@@ -1,0 +1,44 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block title %}
+  Прессформы
+{% endblock %}
+
+{% block link %}
+  <link rel="stylesheet" href="{% static 'pressforms/css/history.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page_name">
+   <h3> История </h3>
+</div>
+<div class="my_table">
+    {% if years %}
+        <table>
+            <tbody>
+                {% for current_year in years %}
+                    <tr>
+                        <td class="td_year">
+                            {{current_year.year}} год
+                        </td>
+                        {% for pressform in pressform_list %}
+                            {% if pressform.year == current_year.year %}
+                            <td>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <a href="">{{pressform.name}}</a>
+                                    </div>
+                                </div>
+                            </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        Данных нет
+    {% endif %}
+</div>
+{% endblock %}

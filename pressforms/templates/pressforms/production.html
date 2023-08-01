@@ -1,0 +1,177 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block title %}
+Прессформы в производстве
+{% endblock %}
+
+{% block link %}
+  <link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page_name">
+    <h3> План работ по прессформам</h3>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ModalLabel">Выберите действие</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'pressforms:operation' %}">
+          {% csrf_token %}
+          <p id="operation"></p>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked>
+            <label class="form-check-label" for="Radios1">
+              Серый
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1">
+            <label class="form-check-label" for="Radios2">
+              Зеленый
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2">
+            <label class="form-check-label" for="Radios3">
+              Синий
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3">
+            <label class="form-check-label" for="Radios4">
+              Желтый
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4">
+            <label class="form-check-label" for="Radios5">
+              Красный
+            </label>
+          </div>
+          <div>
+          </div>
+          <div>
+            <label class="form-check-label" for="week">
+              Неделя
+            </label>
+            <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
+          </div>
+          <div style="visibility: hidden;">
+            <input id="pressform_id" type="number" name="pressform_id" value="0">
+            <input id="work_id" type="number" name="work_id" value="0">
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="my_table">
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" rowspan="2" class="col_property_pressform">Шильда</th>
+        <th scope="col" rowspan="2" class="col_property_pressform">Очередность</th>
+        <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
+        <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
+        {% for current_type in typeWorks %} <!-- цикл по типам работ -->
+          {% for el in count_type %}  <!-- цикл пколичеству работ в типах -->
+            {% if current_type.id == el.type %} <!-- если это нужный тип, добавляем колонки -->
+              {% if el.dcount == 1 %} <!-- если в типе только одна колонка, объединяем с нижней -->
+                <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
+              {% else %}
+                <th scope="col" colspan="{{el.dcount}}">{{current_type.name}}</th> <!-- иначе объединяем колонки  в право -->
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </tr>
+      <tr>
+          {% for current_type in typeWorks %} <!-- цикл по типам работ -->
+            {% for el in count_type %} <!-- цикл пколичеству работ в типах -->
+              {% if current_type.id == el.type and el.dcount != 1 %} <!-- если это нужный тип и колонок больше 1 добавляем колонки -->
+                  {% for el in works %} <!-- цикл по работам -->
+                    {% if current_type.id == el.type.id %}  <!-- если это нужный тип, добавляем колонки -->
+                      <th scope="col" class="col_work_pressform">{{el.name}}</th>
+                    {% endif %}
+                  {% endfor %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+        {% for progress in list_progress %}
+          <tr>
+            {% if progress.pf.shield%}
+              <td>V</td>
+            {% else %}
+              <td></td>
+            {% endif %}
+            <td>{{progress.pf.priority}}</td>
+            <td>{{progress.pf.name}}</td>
+            <td>{{progress.pf.assembly}}</td>
+            {% for el in progress.list_works %}
+              <td class="col_work_progress">
+                <a href="" class="cell_progress" data-bs-toggle="modal" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
+                  {% if el.progress == 1 %}
+                    <div class="circle circle_color_green">
+                  {% elif el.progress == 2 %}
+                    <div class="circle circle_color_blue">
+                  {% elif el.progress == 3 %}
+                    <div class="circle circle_color_yellow">
+                      {% elif el.progress == 4 %}
+                      <div class="circle circle_color_red">
+                  {% else %}
+                    <div class="circle circle_color_grey">
+                  {% endif %}
+                    {% if el.week != 0 %}
+                      {{el.week}}
+                    {% endif %}
+                  </div>
+                </a>
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  var Modal = document.getElementById('Modal')
+  Modal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var work_id = button.getAttribute('data-work-id')
+    var pressform_id = button.getAttribute('data-pressform-id')
+    var work_name = button.getAttribute('data-work-name')
+    var pressform_name = button.getAttribute('data-pressform-name')
+    
+    var modalTitle = Modal.querySelector('.modal-title')
+    modalTitle.textContent = '' + pressform_name
+
+    var el1 = document.getElementById('operation')
+    el1.textContent = work_name
+
+    var el2 = document.getElementById('pressform_id')
+    el2.setAttribute('value', pressform_id)
+
+    var el3 = document.getElementById('work_id')
+    el3.setAttribute('value', work_id)})  
+</script>
+{% endblock %}
+

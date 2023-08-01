@@ -1,0 +1,47 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block title %}
+  Прессформы
+{% endblock %}
+{% block link %}
+  <link rel="stylesheet" href="{% static 'pressforms/css/list.css' %}">
+{% endblock %}
+{% block content %}
+
+<div class="main_head">
+  <div class="page_name">
+    <h3> Прессформы </h3>
+  </div>
+  <div class="btn_add">
+    <a href="{% url 'pressforms:create' %}" class="btn btn-success">Добавить</a>
+  </div>
+</div>
+
+<div class="grid">
+  <table class="table">
+      <thead>
+        <tr>
+          <th class="th_col_small" scope="col">Артикул</th>
+          <th class="th_col_name" scope="col">Наименование</th>
+          <th class="th_col_small" scope="col">Год <br> производства</th>
+          <th class="th_col_small" scope="col">Тип</th>
+          <th class="th_col_small" scope="col">Статус</th>
+          <th class="th_col_small" scope="col">Карточка</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for el in pressforms %}
+          <tr>
+            <td>{{ el.article }}</td>
+            <td class="tr_col_name">{{ el.name }}</td>
+            <td>{{ el.getYear }}</td>
+            <td>{{ el.get_type_display }}</td>
+            <td>{{ el.get_status_display }}</td>
+            <td> <a href="{% url 'pressforms:card' el.id %}" class="btn btn-warning">Открыть</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+ </div>
+{% endblock %}
