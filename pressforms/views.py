@@ -73,6 +73,7 @@ def production(request):
     return render(request, 'pressforms/production.html', context)
 
 def operation(request):
+    """ Сохраняет введенные данные """
     if request.method == 'POST':
         #print(request.POST)
         pressform_id = request.POST['pressform_id']
