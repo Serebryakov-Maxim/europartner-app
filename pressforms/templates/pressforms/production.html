@@ -86,24 +86,24 @@
         <th scope="col" rowspan="2" class="col_property_pressform">Очередность</th>
         <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
         <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
-        {% for current_type in typeWorks %} <!-- цикл по типам работ -->
-          {% for el in count_type %}  <!-- цикл пколичеству работ в типах -->
-            {% if current_type.id == el.type %} <!-- если это нужный тип, добавляем колонки -->
-              {% if el.dcount == 1 %} <!-- если в типе только одна колонка, объединяем с нижней -->
+        {% for current_type in typeWorks %}
+          {% for el in count_type %}
+            {% if current_type.id == el.type %}
+              {% if el.dcount == 1 %}
                 <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
               {% else %}
-                <th scope="col" colspan="{{el.dcount}}">{{current_type.name}}</th> <!-- иначе объединяем колонки  в право -->
+                <th scope="col" colspan="{{el.dcount}}">{{current_type.name}}</th>
               {% endif %}
             {% endif %}
           {% endfor %}
         {% endfor %}
       </tr>
       <tr>
-          {% for current_type in typeWorks %} <!-- цикл по типам работ -->
-            {% for el in count_type %} <!-- цикл пколичеству работ в типах -->
-              {% if current_type.id == el.type and el.dcount != 1 %} <!-- если это нужный тип и колонок больше 1 добавляем колонки -->
-                  {% for el in works %} <!-- цикл по работам -->
-                    {% if current_type.id == el.type.id %}  <!-- если это нужный тип, добавляем колонки -->
+          {% for current_type in typeWorks %}
+            {% for el in count_type %}
+              {% if current_type.id == el.type and el.dcount != 1 %}
+                  {% for el in works %}
+                    {% if current_type.id == el.type.id %}
                       <th scope="col" class="col_work_pressform">{{el.name}}</th>
                     {% endif %}
                   {% endfor %}
@@ -174,4 +174,3 @@
     el3.setAttribute('value', work_id)})  
 </script>
 {% endblock %}
-
