@@ -37,6 +37,8 @@ class Pressform(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.date_finish is not None:
             self.year = self.date_finish.year
+        else:
+            self.year = 0        
 
         super(Pressform, self).save()
 
