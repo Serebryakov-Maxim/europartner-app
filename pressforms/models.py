@@ -46,7 +46,7 @@ class Pressform(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'pressform'
+        db_table = 'pf_pressform'
         verbose_name = 'Прессформа'
         verbose_name_plural = 'Прессформы'
 
@@ -62,7 +62,7 @@ class TypeWork(models.Model):
     priority = models.IntegerField('Очередность')
 
     class Meta:
-            db_table = 'type_work'
+            db_table = 'pf_type_work'
             verbose_name = 'Тип работы'
             verbose_name_plural = 'Типы работ'
     
@@ -76,7 +76,7 @@ class Work(models.Model):
     type = models.ForeignKey(TypeWork, on_delete=models.CASCADE)
 
     class Meta:
-            db_table = 'work'
+            db_table = 'pf_work'
             verbose_name = 'Работа'
             verbose_name_plural = 'Работы'
 
@@ -91,7 +91,7 @@ class Progress(models.Model):
     week = models.IntegerField('Неделя', default=0)
 
     class Meta:
-            db_table = 'Выполнение'
+            db_table = 'pf_execute'
             verbose_name = 'Выполнение'
             verbose_name_plural = 'Выполнение'
             unique_together = ('pressform', 'work')
