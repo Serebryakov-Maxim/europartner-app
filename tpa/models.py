@@ -11,10 +11,14 @@ class Machine(models.Model):
             db_table = 'pf_machine'
             verbose_name = 'Станок'
             verbose_name_plural = 'Станки'
+            ordering = ["id"]
+
+    def __str__(self):
+        return '№' + str(self.id) + ' ' + self.name
 
 class Cycle(models.Model):
     """Цикл - выполненные циклы"""
-    date = models.DateField('Дата')
+    date = models.DateTimeField('Дата')
     time_ms = models.IntegerField('Время цикла')
     id_machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
 
@@ -24,4 +28,4 @@ class Cycle(models.Model):
             verbose_name_plural = 'Циклы'
 
     def __str__(self):
-        return '№' + str(self.id_machine) + ', ' + self.date + ', ' + self.time_ms + ' мс'
+        return '№' + str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
