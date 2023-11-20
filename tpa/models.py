@@ -8,7 +8,7 @@ class Machine(models.Model):
     id = models.IntegerField('Номер', primary_key=True)
 
     class Meta:
-            db_table = 'pf_machine'
+            db_table = 'tpa_machine'
             verbose_name = 'Станок'
             verbose_name_plural = 'Станки'
             ordering = ["id"]
@@ -23,7 +23,7 @@ class Cycle(models.Model):
     id_machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
 
     class Meta:
-            db_table = 'pf_cycle'
+            db_table = 'tpa_cycle'
             verbose_name = 'Цикл'
             verbose_name_plural = 'Циклы'
 
