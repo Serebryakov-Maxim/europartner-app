@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 # Create your models here.
 
@@ -18,6 +19,7 @@ class Machine(models.Model):
 
 class Cycle(models.Model):
     """Цикл - выполненные циклы"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,editable=False)
     date = models.DateTimeField('Дата')
     time_ms = models.IntegerField('Время цикла')
     id_machine = models.ForeignKey(Machine, on_delete=models.CASCADE)

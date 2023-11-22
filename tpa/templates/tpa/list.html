@@ -7,14 +7,22 @@
 
 {% block content %}
 
-{% for el in machines %}
-    <a href="{% url 'tpa:machine_card' el.id %}">
-        <div class="card text-bg-secondary mb-3" style="width: 18rem;">
-        <h5 class="card-title"> №{{ el.id }} {{ el.name }}</h5>
-            <div class="card-body">
+<div class="container">
+    <div class="row align-items-start">
+        
+             {% for el in machines %}
+             <div class="col">
+                <a href="{% url 'tpa:machine_card' el.id %}">
+                    <div class="card text-bg-warning mb-3" style="width: 18rem;">
+                    <h5 class="card-title text-center"> №{{ el.id }} {{ el.name }}</h5>
+                        <div class="card-body">
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
-    </a>
-{% endfor %}
+            {% endfor %}
+        
+    </div>
+</div>
 
 {% endblock %}
