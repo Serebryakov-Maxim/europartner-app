@@ -17,7 +17,6 @@ class Machine(models.Model):
 
 class Cycle(models.Model):
     """Цикл - выполненные циклы"""
-    id = models.UUIDField(primary_key=True, editable=False)
     date = models.DateTimeField('Дата')
     time_ms = models.IntegerField('Время цикла')
     machine_id = models.ForeignKey(Machine, on_delete=models.CASCADE)
