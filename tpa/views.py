@@ -20,7 +20,7 @@ def machine_card(request, machine_id):
     except Exception as e:
         raise Http404("Прессформа не найдена!")
 
-    cycles = Cycle.objects.filter(id_machine=machine_id).order_by('-date')[:10]
+    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 
     context = {'machine':instance, 'cycles': cycles}
     return render(request, 'tpa/machine.html', context)
