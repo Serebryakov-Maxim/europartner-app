@@ -14,21 +14,6 @@ class Machine(models.Model):
 
     def __str__(self):
         return '№' + str(self.id) + ' ' + self.name
-
-class Cycle(models.Model):
-    """Цикл - выполненные циклы"""
-    date = models.DateTimeField('Дата')
-    time_ms = models.IntegerField('Время цикла')
-    machine_id = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    count = models.IntegerField('Количество', default=0)
-
-    class Meta:
-            db_table = 'tpa_cycle'
-            verbose_name = 'Цикл'
-            verbose_name_plural = 'Циклы'
-
-    def __str__(self):
-        return '№' + str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
     
 class Job(models.Model):
     """Задания - справочник заданий"""
@@ -66,3 +51,19 @@ class Event(models.Model):
 
     def __str__(self):
         return str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.data)
+    
+class Cycle(models.Model):
+    """Цикл - выполненные циклы"""
+    date = models.DateTimeField('Дата')
+    time_ms = models.IntegerField('Время цикла')
+    machine_id = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, default=uuid.uuid4)
+    count = models.IntegerField('Количество', default=0)
+
+    class Meta:
+            db_table = 'tpa_cycle'
+            verbose_name = 'Цикл'
+            verbose_name_plural = 'Циклы'
+
+    def __str__(self):
+        return '№' + str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
