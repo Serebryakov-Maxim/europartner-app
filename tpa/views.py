@@ -22,7 +22,7 @@ def machine_card(request, machine_id):
 
     cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 
-    context = {'machine':instance}, 'cycles': cycles}
+    context = {'machine':instance, 'cycles': cycles}
     return render(request, 'tpa/machine.html', context)
 
 
