@@ -7,7 +7,7 @@ class Machine(models.Model):
     id = models.IntegerField('Номер', primary_key=True)
 
     class Meta:
-            db_table = 'tpa_machine'
+            db_table = 'tpa_machines'
             verbose_name = 'Станок'
             verbose_name_plural = 'Станки'
             ordering = ["id"]
@@ -29,7 +29,7 @@ class Job(models.Model):
     data_json = models.TextField('Данные JSON')
     
     class Meta:
-            db_table = 'tpa_job'
+            db_table = 'tpa_jobs'
             verbose_name = 'Задание'
             verbose_name_plural = 'Задания'
             ordering = ["date"]
@@ -40,17 +40,17 @@ class Job(models.Model):
 class Event(models.Model):
     """Событие - события на станках"""
     date = models.DateTimeField('Дата')
-    machine_id = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     data = models.CharField('События', max_length=255)
 
     class Meta:
-            db_table = 'tpa_event'
+            db_table = 'tpa_events'
             verbose_name = 'Событие'
             verbose_name_plural = 'События'
             ordering = ["date"]
 
     def __str__(self):
-        return str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.data)
+        return str(self.machine) + ', ' + str(self.date) + ', ' + str(self.data)
     
 class Cycle(models.Model):
     """Цикл - выполненные циклы"""
@@ -61,9 +61,9 @@ class Cycle(models.Model):
     count = models.IntegerField('Количество', default=0)
 
     class Meta:
-            db_table = 'tpa_cycle'
+            db_table = 'tpa_cycles'
             verbose_name = 'Цикл'
             verbose_name_plural = 'Циклы'
 
     def __str__(self):
-        return '№' + str(self.machine_id) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
+        return '№' + str(self.machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
