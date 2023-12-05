@@ -17,16 +17,16 @@ class Machine(models.Model):
     
 class Job(models.Model):
     """Задания - справочник заданий"""
-    uuid_1C = models.UUIDField('Идентификатор задания в 1С', default=uuid.uuid4, editable=False)
-    date = models.DateTimeField('Дата')
-    number = models.CharField('Номер', max_length=50)
-    name = models.CharField('Наименование', max_length=255)
-    status = models.CharField('Статус', max_length=50)
-    count_plan = models.IntegerField('Количество')
-    time_plan_ms = models.IntegerField('Плановое время цикла')
-    socket_plan = models.IntegerField('Количество гнезд (план)')
-    socket_fact = models.IntegerField('Количество гнезд (факт)')
-    data_json = models.TextField('Данные JSON')
+    uuid_1C = models.UUIDField('Идентификатор задания в 1С', default=uuid.uuid4, editable=False, blank=True)
+    date = models.DateTimeField('Дата', blank=True)
+    number = models.CharField('Номер', max_length=50, blank=True)
+    name = models.CharField('Наименование', max_length=255, blank=True)
+    status = models.CharField('Статус', max_length=50, blank=True)
+    count_plan = models.IntegerField('Количество', blank=True)
+    time_plan_ms = models.IntegerField('Плановое время цикла', blank=True)
+    socket_plan = models.IntegerField('Количество гнезд (план)', blank=True)
+    socket_fact = models.IntegerField('Количество гнезд (факт)', blank=True)
+    data_json = models.TextField('Данные JSON', blank=True)
     
     class Meta:
             db_table = 'tpa_jobs'
