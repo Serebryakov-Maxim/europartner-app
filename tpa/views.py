@@ -18,7 +18,7 @@ def machine_card(request, machine_id):
     try:
         instance = Machine.objects.get(id=machine_id)
     except Exception as e:
-        raise Http404("Прессформа не найдена!")
+        raise Http404("Станок не найден!")
 
     cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 

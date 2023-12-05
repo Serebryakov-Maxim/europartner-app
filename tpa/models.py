@@ -66,4 +66,4 @@ class Cycle(models.Model):
             verbose_name_plural = 'Циклы'
 
     def __str__(self):
-        return '№' + str(self.id_machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
+        return '№' + str(self.machine_id) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
