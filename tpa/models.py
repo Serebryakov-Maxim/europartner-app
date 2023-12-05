@@ -56,7 +56,7 @@ class Cycle(models.Model):
     """Цикл - выполненные циклы"""
     date = models.DateTimeField('Дата')
     time_ms = models.IntegerField('Время цикла')
-    machine_id = models.ForeignKey(Machine, on_delete=models.CASCADE, default=0)
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, default=0)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, default=uuid.uuid4)
     count = models.IntegerField('Количество', default=0)
 
