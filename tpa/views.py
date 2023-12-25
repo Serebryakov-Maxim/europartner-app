@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from .models import Machine, Cycle
-from .serializers import MachineSerializer
+from .models import Machine, Cycle, Job
+from .serializers import MachineSerializer, JobSerializer
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -18,7 +18,7 @@ def machine_card(request, machine_id):
     try:
         instance = Machine.objects.get(id=machine_id)
     except Exception as e:
-        raise Http404("Станок не найден!")
+        raise Http404("Станок не найдена!")
 
     cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 
@@ -61,3 +61,26 @@ class MachineListApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class JobListApiView(APIView):
+    
+    def get_object(self, id):
+        '''Метод возвращает задание по id'''
+        try:
+            return Job.objects.get(id=id)
+        except Job.DoesNotExist:
+            return None
+        
+    def get_object_by_uuid(self, uuid_1C):
+        '''Метод возвращает задание по uuid'''
+        try:
+            return Job.objects.get(uuid_1C=uuid_1C)
+        except Job.DoesNotExist:
+            return None
+        
+    # 1. List all
+    def get(self, request, *args, **kwargs):
+        '''Получить список заданий'''
+        machines = Job.objects.all()
+        serializer = JobSerializer(machines, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
