@@ -1,7 +1,7 @@
 {% extends 'tpa/layout.html' %}
 
 {% block title %}
-Станок
+Станок №{{ machine.id }}
 {% endblock %}
 
 
@@ -15,7 +15,6 @@
         <thead>
           <tr>
             <th class="th_col_small" scope="col">Дата</th>
-            <th class="th_col_name" scope="col">Станок</th>
             <th class="th_col_small" scope="col">Цикл, мс</th>
           </tr>
         </thead>
@@ -23,7 +22,6 @@
           {% for el in cycles %}
             <tr>
               <td>{{ el.date }}</td>
-              <td >{{ el.id_machine }}</td>
               <td>{{ el.time_ms }}</td>
             </tr>
           {% endfor %}

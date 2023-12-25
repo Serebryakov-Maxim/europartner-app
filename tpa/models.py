@@ -18,7 +18,7 @@ class Machine(models.Model):
 class Job(models.Model):
     """Задания - справочник заданий"""
     uuid_1C = models.UUIDField('Идентификатор задания в 1С', default=uuid.uuid4, editable=False, blank=True)
-    date = models.DateTimeField('Дата', blank=True)
+    date = models.DateTimeField('Дата', blank=True, )
     number = models.CharField('Номер', max_length=50, blank=True)
     name = models.CharField('Наименование', max_length=255, blank=True)
     status = models.CharField('Статус', max_length=50, blank=True)
