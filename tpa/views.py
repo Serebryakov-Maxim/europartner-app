@@ -84,3 +84,31 @@ class JobListApiView(APIView):
         machines = Job.objects.all()
         serializer = JobSerializer(machines, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+     # 2. Create / update
+    def post(self, request, *args, **kwargs):
+        '''Создание/обновление заданий'''
+        data = {
+            'uuid_1C': request.data.get('uuid_1C'), 
+            'date': request.data.get('date'),
+            'number': request.data.get('number'),
+            'name': request.data.get('name'),
+            'status': request.data.get('status'),
+            'count_plan': request.data.get('count_plan'),
+            'time_plan_ms': request.data.get('time_plan_ms'),
+            'socket_plan': request.data.get('socket_plan'),
+            'socket_fact': request.data.get('socket_fact'),
+            'data_json': request.data.get('data_json')
+        }
+        
+        job_instance = self.get_object_by_uuid(data['uuid_1C'])
+        if not job_instance:
+            serializer = JobSerializer(data=data)
+        else:
+            serializer = JobSerializer(instance = job_instance, data=data, partial = True)
+      
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
