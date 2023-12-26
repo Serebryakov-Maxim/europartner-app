@@ -23,7 +23,7 @@ class Job(models.Model):
     name = models.CharField('Наименование', max_length=255, blank=True)
     status = models.CharField('Статус', max_length=50, blank=True)
     count_plan = models.IntegerField('Количество', blank=True)
-    time_plan_ms = models.IntegerField('Плановое время цикла', blank=True)
+    time_plan_ms = models.FloatField('Плановое время цикла', blank=True)
     socket_plan = models.IntegerField('Количество гнезд (план)', blank=True)
     socket_fact = models.IntegerField('Количество гнезд (факт)', blank=True)
     data_json = models.TextField('Данные JSON', blank=True)
