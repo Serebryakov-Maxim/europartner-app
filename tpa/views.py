@@ -12,7 +12,6 @@ def list(request):
     context = {'machines': machines_list}
     return render(request, 'tpa/list.html', context)
 
-
 def machine_card(request, machine_id):
     """ Просмотр карточки станка """
     try:
@@ -24,7 +23,6 @@ def machine_card(request, machine_id):
 
     context = {'machine':instance, 'cycles': cycles}
     return render(request, 'tpa/machine.html', context)
-
 
 class MachineListApiView(APIView):
 
