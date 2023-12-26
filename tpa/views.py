@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Machine, Cycle, Job
 from .serializers import MachineSerializer, JobSerializer
+import uuid
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -83,11 +84,11 @@ class JobListApiView(APIView):
         serializer = JobSerializer(machines, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-     # 2. Create / update
+    # 2. Create / update
     def post(self, request, *args, **kwargs):
         '''Создание/обновление заданий'''
         data = {
-            'uuid_1C': request.data.get('uuid_1C'), 
+            'uuid_1C': uuid.UUID(request.data.get('uuid_1C')), 
             'date': request.data.get('date'),
             'number': request.data.get('number'),
             'name': request.data.get('name'),
