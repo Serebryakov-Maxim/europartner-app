@@ -88,7 +88,7 @@ class JobListApiView(APIView):
     def post(self, request, *args, **kwargs):
         '''Создание/обновление заданий'''
         data = {
-            'uuid_1C': uuid.UUID(request.data.get('uuid_1C')), 
+            'uuid_1C':request.data.get('uuid_1C'), 
             'date': request.data.get('date'),
             'number': request.data.get('number'),
             'name': request.data.get('name'),
