@@ -9,4 +9,4 @@ class MachineSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ['id','uuid_1C','date','number','name','status','count_plan','time_plan_ms','socket_plan','socket_fact','data_json']
+        fields = ['id','uuid_1C','date','number','name','status','count_plan','time_plan_ms','socket_plan','socket_fact','data_json', 'machine']

@@ -77,6 +77,13 @@ class JobListApiView(APIView):
         except Job.DoesNotExist:
             return None
         
+    def get_machine(self, id):
+        '''Метод возвращает станок по id'''
+        try:
+            return Machine.objects.get(id=id)
+        except Machine.DoesNotExist:
+            return None
+        
     # 1. List all
     def get(self, request, *args, **kwargs):
         '''Получить список заданий'''
@@ -97,7 +104,8 @@ class JobListApiView(APIView):
             'time_plan_ms': request.data.get('time_plan_ms'),
             'socket_plan': request.data.get('socket_plan'),
             'socket_fact': request.data.get('socket_fact'),
-            'data_json': request.data.get('data_json')
+            'data_json': request.data.get('data_json'),
+            'machine': self.get_machine(request.data.get('machine'))
         }
         
         job_instance = self.get_object_by_uuid(data['uuid_1C'])

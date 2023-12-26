@@ -23,10 +23,11 @@ class Job(models.Model):
     name = models.CharField('Наименование', max_length=255, blank=True)
     status = models.CharField('Статус', max_length=50, blank=True)
     count_plan = models.IntegerField('Количество', blank=True)
-    time_plan_ms = models.FloatField('Плановое время цикла', blank=True)
+    time_plan_ms = models.DecimalField('Плановое время цикла', blank=True, max_digits=5, decimal_places=2)
     socket_plan = models.IntegerField('Количество гнезд (план)', blank=True)
     socket_fact = models.IntegerField('Количество гнезд (факт)', blank=True)
     data_json = models.TextField('Данные JSON', blank=True)
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, default=0)
     
     class Meta:
             db_table = 'tpa_jobs'
