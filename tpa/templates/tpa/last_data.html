@@ -1,0 +1,31 @@
+{% extends 'tpa/layout.html' %}
+
+{% block title %}
+Станок №{{ machine.id }}
+{% endblock %}
+
+
+{% block content %}
+
+ <h1>№{{ machine.id }} {{ machine.name }}</h1>
+
+ <h4>Последние 10-ть циклов</h4>
+ <div class="grid">
+    <table class="table">
+        <thead>
+          <tr>
+            <th class="th_col_small" scope="col">Дата</th>
+            <th class="th_col_small" scope="col">Цикл, мс</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for el in cycles %}
+            <tr>
+              <td>{{ el.date|date:"c"}}</td>
+              <td>{{ el.time_ms }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+{% endblock %}

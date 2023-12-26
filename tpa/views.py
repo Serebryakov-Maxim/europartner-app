@@ -22,8 +22,33 @@ def machine_card(request, machine_id):
 
     cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 
-    context = {'machine':instance, 'cycles': cycles}
+    context = {'machine':instance}
     return render(request, 'tpa/machine.html', context)
+
+def machine_last_data(request, machine_id):
+    """ Просмотр последних данных с контроллера """
+    try:
+        instance = Machine.objects.get(id=machine_id)
+    except Exception as e:
+        raise Http404("Станок не найдена!")
+
+    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
+
+    context = {'machine':instance, 'cycles': cycles}
+    return render(request, 'tpa/last_data.html', context)
+
+def machine_job(request, machine_id):
+    """ Просмотр задания """
+    try:
+        instance = Machine.objects.get(id=machine_id)
+    except Exception as e:
+        raise Http404("Станок не найдена!")
+
+    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
+
+    context = {'machine':instance, 'cycles': cycles}
+    return render(request, 'tpa/job.html', context)
+
 
 class MachineListApiView(APIView):
 

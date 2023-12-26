@@ -36,7 +36,7 @@ class Job(models.Model):
             ordering = ["date"]
 
     def __str__(self):
-        return 'Задание' + str(self.name) + ' от ' + str(self.date)
+        return 'Задание ' + str(self.name) + ' от ' + str(self.date)
     
 class Event(models.Model):
     """Событие - события на станках"""
