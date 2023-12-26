@@ -105,7 +105,7 @@ class JobListApiView(APIView):
             'socket_plan': request.data.get('socket_plan'),
             'socket_fact': request.data.get('socket_fact'),
             'data_json': request.data.get('data_json'),
-            'machine': self.get_machine(request.data.get('machine'))
+            'machine': request.data.get('machine')
         }
         
         job_instance = self.get_object_by_uuid(data['uuid_1C'])
