@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Machine, Cycle, Job
 from .serializers import MachineSerializer, JobSerializer
-import uuid
+import json
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -40,13 +40,17 @@ def machine_last_data(request, machine_id):
 def machine_job(request, machine_id):
     """ Просмотр задания """
     try:
-        instance = Machine.objects.get(id=machine_id)
+        instance = Job.objects.get(machine_id=machine_id)
     except Exception as e:
-        raise Http404("Станок не найдена!")
+        raise Http404("Задание не найдено!")
+    
+    data_str = instance.data_json
+    data_json = json.loads(data_str)
 
-    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
+    context = {'job':instance, 'data_json':data_json}
 
-    context = {'machine':instance, 'cycles': cycles}
+
+
     return render(request, 'tpa/job.html', context)
 
 
