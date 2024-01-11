@@ -60,6 +60,7 @@ class Cycle(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, default=0)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, default=uuid.uuid4)
     count = models.IntegerField('Количество', default=0)
+    counter = models.IntegerField('Счетчик', default=0)
 
     class Meta:
             db_table = 'tpa_cycles'

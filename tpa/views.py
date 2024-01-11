@@ -53,7 +53,6 @@ def machine_job(request, machine_id):
 
     return render(request, 'tpa/job.html', context)
 
-
 class MachineListApiView(APIView):
 
     def get_object(self, id):
