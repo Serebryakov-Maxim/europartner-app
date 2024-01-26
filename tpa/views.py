@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from .models import Machine, Cycle, Job
+from .models import Machine, Cycle, Job, Event
 from .serializers import MachineSerializer, JobSerializer
 import json
 
@@ -33,8 +33,9 @@ def machine_last_data(request, machine_id):
         raise Http404("Станок не найдена!")
 
     cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
+    events = Event.objects.filter(machine_id=machine_id).order_by('-date')[:10]
 
-    context = {'machine':instance, 'cycles': cycles}
+    context = {'machine':instance, 'cycles': cycles, 'events': events}
     return render(request, 'tpa/last_data.html', context)
 
 def machine_job(request, machine_id):

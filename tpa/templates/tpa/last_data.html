@@ -30,4 +30,25 @@
         </tbody>
     </table>
   </div>
+  <h4>Последние 10-ть событий</h4>
+  <div class="grid">
+     <table class="table">
+         <thead>
+           <tr>
+             <th class="th_col_small" scope="col">Дата</th>
+             <th class="th_col_small" scope="col">Событие</th>
+             <th class="th_col_small" scope="col">Данные</th>
+           </tr>
+         </thead>
+         <tbody>
+           {% for el in events %}
+             <tr>
+               <td>{{ el.date|date:"c"}}</td>
+               <td>{{ el.type }}</td>
+               <td>{{ el.date }}</td>
+             </tr>
+           {% endfor %}
+         </tbody>
+     </table>
+   </div>
 {% endblock %}
