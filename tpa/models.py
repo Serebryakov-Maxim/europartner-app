@@ -42,7 +42,8 @@ class Event(models.Model):
     """Событие - события на станках"""
     date = models.DateTimeField('Дата')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    data = models.CharField('События', max_length=255)
+    type = models.CharField('Тип события', max_length=255, default='')
+    data = models.CharField('Данные', max_length=255)
 
     class Meta:
             db_table = 'tpa_events'
