@@ -1,74 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="">
 	<title>Текущее задание на E-50с</title>
-	<style type="text/css">
-		.stanok_head{
-			width:90%;
-			height: 60px;
-			margin-left: 5%;
-			margin-right: 5%;
-			font-size: 350%;
-			font-weight: bold;
-			text-decoration: underline;
-		}
-		.stanok_main{
-			width: calc(100% / 2);
-			float: left;
-		}
-		.stanok_main.stanok_left{
-			text-align: left;
-		}
-		.stanok_main.stanok_right{
-			text-align: right;
-		}
-		.product_main{
-			margin-top: 15px;
-  			width: calc(90% - 10px);
-  			font-size: 350%;
-			font-weight: bold;
-			text-align: center;
-			float: left;
-		}
-		.td_left{
-			text-align: left; 
-			padding-left: 10px;
-		}
-		.td_right{
-			text-align: right; 
-			padding-right: 10px;
-		}
-		table{
-			margin-top: 25px;
-			width: 100%;
-			border-collapse: collapse;
-  			border: 1px solid black;
-		}
-		table td {
-  			border: 1px solid black;
-		}
-		thead{
-			text-align: center;
-			font-size: x-large;
-			font-weight: bold;
-		}
-		thead td{
-			padding: 5px;
-		}
-		tbody{
-			font-size: xx-large;
-			font-weight: bold;
-		}
-		tfoot{
-			font-size: xx-large;
-			font-weight: bold;
-		}
-		.qr{
-			float: right;
-		}
-	</style>
+	<link rel="stylesheet" href="{% static 'tpa/css/job.css' %}">
 </head>
 <body>
 	<div class="stanok_head">
