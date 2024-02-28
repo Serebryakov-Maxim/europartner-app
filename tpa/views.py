@@ -41,16 +41,16 @@ def machine_last_data(request, machine_id):
 def machine_job(request, machine_id):
     """ Просмотр задания """
     try:
-        instance = Job.objects.get(machine_id=machine_id)
+        instance = Job.objects.get(machine_id=machine_id, status='Выполняется')
     except Exception as e:
-        raise Http404("Задание не найдено!")
+        machine = Machine.objects.get(id=machine_id)
+        context = {'name': machine.name, 'number': machine.id}
+        return render(request, 'tpa/job_empty.html', context)
     
     data_str = instance.data_json
     data_json = json.loads(data_str)
 
     context = {'job':instance, 'data_json':data_json}
-
-
 
     return render(request, 'tpa/job.html', context)
 
@@ -71,6 +71,7 @@ class MachineListApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
         
      # 2. Create / update
+    
     def post(self, request, *args, **kwargs):
         '''Создание/обновление станков'''
         data = {
