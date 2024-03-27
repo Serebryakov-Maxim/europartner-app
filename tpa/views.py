@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from .models import Machine, Cycle, Job, Event
-from .serializers import MachineSerializer, JobSerializer
+from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer
 import json
 
 def list(request):
@@ -143,6 +143,71 @@ class JobListApiView(APIView):
             serializer = JobSerializer(data=data)
         else:
             serializer = JobSerializer(instance = job_instance, data=data, partial = True)
+      
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CycleApiView(APIView):
+    # 1. Get cycles  
+    def get(self, request, *args, **kwargs):
+        '''Получить список цикло'''
+        machines = Cycle.objects.all().order_by('-date')[:10]
+        serializer = CycleSerializer(machines, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+     # 2. Create / update
+    def post(self, request, *args, **kwargs):
+        '''Создание циклов'''
+        data = {
+            'date': request.data.get('date'),
+            'time_ms': request.data.get('time_ms'),
+            'job': request.data.get('job'),
+            'count': request.data.get('count'),
+            'counter': request.data.get('counter'),
+            'machine': request.data.get('machine')
+        }
+
+        try:
+            job_instance = Job.objects.get(machine_id=data['machine'], status='Выполняется')
+        except:
+            job_instance = Job.objects.get(uuid_1C='00000000-0000-0000-0000-000000000000')
+
+        data['job'] = job_instance.id
+        if job_instance.socket_fact > 0:
+            data['count'] = job_instance.socket_fact
+        else:
+            data['count'] = job_instance.socket_plan
+        
+        serializer = CycleSerializer(data=data)
+      
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class EventApiView(APIView):
+    # 1. Get events 
+    def get(self, request, *args, **kwargs):
+        '''Получить список событий'''
+        machines = Event.objects.all().order_by('-date')[:10]
+        serializer = EventSerializer(machines, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+     # 2. Create / update
+    def post(self, request, *args, **kwargs):
+        '''Создание событий'''
+        data = {
+            'date': request.data.get('date'),
+            'machine': request.data.get('machine'),
+            'type': request.data.get('type'),
+            'data': request.data.get('data')
+        }
+        
+        serializer = EventSerializer(data=data)
       
         if serializer.is_valid():
             serializer.save()
