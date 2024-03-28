@@ -174,8 +174,8 @@ class CycleApiView(APIView):
             job_instance = Job.objects.get(machine_id=data['machine'], status='Выполняется')
         except:
             job_instance = Job.objects.get(uuid_1C='00000000-0000-0000-0000-000000000000')
-        data['job'] = job_instance.uuid_1C
-        # find count sockets
+        data['job'] = job_instance.id
+        # find count
         if job_instance.socket_fact > 0:
             data['count'] = job_instance.socket_fact
         else:
