@@ -8,6 +8,8 @@ from .serializers import MachineSerializer, JobSerializer, CycleSerializer, Even
 import json
 from datetime import datetime, timedelta
 from django.http import JsonResponse
+import pytz
+from django.utils import timezone
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -222,6 +224,12 @@ class EffectCycleApiView(APIView):
         date_now = datetime.now()
         machines = []
         machines_list = Machine.objects.order_by('id')
+
+        tzname = request.session.get('django_timezone')
+        if tzname:
+            timezone.activate(pytz.timezone(tzname))
+        else:
+            timezone.deactivate()
 
         for machine in machines_list:
             job_ob = None
