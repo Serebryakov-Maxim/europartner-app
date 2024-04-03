@@ -233,7 +233,7 @@ class EffectCycleApiView(APIView):
             except Exception as e:
                 job = ''
             try:
-                cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date_gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
+                cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
                     date = cycle_ob[0].date
             except Exception as e:
