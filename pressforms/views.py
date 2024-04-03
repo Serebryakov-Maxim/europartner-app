@@ -1,8 +1,14 @@
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.db.models import Max
 from .models import Pressform, TypeWork, Work, Progress
 from .forms import PressformForm
 from django.db.models import Count
+from .serializers import PressformSerializer, PressformLastModifiedSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+import datetime
 
 def history(request):
     """ Формирование произведенных прессформ """
@@ -88,6 +94,8 @@ def operation(request):
         prg.progress = int(oper)
         prg.week = int(week)
         prg.save()
+
+        pressform.save()
  
     return redirect('/pressforms/production/')
 
@@ -131,3 +139,22 @@ def card(request, pressform_id):
         'form': form
     }
     return render(request, 'pressforms/create.html', context)
+
+class PressformApiView(APIView):
+    # 1. Get events 
+    def get(self, request, *args, **kwargs):
+        '''Получить список событий'''
+        pressforms = Pressform.objects.all().order_by('-date_start')
+        serializer = PressformSerializer(pressforms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class PressformLastModifiedApiView(APIView):
+    # 1. Get events 
+    def get(self, request, *args, **kwargs):
+        '''Получить список событий'''
+        pressforms = Pressform.objects.all().order_by('-date_modified')[:1]
+        if (pressforms.count() >= 1):
+            serializer = PressformLastModifiedSerializer(pressforms[0], many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("", status=status.HTTP_200_OK)

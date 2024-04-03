@@ -3,10 +3,11 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import permissions
 from .models import Machine, Cycle, Job, Event
 from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer
 import json
+from datetime import datetime, timedelta
+from django.http import JsonResponse
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -117,8 +118,8 @@ class JobListApiView(APIView):
     # 1. List all
     def get(self, request, *args, **kwargs):
         '''Получить список заданий'''
-        machines = Job.objects.all()
-        serializer = JobSerializer(machines, many=True)
+        jobs = Job.objects.all()
+        serializer = JobSerializer(jobs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     # 2. Create / update
@@ -153,12 +154,12 @@ class JobListApiView(APIView):
 class CycleApiView(APIView):
     # 1. Get cycles  
     def get(self, request, *args, **kwargs):
-        '''Получить список цикло'''
+        '''Получить список циклов'''
         machines = Cycle.objects.all().order_by('-date')[:10]
         serializer = CycleSerializer(machines, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-     # 2. Create / update
+    # 2. Create / update
     def post(self, request, *args, **kwargs):
         '''Создание циклов'''
         data = {
@@ -214,3 +215,30 @@ class EventApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EffectCycleApiView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        date_now = datetime.now()
+        machines = []
+        machines_list = Machine.objects.order_by('id')
+
+        for machine in machines_list:
+            job_ob = None
+            job = None
+            date = ''
+            try:
+                job_ob = Job.objects.get(machine_id=machine.id, status='Выполняется')
+                job = job_ob.uuid_1C
+            except Exception as e:
+                job = ''
+            try:
+                cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date_gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
+                if cycle_ob.count() > 0:
+                    date = cycle_ob[0].date
+            except Exception as e:
+                pass
+            machine_info = {'id': machine.id, 'job': job, 'last_date_cycle': date}
+            machines.append(machine_info)
+
+        return JsonResponse(machines, safe=False)

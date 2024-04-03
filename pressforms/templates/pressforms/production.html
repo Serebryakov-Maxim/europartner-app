@@ -150,9 +150,10 @@
   </table>
 </div>
 
-
 <script>
-  var Modal = document.getElementById('Modal')
+  var date_modified = getDateModified();
+  var Modal = document.getElementById('Modal');
+
   Modal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget
@@ -173,5 +174,22 @@
 
     var el3 = document.getElementById('work_id')
     el3.setAttribute('value', work_id)})  
+
+    setInterval(function(){
+      last_modified = getDateModified();
+      if (date_modified < last_modified) {
+        window.location.reload(1);
+        date_modified = last_modified;
+      }
+    }, 5000);
+
+  function getDateModified(){
+    theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    responseText = xmlHttp.responseText;
+    return Date.parse(JSON.parse(responseText)["date_modified"]);
+  };
 </script>
 {% endblock %}

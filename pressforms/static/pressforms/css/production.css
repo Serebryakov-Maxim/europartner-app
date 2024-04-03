@@ -22,7 +22,6 @@
 
 .col_work_progress {
     text-align: center;
-    
 }
 
 .table th{
@@ -31,27 +30,31 @@
     text-align: center;
     word-break: break-all;
     padding: 0px;
+    font-weight: normal;
+    vertical-align: middle;
 }
 
 .table td{
+    padding: 0px;
+    padding-top: 5px;
     font-size: x-small;
     vertical-align: middle;
 }
 
 .circle_color_green{
-    background: radial-gradient(circle at bottom, #87A941, transparent);
+    background: radial-gradient(circle at bottom, #537c00, transparent);
 }
 
 .circle_color_blue{
-    background: radial-gradient(circle at bottom, #3870B4, transparent);
+    background: radial-gradient(circle at bottom, #0073ff, transparent);
 }
 
 .circle_color_red{
-    background: radial-gradient(circle at bottom, #B33835, transparent);
+    background: radial-gradient(circle at bottom, #ff0400, transparent);
 }
 
 .circle_color_yellow{
-    background: radial-gradient(circle at bottom, #FFFF05, transparent);
+    background: radial-gradient(circle at bottom, #f3bc07, transparent);
 }
 
 .circle_color_grey{
@@ -64,9 +67,9 @@
 }
 
 .circle {
-    width: 25px; /* поддерживаются любые единицы, в том числе проценты */
-    height: 25px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    margin: 0px;
-    padding: 5px;
+    padding-top: 8px;
+    display: inline-block;
 }

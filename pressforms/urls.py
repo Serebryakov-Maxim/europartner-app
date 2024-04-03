@@ -11,4 +11,6 @@ urlpatterns = [
     path('production/', views.production, name='production'),
     path('operation/', views.operation, name='operation'),
     path('<int:pressform_id>', views.card, name='card'),
+    path('api/list/', views.PressformApiView.as_view(), name='api'),
+    path('api/last_modified/', views.PressformLastModifiedApiView.as_view(), name='api'),
 ]

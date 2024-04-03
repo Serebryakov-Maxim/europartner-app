@@ -33,6 +33,7 @@ class Pressform(models.Model):
                                 default=0
                                 )
     year = models.IntegerField('Год выпуска', blank=True, null=True)
+    date_modified = models.DateTimeField('Дата изменения', auto_now=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.date_finish is not None:

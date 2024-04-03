@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/job/', views.JobListApiView.as_view(), name='api'),
     path('api/cycle/', views.CycleApiView.as_view(), name='api'),
     path('api/event/', views.EventApiView.as_view(), name='api'),
+    path('api/effect_cycle/', views.EffectCycleApiView.as_view(), name='api'),
 ]
