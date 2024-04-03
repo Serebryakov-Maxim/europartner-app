@@ -238,7 +238,7 @@ class EffectCycleApiView(APIView):
                     date = cycle_ob[0].date
             except Exception as e:
                 pass
-            machine_info = {'id': machine.id, 'job': job, 'last_date_cycle': date}
+            machine_info = {'date_now': date_now - timedelta(hours=0, minutes=5), 'id': machine.id, 'job': job, 'last_date_cycle': date}
             machines.append(machine_info)
 
         return JsonResponse(machines, safe=False)
