@@ -225,7 +225,7 @@ class EffectCycleApiView(APIView):
         machines = []
         machines_list = Machine.objects.order_by('id')
 
-        tz = timezone.get_current_timezone()
+        #tz = timezone.get_current_timezone()
 
         for machine in machines_list:
             job_ob = None
@@ -239,7 +239,7 @@ class EffectCycleApiView(APIView):
             try:
                 cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
-                    date = cycle_ob[0].date.astimezone(tz)
+                    date = cycle_ob[0].date.now()
             except Exception as e:
                 pass
             machine_info = {'date_now': date_now - timedelta(hours=0, minutes=5), 'id': machine.id, 'job': job, 'last_date_cycle': date}
