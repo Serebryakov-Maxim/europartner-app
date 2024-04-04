@@ -235,7 +235,7 @@ class EffectCycleApiView(APIView):
             # найдем еффективное время цикла, всё что меньше среднего + 1 сек.
             list_time_ms = []
             for el in last_50_cycles:
-                if el.time_ms < avg_time_ms+1000:
+                if el.time_ms < avg_time_ms*2:
                     list_time_ms.append(el.time_ms)
 
             avg_effect_time_ms = mean(list_time_ms)
@@ -255,8 +255,7 @@ class EffectCycleApiView(APIView):
             date_start = date_now.replace(hour=20, minute=0, second=0)
         elif date_now.hour < 8:
             # ночная смена сегодня
-            day_tomorrow = date_now.day-1
-            date_start = date_start - timedelta(day=day_tomorrow, hour=20, minute=0, second=0)
+            date_start = (date_start - timedelta(days=1)).replace(hour=20, minute=0, second=0)
         else:
             pass
 
@@ -268,6 +267,41 @@ class EffectCycleApiView(APIView):
             list_time_ms = []
             for el in cycle_objects:
                 if el.time_ms > avg_time_ms+1000:
+                    list_time_ms.append(el.time_ms)
+
+            countstop_team = len(list_time_ms)
+
+        return countstop_team
+
+    def last_team_data(self, machine, job):
+        tz = timezone.get_current_timezone()
+        date_now = datetime.now().astimezone(tz)
+        countstop_team = 0
+
+        if date_now.hour >= 8 and date_now.hour < 20:
+            # сейчас дневная смена, значит прошлая началась вчера
+            date_start = (date_now - timedelta(days=1)).replace(hour=20, minute=0, second=0)
+            date_stop = date_now.replace(hour=8, minute=0, second=0)
+
+        elif date_now.hour >= 20:
+            # ночная смена сегодня, значит прошлая сегодня с 8-ми
+            date_start = date_now.replace(hour=8, minute=0, second=0)
+            date_stop = date_now.replace(hour=20, minute=0, second=0)
+        elif date_now.hour < 8:
+            # ночная смена сегодня, значит прошлая началась вчера с 8-20
+            date_start = (date_start - timedelta(days=1)).replace(hour=8, minute=0, second=0)
+            date_stop = (date_start - timedelta(days=1)).replace(hour=20, minute=0, second=0)
+        else:
+            pass
+
+        cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start, date__lt=date_stop)
+        if cycle_objects.count() > 0:
+            avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
+            avg_time_ms = avg_cycle['time_ms__avg']
+
+            list_time_ms = []
+            for el in cycle_objects:
+                if el.time_ms > avg_time_ms*2:
                     list_time_ms.append(el.time_ms)
 
             countstop_team = len(list_time_ms)
@@ -286,6 +320,7 @@ class EffectCycleApiView(APIView):
             date = ''
             avg_effect_cycle = 0
             countstop_team = 0
+            countstop_last_team = 0
             
             try:
                 # Поиск активного задания
@@ -298,6 +333,7 @@ class EffectCycleApiView(APIView):
                 job = job_ob.uuid_1C
                 avg_effect_cycle = self.find_avg_50_cycle(machine.id, job_ob)
                 countstop_team = self.current_team_data(machine.id, job_ob)
+                countstop_last_team = self.last_team_data(machine.id, job_ob)
 
             except Job.DoesNotExist:
                 pass
@@ -306,7 +342,8 @@ class EffectCycleApiView(APIView):
                                     'job': job, 
                                     'last_date_cycle': date, 
                                     'avg_effect_cycle': avg_effect_cycle,
-                                    'countstop_team': countstop_team}
+                                    'countstop_team': countstop_team,
+                                    'countstop_last_team': countstop_last_team,}
 
             machines.append(machine_info)
 
