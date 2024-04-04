@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from django.http import JsonResponse
 import pytz
 from django.utils import timezone
+from statistics import mean
 
 def list(request):
     machines_list = Machine.objects.order_by('id')
@@ -222,9 +223,25 @@ class EventApiView(APIView):
 class EffectCycleApiView(APIView):
 
     def find_avg_50_cycle(self, machine, job):
+        avg_effect_time_ms = 0
+        # соберем последние 50 циклов
         last_50_cycles = Cycle.objects.filter(machine_id=machine, job=job).order_by('-date')[:50]
-        avg_cycle = last_50_cycles.aggregate(Avg('time'))
-        return avg_cycle
+
+        if last_50_cycles.count() > 0:
+            # циклы есть, возьмем средний показатель времени
+            avg_cycle = last_50_cycles.aggregate(Avg('time_ms'))
+            avg_time_ms = avg_cycle['time_ms__avg']
+
+            # найдем еффективное время цикла, всё что меньше среднего + 1 сек.
+            list_time_ms = []
+            for el in last_50_cycles:
+                if el.time_ms < avg_time_ms+1000:
+                    list_time_ms.append(el.time_ms)
+
+            avg_effect_time_ms = mean(list_time_ms)
+
+        return avg_effect_time_ms
+      
 
 
     def get(self, request, *args, **kwargs):
@@ -235,25 +252,28 @@ class EffectCycleApiView(APIView):
         avg_cycle = 0
 
         for machine in machines_list:
-            job_ob = None
-            job = None
+            job = ''
             date = ''
+            avg_effect_cycle = 0
+            
             try:
+                # Поиск активного задания
                 job_ob = Job.objects.get(machine_id=machine.id, status='Выполняется')
-                job = job_ob.uuid_1C
-
-                avg_cycle = self.find_avg_50_cycle(machine.id, job_ob)
-            except Exception as e:
-                job = ''
-            try:
+                # Найдем последний цикл
                 cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
                     date = cycle_ob[0].date.astimezone(tz)
-            except Exception as e:
+
+                job = job_ob.uuid_1C
+                avg_effect_cycle = self.find_avg_50_cycle(machine.id, job_ob)
+
+            except Job.DoesNotExist:
                 pass
-            machine_info = {'date_now': date_now - timedelta(hours=0, minutes=5), 'id': machine.id, 'job': job, 'last_date_cycle': date, 'avg_cycle': avg_cycle}
-            
-            
+
+            machine_info = {'id': machine.id, 
+                                    'job': job, 
+                                    'last_date_cycle': date, 
+                                    'avg_effect_cycle': avg_effect_cycle}
 
             machines.append(machine_info)
 
