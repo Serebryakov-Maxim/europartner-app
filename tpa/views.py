@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
+from django.db.models import Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -220,12 +221,18 @@ class EventApiView(APIView):
 
 class EffectCycleApiView(APIView):
 
+    def find_avg_50_cycle(self, machine, job):
+        last_50_cycles = Cycle.objects.filter(machine_id=machine, job=job).order_by('-date')[:50]
+        avg_cycle = last_50_cycles.aggregate(Avg('time'))
+        return avg_cycle
+
+
     def get(self, request, *args, **kwargs):
-        date_now = datetime.now()
+        tz = timezone.get_current_timezone()
+        date_now = datetime.now().astimezone(tz)
         machines = []
         machines_list = Machine.objects.order_by('id')
-
-        #tz = timezone.get_current_timezone()
+        avg_cycle = 0
 
         for machine in machines_list:
             job_ob = None
@@ -234,15 +241,20 @@ class EffectCycleApiView(APIView):
             try:
                 job_ob = Job.objects.get(machine_id=machine.id, status='Выполняется')
                 job = job_ob.uuid_1C
+
+                avg_cycle = self.find_avg_50_cycle(machine.id, job_ob)
             except Exception as e:
                 job = ''
             try:
                 cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
-                    date = cycle_ob[0].date.astimezone(timezone.get_current_timezone())
+                    date = cycle_ob[0].date.astimezone(tz)
             except Exception as e:
                 pass
-            machine_info = {'date_now': date_now - timedelta(hours=0, minutes=5), 'id': machine.id, 'job': job, 'last_date_cycle': date}
+            machine_info = {'date_now': date_now - timedelta(hours=0, minutes=5), 'id': machine.id, 'job': job, 'last_date_cycle': date, 'avg_cycle': avg_cycle}
+            
+            
+
             machines.append(machine_info)
 
         return JsonResponse(machines, safe=False)
