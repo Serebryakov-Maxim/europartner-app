@@ -332,12 +332,12 @@ class EffectCycleApiView(APIView):
                     date = cycle_ob[0].date.astimezone(tz)
                 
                 job = job_ob.uuid_1C
-                #avg_effect_cycle = self.find_avg_50_cycle(machine.id, job_ob)
-                #countstop_team = self.current_team_data(machine.id, job_ob)
-                #countstop_last_team = self.last_team_data(machine.id, job_ob)
+                avg_effect_cycle = self.find_avg_50_cycle(machine.id, job_ob)
+                countstop_team = self.current_team_data(machine.id, job_ob)
+                countstop_last_team = self.last_team_data(machine.id, job_ob)
 
-            except Exception:
-                return JsonResponse(Exception, safe=False)
+            except Job.DoesNotExist:
+                pass
 
             machine_info = {'id': machine.id, 
                                     'job': job, 
