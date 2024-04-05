@@ -336,8 +336,8 @@ class EffectCycleApiView(APIView):
                 #countstop_team = self.current_team_data(machine.id, job_ob)
                 #countstop_last_team = self.last_team_data(machine.id, job_ob)
 
-            except Job.DoesNotExist:
-                pass
+            except Exception:
+                return JsonResponse(Exception, safe=False)
 
             machine_info = {'id': machine.id, 
                                     'job': job, 
