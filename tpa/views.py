@@ -255,10 +255,10 @@ class EffectCycleApiView(APIView):
             date_start = date_now.replace(hour=20, minute=0, second=0)
         elif date_now.hour < 8:
             # ночная смена сегодня
-            date_start = (date_start - timedelta(days=1)).replace(hour=20, minute=0, second=0)
+            date_start = (date_now - timedelta(days=1)).replace(hour=20, minute=0, second=0)
         else:
             pass
-
+        print(date_start)
         cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
@@ -289,11 +289,12 @@ class EffectCycleApiView(APIView):
             date_stop = date_now.replace(hour=20, minute=0, second=0)
         elif date_now.hour < 8:
             # ночная смена сегодня, значит прошлая началась вчера с 8-20
-            date_start = (date_start - timedelta(days=1)).replace(hour=8, minute=0, second=0)
-            date_stop = (date_start - timedelta(days=1)).replace(hour=20, minute=0, second=0)
+            date_start = (date_now - timedelta(days=1)).replace(hour=8, minute=0, second=0)
+            date_stop = (date_now - timedelta(days=1)).replace(hour=20, minute=0, second=0)
         else:
             pass
-
+        
+        print(date_start, date_stop)
         cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start, date__lt=date_stop)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
