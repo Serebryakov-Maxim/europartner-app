@@ -258,7 +258,7 @@ class EffectCycleApiView(APIView):
             date_start = (date_now - timedelta(days=1)).replace(hour=20, minute=0, second=0)
         else:
             pass
-        print(date_start)
+
         cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
@@ -266,7 +266,7 @@ class EffectCycleApiView(APIView):
 
             list_time_ms = []
             for el in cycle_objects:
-                if el.time_ms > avg_time_ms+1000:
+                if el.time_ms > avg_time_ms*2:
                     list_time_ms.append(el.time_ms)
 
             countstop_team = len(list_time_ms)
@@ -294,7 +294,6 @@ class EffectCycleApiView(APIView):
         else:
             pass
         
-        print(date_start, date_stop)
         cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start, date__lt=date_stop)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
