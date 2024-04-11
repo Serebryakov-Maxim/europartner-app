@@ -35,7 +35,7 @@ def pressforms(request):
 
 def production(request):
     """ Формирует план производства прессформ """
-    pressforms = Pressform.objects.filter(year=0).order_by('date_finish')
+    pressforms = Pressform.objects.filter(year=0).order_by('assembly')
     count_type = Work.objects.values('type').annotate(dcount=Count('type')).order_by('type')
     typeWorks = TypeWork.objects.order_by('priority')
     works = Work.objects.order_by('priority')
