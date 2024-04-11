@@ -115,13 +115,21 @@
     <tbody>
         {% for progress in list_progress %}
           <tr>
-            {% if progress.pf.shield%}
+            {% if progress.pf.shield %}
               <td class="col_property_pressform">V</td>
             {% else %}
               <td></td>
             {% endif %}
             <td class="col_property_pressform">{{progress.pf.priority}}</td>
-            <td>{{progress.pf.name}}</td>
+            {% if progress.pf.type == 1 %}
+              <td id="type_pf_our">{{progress.pf.name}}</td>
+            {% elif progress.pf.type == 2 %}
+              <td id="type_pf_partner">{{progress.pf.name}}</td>
+            {% elif progress.pf.type == 3 %}
+              <td id="type_pf_import">{{progress.pf.name}}</td>
+            {% else %}
+              <td>{{progress.pf.name}}</td>
+            {% endif %}
             <td class="col_property_pressform">{{progress.pf.assembly}}</td>
             {% for el in progress.list_works %}
               <td class="col_work_progress">

@@ -30,6 +30,21 @@ body {
     font-size: 15px;
 }
 
+#type_pf_our{
+   background: #f3bc07;
+   color: black;
+}
+
+#type_pf_partner{
+    background: pink;
+    color: black;
+ }
+
+#type_pf_import{
+    background: #0059ff;
+    color: black;
+ }
+
 .col_work_progress {
     text-align: center;
 }
