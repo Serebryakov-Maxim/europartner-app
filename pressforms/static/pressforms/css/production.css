@@ -1,6 +1,11 @@
+body {
+    background: #747473;
+}
+
 .page_name {
     text-align: left;
     margin-left: 15px;
+    color: rgb(224, 225, 228);
 }
 
 .table {
@@ -32,6 +37,8 @@
     padding: 0px;
     font-weight: normal;
     vertical-align: middle;
+    color: rgb(255, 255, 255);
+    background: #747473;
 }
 
 .table td{
@@ -39,26 +46,32 @@
     padding-top: 5px;
     font-size: x-small;
     vertical-align: middle;
+    color: rgb(253, 253, 253);
 }
 
 .circle_color_green{
-    background: radial-gradient(circle at bottom, #537c00, transparent);
+    /*background: radial-gradient(circle at bottom, #537c00, transparent);*/
+    background: #a1f003;
 }
 
 .circle_color_blue{
-    background: radial-gradient(circle at bottom, #0073ff, transparent);
+   /* background: radial-gradient(circle at bottom, #0073ff, transparent);*/
+   background: #0073ff;
 }
 
 .circle_color_red{
-    background: radial-gradient(circle at bottom, #ff0400, transparent);
+    /*background: radial-gradient(circle at bottom, #ff0400, transparent);*/
+    background: #ec0e0ac9;
 }
 
 .circle_color_yellow{
-    background: radial-gradient(circle at bottom, #f3bc07, transparent);
+    /*background: radial-gradient(circle at bottom, #f3bc07, transparent);*/
+    background: #f3bc07;
 }
 
 .circle_color_grey{
-    background: radial-gradient(circle at bottom, #c3c3bf, transparent);
+    /*background: radial-gradient(circle at bottom, #c3c3bf, transparent);*/
+    background: #c3c3bf;
 }
 
 .cell_progress{
