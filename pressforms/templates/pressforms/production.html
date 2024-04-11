@@ -92,7 +92,7 @@
               {% if el.dcount == 1 %}
                 <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
               {% else %}
-                <th scope="col" colspan="{{el.dcount}}">{{current_type.name}}</th>
+                <th scope="col" id="col_work_pressform_group" colspan="{{el.dcount}}">{{current_type.name}}</th>
               {% endif %}
             {% endif %}
           {% endfor %}
@@ -116,32 +116,32 @@
         {% for progress in list_progress %}
           <tr>
             {% if progress.pf.shield%}
-              <td>V</td>
+              <td class="col_property_pressform">V</td>
             {% else %}
               <td></td>
             {% endif %}
-            <td>{{progress.pf.priority}}</td>
+            <td class="col_property_pressform">{{progress.pf.priority}}</td>
             <td>{{progress.pf.name}}</td>
-            <td>{{progress.pf.assembly}}</td>
+            <td class="col_property_pressform">{{progress.pf.assembly}}</td>
             {% for el in progress.list_works %}
               <td class="col_work_progress">
-                <a href="" class="cell_progress" data-bs-toggle="modal" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
-                  {% if el.progress == 1 %}
-                    <div class="circle circle_color_green">
-                  {% elif el.progress == 2 %}
-                    <div class="circle circle_color_blue">
-                  {% elif el.progress == 3 %}
-                    <div class="circle circle_color_yellow">
-                      {% elif el.progress == 4 %}
-                      <div class="circle circle_color_red">
-                  {% else %}
-                    <div class="circle circle_color_grey">
-                  {% endif %}
-                    {% if el.week != 0 %}
-                      {{el.week}}
+                  <a href="" class="cell_progress" data-bs-toggle="modal" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
+                    {% if el.progress == 1 %}
+                      <div class="circle circle_color_green">
+                    {% elif el.progress == 2 %}
+                      <div class="circle circle_color_blue">
+                    {% elif el.progress == 3 %}
+                      <div class="circle circle_color_yellow">
+                        {% elif el.progress == 4 %}
+                        <div class="circle circle_color_red">
+                    {% else %}
+                      <div class="circle circle_color_grey">
                     {% endif %}
-                  </div>
-                </a>
+                      {% if el.week != 0 %}
+                        {{el.week}}
+                      {% endif %}
+                    </div>
+                  </a>
               </td>
             {% endfor %}
           </tr>
@@ -191,5 +191,6 @@
     responseText = xmlHttp.responseText;
     return Date.parse(JSON.parse(responseText)["date_modified"]);
   };
+
 </script>
 {% endblock %}

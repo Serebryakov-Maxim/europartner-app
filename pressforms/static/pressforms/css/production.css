@@ -18,11 +18,16 @@ body {
 
 .col_property_pressform {
     width: 25px;
+    text-align: center;
 }
 
 .col_work_pressform {
     width: 45px;/*calc((100vw -175px) / var(--count-col-work));*/
     vertical-align: middle;
+}
+
+#col_work_pressform_group {
+    font-size: 15px;
 }
 
 .col_work_progress {
