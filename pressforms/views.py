@@ -15,14 +15,25 @@ def history(request):
     pressform_list = Pressform.objects.order_by('date_finish')
     years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('-year')
 
-    max_item = 0
+    # заполним список с номерами по порядку
+    maxcountrow = 12
+    table = []
     for year in years:
-        max_item = max(max_item, year['dcount'])
+        list2=[]
+        npp = 1
+        for cur_pf in pressform_list:
+            if cur_pf.year == year['year']:
+                d = {'npp':npp, 'name':cur_pf.name, 'type':cur_pf.type}
+                list2.append(d)
+                npp += 1
+
+        # нужно еще разбить но столбцы, если больше N прессформ в колонке
+        new_list = [list2[i:i+maxcountrow] for i in range(0, len(list2), maxcountrow)]
+        table.append({'year': year['year'], 'count_col': len(new_list), 'list_pf':new_list})
 
     context = {
-        'pressform_list': pressform_list,
         'years': years,
-        'max_item': max_item,
+        'table': table,
     }
 
     return render(request, 'pressforms/history.html', context)
