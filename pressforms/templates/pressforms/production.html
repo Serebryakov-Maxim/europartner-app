@@ -83,7 +83,7 @@
     <thead class="table-light">
       <tr>
         <th scope="col" rowspan="2" class="col_property_pressform">Шильда</th>
-        <th scope="col" rowspan="2" class="col_property_pressform">Очередность</th>
+        <th scope="col" rowspan="2" class="col_property_pressform">№</th>
         <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
         <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
         {% for current_type in typeWorks %}
@@ -120,9 +120,13 @@
             {% else %}
               <td></td>
             {% endif %}
-            <td class="col_property_pressform">{{progress.pf.priority}}</td>
+            <td class="col_property_pressform">{{ forloop.counter }}</td>
             {% if progress.pf.type == 1 %}
-              <td id="type_pf_our">{{progress.pf.name}}</td>
+              {% if progress.pf.status == 2 %}
+                <td id="type_pf_our_ready">{{progress.pf.name}}</td>
+              {% else %}
+                <td id="type_pf_our">{{progress.pf.name}}</td>
+              {% endif %}
             {% elif progress.pf.type == 2 %}
               <td id="type_pf_partner">{{progress.pf.name}}</td>
             {% elif progress.pf.type == 3 %}
@@ -140,7 +144,7 @@
                       <div class="circle circle_color_blue">
                     {% elif el.progress == 3 %}
                       <div class="circle circle_color_yellow">
-                        {% elif el.progress == 4 %}
+                    {% elif el.progress == 4 %}
                         <div class="circle circle_color_red">
                     {% else %}
                       <div class="circle circle_color_grey">
@@ -157,7 +161,29 @@
     </tbody>
   </table>
 </div>
-
+<div class="footer">
+  <table>
+    <tr>
+      <td><div class="square footer-td" id="type_pf_our"></div></td>
+      <td>Европартнер (в работе)</td>
+      <td><div class="square footer-td" id="type_pf_our_ready"></div></td>
+      <td>Европартнер (выполнено)</td>
+      <td><div class="square footer-td" id="type_pf_partner"></div></td>
+      <td>Клиент</td>
+      <td><div class="square footer-td" id="type_pf_import"></div></td>
+      <td>Импорт</td>
+      <td style="width: 50px;"></td>
+      <td><div class="circle circle_color_blue footer-td"></div></td>
+      <td>Не требует выполнения</td>
+      <td><div class="circle circle_color_yellow footer-td"></div></td>
+      <td>В работе</td>
+      <td><div class="circle circle_color_red footer-td"></div></td>
+      <td>Не выполнено</td>
+      <td><div class="circle circle_color_green footer-td"></div></td>
+      <td>Выполнено</td>
+    </tr>
+  </table>  
+</div>
 <script>
   var date_modified = getDateModified();
   var Modal = document.getElementById('Modal');

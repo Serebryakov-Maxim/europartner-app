@@ -35,6 +35,11 @@ body {
    color: black;
 }
 
+#type_pf_our_ready{
+    background: #a1f003;
+    color: black;
+ }
+
 #type_pf_partner{
     background: pink;
     color: black;
@@ -82,7 +87,7 @@ body {
 
 .circle_color_red{
     /*background: radial-gradient(circle at bottom, #ff0400, transparent);*/
-    background: #ec0e0ac9;
+    background: #aa1614c9;
 }
 
 .circle_color_yellow{
@@ -106,4 +111,24 @@ body {
     border-radius: 50%;
     padding-top: 8px;
     display: inline-block;
+}
+
+.square {
+    width: 35px;
+    height: 35px;
+    padding-top: 8px;
+    display: inline-block;
+}
+
+.footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height:auto;
+    color: rgb(253, 253, 253);
+}
+
+.footer-td{
+    margin-left: 10px;
 }
