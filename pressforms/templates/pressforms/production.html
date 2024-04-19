@@ -14,46 +14,46 @@
     <h3> План работ по прессформам</h3>
 </div>
 
-<!-- Modal -->
+<!-- Модальное окно -->
 <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-sm" style="left: 10px;">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="ModalLabel">Выберите действие</h1>
+        <h1 class="modal-title" id="ModalLabel">Название прессформы</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form method="POST" action="{% url 'pressforms:operation' %}">
           {% csrf_token %}
-          <p id="operation"></p>
+          <h5 id="operation">Название операции</h5>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked>
+            <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
             <label class="form-check-label" for="Radios1">
-              Серый
+              Пусто
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1">
+            <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
             <label class="form-check-label" for="Radios2">
-              Зеленый
+              Выполнено
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2">
+            <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
             <label class="form-check-label" for="Radios3">
-              Синий
+              Не требует выполнения
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3">
+            <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
             <label class="form-check-label" for="Radios4">
-              Желтый
+              В работе
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4">
+            <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
             <label class="form-check-label" for="Radios5">
-              Красный
+              Не выполнено
             </label>
           </div>
           <div>
