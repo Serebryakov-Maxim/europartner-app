@@ -99,3 +99,25 @@ class Progress(models.Model):
 
     def __str__(self):
         return str(self.pressform.name) + '. ' + str(self.work.name)
+
+class MediaFile(models.Model):
+    """Медиа файлы - видио и фото контент"""
+    TYPE = [
+        (0, "Видео"),
+        (1, "Фото"),
+    ]
+
+    name = models.CharField('Наименование', max_length=255)
+    file = models.FileField(upload_to='instrumentalka')
+    type = models.IntegerField('Тип контента',
+                                choices=TYPE,
+                                default=0
+                                )
+
+    class Meta:
+            db_table = 'pf_mediafiles'
+            verbose_name = 'Файл'
+            verbose_name_plural = 'Медиа файлы'
+    
+    def __str__(self):
+        return str(self.type) + '. ' + self.name

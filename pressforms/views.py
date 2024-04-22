@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.db.models import Max
-from .models import Pressform, TypeWork, Work, Progress
+from .models import Pressform, TypeWork, Work, Progress, MediaFile
 from .forms import PressformForm
 from django.db.models import Count
 from .serializers import PressformSerializer, PressformLastModifiedSerializer
@@ -37,6 +37,12 @@ def history(request):
     }
 
     return render(request, 'pressforms/history.html', context)
+
+def media(request):
+    """ медиа файлы """
+    video_files = MediaFile.objects.filter(type=0).order_by('name')
+    context = {'files': video_files}
+    return render(request, 'pressforms/media.html', context)
 
 def pressforms(request):
     """ Формирует список всех прессформ """

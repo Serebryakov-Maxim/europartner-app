@@ -1,0 +1,19 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block title %}
+  Медиа файлы
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-sm-6">
+        {% for cur_file in files %}
+            <h2>{{cur_file.name}}</h2>
+            <video width="640" src="{{cur_file.file.url}}" controls preload="auto"></video>
+        {%endfor%}
+    </div>
+</div>
+
+{% endblock %}
