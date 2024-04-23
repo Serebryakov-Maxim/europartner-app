@@ -7,12 +7,45 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="col-sm-6">
-        {% for cur_file in files %}
-            <h2>{{cur_file.name}}</h2>
-            <video width="640" src="{{cur_file.file.url}}" controls preload="auto"></video>
-        {%endfor%}
+<div class="container-fluid">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-video-tab" data-bs-toggle="tab" data-bs-target="#nav-video" type="button" role="tab" aria-controls="nav-video" aria-selected="true">Видео</button>
+          <button class="nav-link" id="nav-foto-tab" data-bs-toggle="tab" data-bs-target="#nav-foto" type="button" role="tab" aria-controls="nav-foto" aria-selected="false">Фото</button>
+        </div>
+    </nav>
+
+    <div class="col-md-6 offset-md-3">
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-video" role="tabpanel" aria-labelledby="nav-video-tab">
+                {% for cur_file in video_files %}
+                    <h2>{{cur_file.name}}</h2>
+                    <video width="640" src="{{cur_file.file.url}}" controls preload="auto"></video>
+                {%endfor%}
+            </div>
+
+            <div class="tab-pane fade" id="nav-foto" role="tabpanel" aria-labelledby="nav-foto-tab">
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for cur_file in foto_files %}
+                            <div class="carousel-item active">
+                                <img src="{{cur_file.file.url}}" class="d-block w-100">
+                            </div>
+                        {%endfor%}
+        
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Предыдущий</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Следующий</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

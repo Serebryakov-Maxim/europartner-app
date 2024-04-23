@@ -41,7 +41,8 @@ def history(request):
 def media(request):
     """ медиа файлы """
     video_files = MediaFile.objects.filter(type=0).order_by('name')
-    context = {'files': video_files}
+    foto_files = MediaFile.objects.filter(type=1).order_by('name')
+    context = {'video_files': video_files, 'foto_files': foto_files}
     return render(request, 'pressforms/media.html', context)
 
 def pressforms(request):
