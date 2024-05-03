@@ -67,3 +67,23 @@ body {
  #type_pf_import{
      background: #0059ff;
   }
+
+  .footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height:auto;
+    color: rgb(253, 253, 253);
+}
+
+.footer-td{
+    margin-left: 10px;
+}
+
+.square {
+    width: 35px;
+    height: 35px;
+    padding-top: 8px;
+    display: inline-block;
+}

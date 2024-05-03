@@ -6,9 +6,9 @@ class Pressform(models.Model):
 
     TYPE = [
         (0, "-"),
-        (1, "Наша"),
-        (2, "Клиента"),
-        (3, "Импортная"),
+        (1, "Европартнер"),
+        (2, "Клиент"),
+        (3, "Импорт"),
     ]
 
     STATUS = [
@@ -90,6 +90,7 @@ class Progress(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE)
     progress = models.IntegerField('Выполнение', default=0)
     week = models.IntegerField('Неделя', default=0)
+    date_finish = models.DateField('Дата выполнения', blank=True, null=True)
 
     class Meta:
             db_table = 'pf_execute'

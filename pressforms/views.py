@@ -74,11 +74,21 @@ def production(request):
                 data_work['work'] = work
                 data_work['progress'] = 0
                 data_work['week'] = 0
+                data_work['week_name'] = ''
+                data_work['date_finish'] = ''
                 
                 for prg in progress:
                     if prg.pressform == pf and prg.work == work:
                         data_work['progress'] = prg.progress
                         data_work['week'] = prg.week
+
+                        if prg.date_finish != None and prg.date_finish > datetime.date(1970, 1, 1):
+                            data_work['week_name'] = prg.date_finish.strftime("%d/%m")
+                            data_work['date_finish'] = prg.date_finish.strftime("%d.%m.%Y")
+                        else:
+                            data_work['week_name'] = str(prg.week)
+                            data_work['date_finish'] = ''
+                     
                         break
 
                 list_works.append(data_work)
@@ -104,6 +114,12 @@ def operation(request):
         work_id = request.POST['work_id']
         oper = request.POST['oper']
         week = request.POST['week']
+        date_finish = request.POST['date_finish']
+        
+        if not date_finish == '':
+            parsed_date = datetime.datetime.strptime(date_finish, "%d.%m.%Y").date()
+        else:
+            parsed_date = datetime.date(1970, 1, 1)
 
         pressform = Pressform.objects.get(id=int(pressform_id))
         work = Work.objects.get(id=int(work_id))
@@ -111,6 +127,7 @@ def operation(request):
         prg, created = Progress.objects.update_or_create(pressform = pressform, work = work)
         prg.progress = int(oper)
         prg.week = int(week)
+        prg.date_finish = parsed_date
         prg.save()
 
         pressform.save()

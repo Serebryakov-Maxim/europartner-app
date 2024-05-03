@@ -16,63 +16,74 @@
 
 <!-- Модальное окно -->
 <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm" style="left: 10px;">
+  <div class="modal-dialog" style="left: 10px;">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title" id="ModalLabel">Название прессформы</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="{% url 'pressforms:operation' %}">
-          {% csrf_token %}
-          <h5 id="operation">Название операции</h5>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
-            <label class="form-check-label" for="Radios1">
-              Пусто
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
-            <label class="form-check-label" for="Radios2">
-              Выполнено
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
-            <label class="form-check-label" for="Radios3">
-              Не требует выполнения
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
-            <label class="form-check-label" for="Radios4">
-              В работе
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
-            <label class="form-check-label" for="Radios5">
-              Не выполнено
-            </label>
-          </div>
-          <div>
-          </div>
-          <div>
-            <label class="form-check-label" for="week">
-              Неделя
-            </label>
-            <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
-          </div>
-          <div style="visibility: hidden;">
-            <input id="pressform_id" type="number" name="pressform_id" value="0">
-            <input id="work_id" type="number" name="work_id" value="0">
+        <div class="container-fluid">
+          <form method="POST" action="{% url 'pressforms:operation' %}">
+            {% csrf_token %}
+            <h5 id="operation">Название операции</h5>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
+              <label class="form-check-label" for="Radios1">
+                Пусто
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
+              <label class="form-check-label" for="Radios2">
+                Выполнено
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
+              <label class="form-check-label" for="Radios3">
+                Не требует выполнения
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
+              <label class="form-check-label" for="Radios4">
+                В работе
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
+              <label class="form-check-label" for="Radios5">
+                Не выполнено
+              </label>
+            </div>
+
+            <div>
+              <label for="week">
+                Неделя:
+              </label>
+              <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
+            </div>
+            
+            <div class="row">
+              <div class="col-4">
+                <label for="datepicker">Дата завершения:</label>
+              </div>
+              <div class="col-2">
+                <input type="text" id="date_finish" name="date_finish" class="form-control" style="width: 120px;">
+              </div>
+            </div>
+
+            <div style="visibility: hidden;">
+              <input id="pressform_id" type="number" name="pressform_id" value="0">
+              <input id="work_id" type="number" name="work_id" value="0">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+          </form>
         </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-          </div>
-        </form>
       </div>
     </div>
   </div>
@@ -137,7 +148,7 @@
             <td class="col_property_pressform">{{progress.pf.assembly}}</td>
             {% for el in progress.list_works %}
               <td class="col_work_progress">
-                  <a href="" class="cell_progress" data-bs-toggle="modal" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
+                  <a href="" class="cell_progress" data-bs-toggle="modal" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
                     {% if el.progress == 1 %}
                       <div class="circle circle_color_green">
                     {% elif el.progress == 2 %}
@@ -149,8 +160,8 @@
                     {% else %}
                       <div class="circle circle_color_grey">
                     {% endif %}
-                      {% if el.week != 0 %}
-                        {{el.week}}
+                      {% if el.week_name != '0' %}
+                        {{el.week_name|linebreaksbr}}
                       {% endif %}
                     </div>
                   </a>
@@ -196,18 +207,32 @@
     var pressform_id = button.getAttribute('data-pressform-id')
     var work_name = button.getAttribute('data-work-name')
     var pressform_name = button.getAttribute('data-pressform-name')
+    var week = button.getAttribute('data-week')
+    var date_finish = button.getAttribute('data-date_finish')
+    var progress = button.getAttribute('data-progress')
     
-    var modalTitle = Modal.querySelector('.modal-title')
-    modalTitle.textContent = '' + pressform_name
+    Modal.querySelector('.modal-title').textContent = '' + pressform_name
+    document.getElementById('operation').textContent = work_name
+    document.getElementById('pressform_id').value = pressform_id
+    document.getElementById('work_id').value = work_id
+    document.getElementById('week').value = week
+    document.getElementById('date_finish').value = date_finish
+    
 
-    var el1 = document.getElementById('operation')
-    el1.textContent = work_name
+    if (progress == 0)
+      document.getElementById('Radios1').checked = true
+    else if (progress == 1)
+      document.getElementById('Radios2').checked = true
+    else if (progress == 2)
+      document.getElementById('Radios3').checked = true
+    else if (progress == 3)
+      document.getElementById('Radios4').checked = true
+    else if (progress == 4)
+      document.getElementById('Radios5').checked = true
+    else
+      document.getElementById('Radios1').checked = true
 
-    var el2 = document.getElementById('pressform_id')
-    el2.setAttribute('value', pressform_id)
-
-    var el3 = document.getElementById('work_id')
-    el3.setAttribute('value', work_id)})  
+    })
 
     setInterval(function(){
       last_modified = getDateModified();
@@ -225,6 +250,14 @@
     responseText = xmlHttp.responseText;
     return Date.parse(JSON.parse(responseText)["date_modified"]);
   };
+
+  $(function() {
+     $('#date_finish').datepicker({
+      autoclose: true,
+      language: "ru",
+      daysOfWeekHighlighted: "0,6",
+     });
+   });
 
 </script>
 {% endblock %}
