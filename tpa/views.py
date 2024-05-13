@@ -32,13 +32,16 @@ def machine_card(request, machine_id):
 
 def machine_last_data(request, machine_id):
     """ Просмотр последних данных с контроллера """
+    tz = timezone.get_current_timezone()
+    date_now = datetime.now().astimezone(tz)
+    date_start = (date_now - timedelta(days=1))
     try:
         instance = Machine.objects.get(id=machine_id)
     except Exception as e:
         raise Http404("Станок не найдена!")
 
-    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
-    events = Event.objects.filter(machine_id=machine_id).order_by('-date')[:10]
+    cycles = Cycle.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-date')[:10]
+    events = Event.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-date')[:10]
 
     context = {'machine':instance, 'cycles': cycles, 'events': events}
     return render(request, 'tpa/last_data.html', context)
