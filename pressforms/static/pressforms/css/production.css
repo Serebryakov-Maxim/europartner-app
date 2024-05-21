@@ -132,3 +132,12 @@ body {
 .footer-td{
     margin-left: 10px;
 }
+
+.footer-table{
+
+}
+
+.footer-table-td{
+    text-align: right;
+    width: 550px;
+}
