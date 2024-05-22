@@ -236,10 +236,11 @@ class EffectCycleApiView(APIView):
             avg_time_ms = avg_cycle['time_ms__avg']
 
             # найдем еффективное время цикла, всё что меньше среднего + 1 сек.
-            list_time_ms = []
-            for el in last_50_cycles:
-                if el.time_ms < avg_time_ms*2:
-                    list_time_ms.append(el.time_ms)
+            list_time_ms = last_50_cycles.filter(time_ms__lt=avg_time_ms*2)
+            #list_time_ms = []
+            #for el in last_50_cycles:
+            #    if el.time_ms < avg_time_ms*2:
+            #        list_time_ms.append(el.time_ms)
 
             avg_effect_time_ms = mean(list_time_ms)
 
@@ -268,11 +269,6 @@ class EffectCycleApiView(APIView):
             avg_time_ms = avg_cycle['time_ms__avg']
 
             list_time_ms = cycle_objects.filter(time_ms__gt=avg_time_ms*2)
-
-            #list_time_ms = []
-            #for el in cycle_objects:
-            #    if el.time_ms > avg_time_ms*2:
-            #        list_time_ms.append(el.time_ms)
 
             countstop_team = len(list_time_ms)
 
@@ -306,11 +302,6 @@ class EffectCycleApiView(APIView):
             print(cycle_objects)
             
             list_time_ms = cycle_objects.filter(time_ms__gt=avg_time_ms*2)
-
-            #list_time_ms = []
-            #for el in cycle_objects:
-            #    if el.time_ms > avg_time_ms*2:
-            #        list_time_ms.append(el.time_ms)
 
             countstop_team = len(list_time_ms)
 
