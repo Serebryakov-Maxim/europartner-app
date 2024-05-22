@@ -249,6 +249,7 @@ class EffectCycleApiView(APIView):
         tz = timezone.get_current_timezone()
         date_now = datetime.now().astimezone(tz)
         countstop_team = 0
+        deviation1sec_team = 0
 
         if date_now.hour >= 8 and date_now.hour < 20:
             # дневная смена
@@ -267,11 +268,10 @@ class EffectCycleApiView(APIView):
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
             avg_time_ms = avg_cycle['time_ms__avg']
 
-            list_time_ms = cycle_objects.filter(time_ms__gt=avg_time_ms*2)
+            countstop_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms*2))
+            deviation1sec_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms+1000))
 
-            countstop_team = len(list_time_ms)
-
-        return countstop_team
+        return {'countstop_team': countstop_team, 'deviation1sec_team': deviation1sec_team}
 
     def last_team_data(self, machine, job):
         tz = timezone.get_current_timezone()
@@ -300,9 +300,8 @@ class EffectCycleApiView(APIView):
             avg_time_ms = avg_cycle['time_ms__avg']
             
             countstop_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms*2))
-            deviation1sec_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms + 1000))
 
-        return {'countstop_team': countstop_team, 'deviation1sec_team': deviation1sec_team}
+        return countstop_team
 
     def get(self, request, *args, **kwargs):
         tz = timezone.get_current_timezone()
@@ -316,6 +315,7 @@ class EffectCycleApiView(APIView):
             date = ''
             avg_effect_cycle = 0
             countstop_team = 0
+            deviation1sec_team = 0
             countstop_last_team = 0
             
             try:
@@ -328,9 +328,11 @@ class EffectCycleApiView(APIView):
                 
                 job = job_ob.uuid_1C
                 avg_effect_cycle = self.find_avg_50_cycle(machine, job_ob)
+                
                 stop_team = self.current_team_data(machine, job_ob)
                 countstop_team = stop_team['countstop_team']
                 deviation1sec_team = stop_team['deviation1sec_team']
+                
                 countstop_last_team = self.last_team_data(machine, job_ob)
 
             except Job.DoesNotExist:
