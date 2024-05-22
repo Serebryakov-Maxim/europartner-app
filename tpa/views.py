@@ -335,8 +335,8 @@ class EffectCycleApiView(APIView):
                 
                 job = job_ob.uuid_1C
                 #avg_effect_cycle = self.find_avg_50_cycle(machine, job_ob)
-                countstop_team = self.current_team_data(machine, job_ob)
-                countstop_last_team = self.last_team_data(machine, job_ob)
+                #countstop_team = self.current_team_data(machine, job_ob)
+                #countstop_last_team = self.last_team_data(machine, job_ob)
 
             except Job.DoesNotExist:
                 pass
