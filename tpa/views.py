@@ -236,11 +236,10 @@ class EffectCycleApiView(APIView):
             avg_time_ms = avg_cycle['time_ms__avg']
 
             # найдем еффективное время цикла, всё что меньше среднего + 1 сек.
-            list_time_ms = last_50_cycles.filter(time_ms__lt=avg_time_ms*2)
-            #list_time_ms = []
-            #for el in last_50_cycles:
-            #    if el.time_ms < avg_time_ms*2:
-            #        list_time_ms.append(el.time_ms)
+            list_time_ms = []
+            for el in last_50_cycles:
+                if el.time_ms < avg_time_ms*2:
+                    list_time_ms.append(el.time_ms)
 
             avg_effect_time_ms = mean(list_time_ms)
 
@@ -299,13 +298,11 @@ class EffectCycleApiView(APIView):
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
             avg_time_ms = avg_cycle['time_ms__avg']
-            print(cycle_objects)
             
-            list_time_ms = cycle_objects.filter(time_ms__gt=avg_time_ms*2)
+            countstop_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms*2))
+            deviation1sec_team = len(cycle_objects.filter(time_ms__gt=avg_time_ms + 1000))
 
-            countstop_team = len(list_time_ms)
-
-        return countstop_team
+        return {'countstop_team': countstop_team, 'deviation1sec_team': deviation1sec_team}
 
     def get(self, request, *args, **kwargs):
         tz = timezone.get_current_timezone()
@@ -331,7 +328,9 @@ class EffectCycleApiView(APIView):
                 
                 job = job_ob.uuid_1C
                 avg_effect_cycle = self.find_avg_50_cycle(machine, job_ob)
-                countstop_team = self.current_team_data(machine, job_ob)
+                stop_team = self.current_team_data(machine, job_ob)
+                countstop_team = stop_team['countstop_team']
+                deviation1sec_team = stop_team['deviation1sec_team']
                 countstop_last_team = self.last_team_data(machine, job_ob)
 
             except Job.DoesNotExist:
@@ -342,6 +341,7 @@ class EffectCycleApiView(APIView):
                                     'last_date_cycle': date, 
                                     'avg_effect_cycle': avg_effect_cycle,
                                     'countstop_team': countstop_team,
+                                    'deviation1sec_team': deviation1sec_team,
                                     'countstop_last_team': countstop_last_team,}
 
             machines.append(machine_info)
