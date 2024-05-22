@@ -228,7 +228,7 @@ class EffectCycleApiView(APIView):
     def find_avg_50_cycle(self, machine, job):
         avg_effect_time_ms = 0
         # соберем последние 50 циклов
-        last_50_cycles = Cycle.objects.filter(machine_id=machine, job=job).order_by('-date')[:50]
+        last_50_cycles = Cycle.objects.filter(machine=machine, job=job).order_by('-date')[:50]
 
         if last_50_cycles.count() > 0:
             # циклы есть, возьмем средний показатель времени
@@ -262,7 +262,7 @@ class EffectCycleApiView(APIView):
         else:
             pass
 
-        cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start)
+        cycle_objects = Cycle.objects.filter(machine=machine, job=job, date__gte=date_start)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
             avg_time_ms = avg_cycle['time_ms__avg']
@@ -297,7 +297,7 @@ class EffectCycleApiView(APIView):
         else:
             pass
         
-        cycle_objects = Cycle.objects.filter(machine_id=machine, job=job, date__gte=date_start, date__lt=date_stop)
+        cycle_objects = Cycle.objects.filter(machine=machine, job=job, date__gte=date_start, date__lt=date_stop)
         if cycle_objects.count() > 0:
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
             avg_time_ms = avg_cycle['time_ms__avg']
@@ -327,16 +327,16 @@ class EffectCycleApiView(APIView):
             
             try:
                 # Поиск активного задания
-                job_ob = Job.objects.get(machine_id=machine.id, status='Выполняется')
+                job_ob = Job.objects.get(machine=machine, status='Выполняется')
                 # Найдем последний цикл
-                cycle_ob = Cycle.objects.filter(machine_id=machine.id, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
+                cycle_ob = Cycle.objects.filter(machine=machine, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
                     date = cycle_ob[0].date.astimezone(tz)
                 
                 job = job_ob.uuid_1C
-                #avg_effect_cycle = self.find_avg_50_cycle(machine.id, job_ob)
-                countstop_team = self.current_team_data(machine.id, job_ob)
-                countstop_last_team = self.last_team_data(machine.id, job_ob)
+                #avg_effect_cycle = self.find_avg_50_cycle(machine, job_ob)
+                countstop_team = self.current_team_data(machine, job_ob)
+                countstop_last_team = self.last_team_data(machine, job_ob)
 
             except Job.DoesNotExist:
                 pass
