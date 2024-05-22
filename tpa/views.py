@@ -267,10 +267,12 @@ class EffectCycleApiView(APIView):
             avg_cycle = cycle_objects.aggregate(Avg('time_ms'))
             avg_time_ms = avg_cycle['time_ms__avg']
 
-            list_time_ms = []
-            for el in cycle_objects:
-                if el.time_ms > avg_time_ms*2:
-                    list_time_ms.append(el.time_ms)
+            list_time_ms = cycle_objects.filter(time_ms__gt=avg_time_ms*2)
+
+            #list_time_ms = []
+            #for el in cycle_objects:
+            #    if el.time_ms > avg_time_ms*2:
+            #        list_time_ms.append(el.time_ms)
 
             countstop_team = len(list_time_ms)
 
