@@ -56,7 +56,7 @@ class Event(models.Model):
     
 class Cycle(models.Model):
     """Цикл - выполненные циклы"""
-    date = models.DateTimeField('Дата')
+    date = models.DateTimeField('Дата', db_index=True)
     time_ms = models.IntegerField('Время цикла')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, default=0)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, default=uuid.uuid4)
