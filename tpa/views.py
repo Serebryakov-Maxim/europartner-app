@@ -351,15 +351,15 @@ class EffectCycleApiView(APIView):
             except Job.DoesNotExist:
                 pass
 
-            machine_info = {'id': machine.id, 
-                                    'job': job, 
+            machine_info = {'machine_id': machine.id, 
+                                    'job_id': job, 
                                     'last_date_cycle': date, 
                                     'avg_effect_cycle': avg_effect_cycle,
                                     'countstop_team': countstop_team,
                                     'deviation1sec_team': deviation1sec_team,
                                     'countstop_last_team': countstop_last_team,
-                                    'socketplan': socketplan,
-                                    'socketfact': socketfact}
+                                    'job_socketplan': socketplan,
+                                    'job_socketfact': socketfact}
 
             machines.append(machine_info)
 
