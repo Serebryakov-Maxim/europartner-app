@@ -345,6 +345,9 @@ class EffectCycleApiView(APIView):
                 
                 countstop_last_team = self.last_team_data(machine, job_ob)
 
+                socketplan = job_ob.socket_plan
+                socketfact = job_ob.socket_fact 
+
             except Job.DoesNotExist:
                 pass
 
@@ -355,8 +358,8 @@ class EffectCycleApiView(APIView):
                                     'countstop_team': countstop_team,
                                     'deviation1sec_team': deviation1sec_team,
                                     'countstop_last_team': countstop_last_team,
-                                    'socketplan': job_ob.socket_plan,
-                                    'socketplan': job_ob.socket_fact}
+                                    'socketplan': socketplan,
+                                    'socketfact': socketfact}
 
             machines.append(machine_info)
 
