@@ -327,6 +327,7 @@ class EffectCycleApiView(APIView):
             countstop_last_team = 0
             socketplan = 0
             socketfact = 0
+            timeplan_ms = 0
             
             try:
                 # Поиск активного задания
@@ -347,6 +348,7 @@ class EffectCycleApiView(APIView):
 
                 socketplan = job_ob.socket_plan
                 socketfact = job_ob.socket_fact 
+                timeplan_ms = job_ob.time_ms
 
             except Job.DoesNotExist:
                 pass
@@ -358,6 +360,7 @@ class EffectCycleApiView(APIView):
                                     'countstop_team': countstop_team,
                                     'deviation1sec_team': deviation1sec_team,
                                     'countstop_last_team': countstop_last_team,
+                                    'job_timeplan_ms': timeplan_ms,
                                     'job_socketplan': socketplan,
                                     'job_socketfact': socketfact}
 
