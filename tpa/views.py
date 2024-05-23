@@ -145,6 +145,14 @@ class JobListApiView(APIView):
             'data_json': request.data.get('data_json'),
             'machine': request.data.get('machine')
         }
+
+        # Если статус нового задание "Выполняется", значит в предыдущих нужно изменить статус на "Остановлен"
+        if data['status'] == 'Выполняется':
+            running_jobs = Job.objects.filter(machine__id=data['machine'], status='Выполняется')
+            if len(running_jobs) > 0:
+                for job in running_jobs:
+                    job.status = 'Завершен'
+                    job.save()
         
         job_instance = self.get_object_by_uuid(data['uuid_1C'])
         if not job_instance:
@@ -317,6 +325,8 @@ class EffectCycleApiView(APIView):
             countstop_team = 0
             deviation1sec_team = 0
             countstop_last_team = 0
+            socketplan = 0
+            socketfact = 0
             
             try:
                 # Поиск активного задания
@@ -344,7 +354,9 @@ class EffectCycleApiView(APIView):
                                     'avg_effect_cycle': avg_effect_cycle,
                                     'countstop_team': countstop_team,
                                     'deviation1sec_team': deviation1sec_team,
-                                    'countstop_last_team': countstop_last_team,}
+                                    'countstop_last_team': countstop_last_team,
+                                    'socketplan': job_ob.socket_plan,
+                                    'socketplan': job_ob.socket_fact}
 
             machines.append(machine_info)
 
