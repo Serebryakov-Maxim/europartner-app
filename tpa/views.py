@@ -348,7 +348,7 @@ class EffectCycleApiView(APIView):
 
                 socketplan = job_ob.socket_plan
                 socketfact = job_ob.socket_fact 
-                timeplan_ms = job_ob.time_ms
+                timeplan_ms = job_ob.time_plan_ms
 
             except Job.DoesNotExist:
                 pass
