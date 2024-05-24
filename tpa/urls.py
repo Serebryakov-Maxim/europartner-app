@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/machine/', views.MachineListApiView.as_view(), name='api'),
     path('api/job/', views.JobListApiView.as_view(), name='api'),
     path('api/cycle/', views.CycleApiView.as_view(), name='api'),
+    path('api/quantity_by_job/', views.QuantProdApiView.as_view(), name='api'),
     path('api/event/', views.EventApiView.as_view(), name='api'),
     path('api/effect_cycle/', views.EffectCycleApiView.as_view(), name='api'),
 ]

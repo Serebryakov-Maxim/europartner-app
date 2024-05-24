@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -170,8 +170,16 @@ class CycleApiView(APIView):
     # 1. Get cycles  
     def get(self, request, *args, **kwargs):
         '''Получить список циклов'''
-        machines = Cycle.objects.all().order_by('-date')[:10]
-        serializer = CycleSerializer(machines, many=True)
+        id = request.GET.get("id")
+        date_cycle = request.GET.get("date")
+        job = request.GET.get("job")
+        if id != None and date_cycle != None:
+            cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job) #.aggregate(Sum('count'))
+            serializer = CycleSerializer(cycles, many=True)    
+        else:
+            cycles = Cycle.objects.all().order_by('-date')[:10]
+            serializer = CycleSerializer(cycles, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     # 2. Create / update
@@ -232,6 +240,7 @@ class EventApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EffectCycleApiView(APIView):
+
 
     def find_avg_50_cycle(self, machine, job):
         avg_effect_time_ms = 0
@@ -367,3 +376,13 @@ class EffectCycleApiView(APIView):
             machines.append(machine_info)
 
         return JsonResponse(machines, safe=False)
+    
+class QuantProdApiView(APIView):
+    '''Возвращает количество штук, выпущеных по заданию'''
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get("id")
+        date_cycle = request.GET.get("date")
+        job = request.GET.get("job")
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).aggregate(Sum('count'))
+
+        return JsonResponse(cycles, safe=False)
