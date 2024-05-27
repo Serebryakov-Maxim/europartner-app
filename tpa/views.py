@@ -342,7 +342,7 @@ class EffectCycleApiView(APIView):
                 # Поиск активного задания
                 job_ob = Job.objects.get(machine=machine, status='Выполняется')
                 # Найдем последний цикл
-                cycle_ob = Cycle.objects.filter(machine=machine, job=job_ob, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
+                cycle_ob = Cycle.objects.filter(machine=machine, date__gte=date_now - timedelta(hours=0, minutes=5)).order_by('-date')[:1]
                 if cycle_ob.count() > 0:
                     date = cycle_ob[0].date.astimezone(tz)
                 
