@@ -126,7 +126,10 @@ def operation(request):
 
         prg, created = Progress.objects.update_or_create(pressform = pressform, work = work)
         prg.progress = int(oper)
-        prg.week = int(week)
+        try:
+            prg.week = int(week)
+        except:
+            prg.week = 0
         prg.date_finish = parsed_date
         prg.save()
 
