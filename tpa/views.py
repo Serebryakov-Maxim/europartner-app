@@ -250,15 +250,15 @@ class EffectCycleApiView(APIView):
         if last_50_cycles.count() > 0:
             # циклы есть, возьмем средний показатель времени
             avg_cycle = last_50_cycles.aggregate(Avg('time_ms'))
-            avg_effect_time_ms = avg_cycle['time_ms__avg']
+            avg_time_ms = avg_cycle['time_ms__avg']
 
             # найдем еффективное время цикла, всё что меньше среднего + 1 сек.
-            #list_time_ms = []
-            #for el in last_50_cycles:
-            #    if el.time_ms < avg_time_ms*2:
-            #        list_time_ms.append(el.time_ms)
+            list_time_ms = []
+            for el in last_50_cycles:
+                if el.time_ms < avg_time_ms*2:
+                    list_time_ms.append(el.time_ms)
 
-            #avg_effect_time_ms = mean(list_time_ms)
+            avg_effect_time_ms = mean(list_time_ms)
 
         return avg_effect_time_ms
       
