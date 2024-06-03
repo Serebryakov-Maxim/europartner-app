@@ -5,6 +5,7 @@ class Machine(models.Model):
     """Станки - справочник станков"""
     name = models.CharField('Наименование', max_length=255)
     id = models.IntegerField('Номер', primary_key=True)
+    full_job_description = models.BooleanField('Полное описание задания', default=True)
 
     class Meta:
             db_table = 'tpa_machines'

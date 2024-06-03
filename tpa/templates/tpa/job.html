@@ -16,6 +16,7 @@
 			№{{data_json.number}}
 		</div>
 	</div>
+	{% if machine.full_job_description %}
 	<div>
 		<div class="product_main">
 			<div>
@@ -60,5 +61,20 @@
 			</tr>
 		</tfoot>
 	</table>
+	{% else %}
+	<div>
+		<div class="product_main">
+			<div style="font-size:130px;">
+				{{data_json.nom}}
+			</div>
+			<div style="font-size:100px;"> 
+				{{data_json.color}}
+			</div>
+		</div>
+		<div class = "qr">
+			<img src="data:image/jpeg;base64,{{data_json.barcode}}" width="150">
+		</div>
+	</div>
+	{% endif %}
 </body>
 </html>
