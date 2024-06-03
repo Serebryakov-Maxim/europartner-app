@@ -84,7 +84,8 @@ class MachineListApiView(APIView):
         '''Создание/обновление станков'''
         data = {
             'id': request.data.get('id'), 
-            'name': request.data.get('name')
+            'name': request.data.get('name'),
+            'full_job_description': request.data.get('full_job_description')
         }
         
         machine_instance = self.get_object(data['id'])
