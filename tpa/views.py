@@ -59,7 +59,7 @@ def machine_job(request, machine_id):
     data_json = json.loads(data_str)
 
     context = {'machine': instance.machine, 'job':instance, 'data_json':data_json}
-    print(instance.machine.full_job_description)
+    
     return render(request, 'tpa/job.html', context)
 
 class MachineListApiView(APIView):
