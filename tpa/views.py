@@ -174,8 +174,10 @@ class CycleApiView(APIView):
         id = request.GET.get("id")
         date_cycle = request.GET.get("date")
         job = request.GET.get("job")
-
-        if date_cycle != None and id == None and job == None: # запрос циклов по дате
+        
+        if date_cycle != None and id != None and job == None: # запрос циклов по дате и станку
+            cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle)
+        elif date_cycle != None and id == None and job == None: # запрос циклов по дате
             cycles = Cycle.objects.filter(date__gte = date_cycle)
         elif id != None and date_cycle != None:
             cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job) #.aggregate(Sum('count'))
