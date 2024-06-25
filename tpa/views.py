@@ -212,7 +212,7 @@ class CycleApiView(APIView):
         
         if page != None:
             paginator = StandartResultSetPagination()
-            paginator.page_size = 10
+            paginator.page_size = 100
             result_page = paginator.paginate_queryset(cycles, request)
             serializer = CycleSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
