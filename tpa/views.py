@@ -1,9 +1,11 @@
 from django.http import Http404
 from django.shortcuts import render
 from django.db.models import Avg, Sum
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from .models import Machine, Cycle, Job, Event
 from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer
 import json
@@ -13,6 +15,20 @@ import pytz
 from django.utils import timezone
 from statistics import mean
 
+class StandartResultSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10
+
+    def get_paginated_response(self, data):
+        return Response({
+            'count': self.page.paginator.count,
+            'num_pages': self.page.number,
+            'per_page': self.page.paginator.per_page,
+            'result': data,
+
+        })
+    
 def list(request):
     machines_list = Machine.objects.order_by('id')
     context = {'machines': machines_list}
@@ -174,6 +190,7 @@ class CycleApiView(APIView):
         id = request.GET.get("id")
         date_cycle = request.GET.get("date")
         job = request.GET.get("job")
+        page = request.GET.get("page")
         
         if date_cycle != None and id != None and job == None: # запрос циклов по дате и станку
             cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle)
@@ -184,8 +201,15 @@ class CycleApiView(APIView):
         else:
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
-        serializer = CycleSerializer(cycles, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if page != None:
+            paginator = StandartResultSetPagination()
+            paginator.page_size = 10
+            result_page = paginator.paginate_queryset(cycles, request)
+            serializer = CycleSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        else:
+            serializer = CycleSerializer(cycles, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     
     # 2. Create / update
     def post(self, request, *args, **kwargs):
