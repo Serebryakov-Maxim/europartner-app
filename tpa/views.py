@@ -191,13 +191,22 @@ class CycleApiView(APIView):
         date_cycle = request.GET.get("date")
         job = request.GET.get("job")
         page = request.GET.get("page")
-        
-        if date_cycle != None and id != None and job == None: # запрос циклов по дате и станку
-            cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle)
-        elif date_cycle != None and id == None and job == None: # запрос циклов по дате
-            cycles = Cycle.objects.filter(date__gte = date_cycle)
-        elif id != None and date_cycle != None:
-            cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job) #.aggregate(Sum('count'))
+        time_ms = request.GET.get("time_ms")
+
+        # Соберем фильтр    
+        filter = {}
+        if date_cycle != None:
+            filter['date__gte'] = date_cycle
+        if id != None:
+            filter['machine__id'] = id
+        if job != None:
+            filter['job__uuid_1C'] = job
+        if time_ms != None:
+            filter['time_ms__gte'] = time_ms
+
+        # Получаем данные
+        if len(filter):
+            cycles = Cycle.objects.filter(**filter)
         else:
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
