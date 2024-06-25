@@ -174,13 +174,15 @@ class CycleApiView(APIView):
         id = request.GET.get("id")
         date_cycle = request.GET.get("date")
         job = request.GET.get("job")
-        if id != None and date_cycle != None:
+
+        if date_cycle != None and id == None and job == None: # запрос циклов по дате
+            cycles = Cycle.objects.filter(date__gte = date_cycle)
+        elif id != None and date_cycle != None:
             cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job) #.aggregate(Sum('count'))
-            serializer = CycleSerializer(cycles, many=True)    
         else:
             cycles = Cycle.objects.all().order_by('-date')[:10]
-            serializer = CycleSerializer(cycles, many=True)
-
+        
+        serializer = CycleSerializer(cycles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     # 2. Create / update
