@@ -424,3 +424,13 @@ class QuantProdApiView(APIView):
         cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).aggregate(Sum('count'))
 
         return JsonResponse(cycles, safe=False)
+    
+class TimeProdApiView(APIView):
+    '''Возвращает сумму времени циклов'''
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get("id")
+        date_cycle = request.GET.get("date")
+        job = request.GET.get("job")
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).aggregate(Sum('time_ms'))
+
+        return JsonResponse(cycles, safe=False)
