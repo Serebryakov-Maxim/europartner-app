@@ -206,7 +206,7 @@ class CycleApiView(APIView):
 
         # Получаем данные
         if len(filter):
-            cycles = Cycle.objects.filter(**filter).order_by('-date')
+            cycles = Cycle.objects.filter(**filter).order_by('date')
         else:
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
