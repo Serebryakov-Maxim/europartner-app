@@ -188,15 +188,18 @@ class CycleApiView(APIView):
     def get(self, request, *args, **kwargs):
         '''Получить список циклов'''
         id = request.GET.get("id")
-        date_cycle = request.GET.get("date")
+        date_cycle_start = request.GET.get("date_start")
+        date_cycle_end = request.GET.get("date_end")
         job = request.GET.get("job")
         page = request.GET.get("page")
         time_ms = request.GET.get("time_ms")
 
         # Соберем фильтр    
         filter = {}
-        if date_cycle != None:
-            filter['date__gte'] = date_cycle
+        if date_cycle_start != None:
+            filter['date__gte'] = date_cycle_start
+        if date_cycle_end != None:
+            filter['date__lt'] = date_cycle_end
         if id != None:
             filter['machine__id'] = id
         if job != None:
