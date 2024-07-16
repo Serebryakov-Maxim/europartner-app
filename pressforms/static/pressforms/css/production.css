@@ -1,5 +1,25 @@
 body {
+    margin: auto;
     background: #747473;
+}
+
+#hiddenField{
+    display: none;
+}
+
+.my_table { 
+    overflow: auto; 
+    height: calc(100vh - 100px);
+}
+
+.my_table thead {
+    position: sticky; 
+    top: 0; 
+    z-index: 2;
+}
+
+.my_table tbody {
+    z-index: 1;
 }
 
 .page_name {
@@ -64,6 +84,7 @@ body {
     vertical-align: middle;
     color: rgb(255, 255, 255);
     background: #747473;
+    z-index: 1;
 }
 
 .table td{
@@ -120,13 +141,17 @@ body {
     display: inline-block;
 }
 
-.footer{
+/*.footer{
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height:auto;
     color: rgb(253, 253, 253);
+}*/
+
+footer {
+    height: 45px;
 }
 
 .footer-td{

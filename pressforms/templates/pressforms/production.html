@@ -10,167 +10,166 @@
 {% endblock %}
 
 {% block content %}
-<div class="page_name">
-    <h3> План работ по прессформам</h3>
-</div>
 
-<!-- Модальное окно -->
-<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="left: 10px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title" id="ModalLabel">Название прессформы</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container-fluid">
-          <form method="POST" action="{% url 'pressforms:operation' %}">
-            {% csrf_token %}
-            <h5 id="operation">Название операции</h5>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
-              <label class="form-check-label" for="Radios1">
-                Пусто
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
-              <label class="form-check-label" for="Radios2">
-                Выполнено
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
-              <label class="form-check-label" for="Radios3">
-                Не требует выполнения
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
-              <label class="form-check-label" for="Radios4">
-                В работе
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
-              <label class="form-check-label" for="Radios5">
-                Не выполнено
-              </label>
-            </div>
-
-            <div>
-              <label for="week">
-                Неделя:
-              </label>
-              <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
-            </div>
-            
-            <div class="row">
-              <div class="col-4">
-                <label for="datepicker">Дата завершения:</label>
+<div class="body">
+  <!-- Модальное окно -->
+  <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="left: 10px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title" id="ModalLabel">Название прессформы</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <form method="POST" action="{% url 'pressforms:operation' %}">
+              {% csrf_token %}
+              <h5 id="operation">Название операции</h5>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
+                <label class="form-check-label" for="Radios1">
+                  Пусто
+                </label>
               </div>
-              <div class="col-2">
-                <input type="text" id="date_finish" name="date_finish" class="form-control" style="width: 120px;">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
+                <label class="form-check-label" for="Radios2">
+                  Выполнено
+                </label>
               </div>
-            </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
+                <label class="form-check-label" for="Radios3">
+                  Не требует выполнения
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
+                <label class="form-check-label" for="Radios4">
+                  В работе
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
+                <label class="form-check-label" for="Radios5">
+                  Не выполнено
+                </label>
+              </div>
 
-            <div style="visibility: hidden;">
-              <input id="pressform_id" type="number" name="pressform_id" value="0">
-              <input id="work_id" type="number" name="work_id" value="0">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-              <button type="submit" class="btn btn-primary">Сохранить</button>
-            </div>
-          </form>
+              <div>
+                <label for="week">
+                  Неделя:
+                </label>
+                <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
+              </div>
+              
+              <div class="row">
+                <div class="col-4">
+                  <label for="datepicker">Дата завершения:</label>
+                </div>
+                <div class="col-2">
+                  <input type="text" id="date_finish" name="date_finish" class="form-control" style="width: 120px;">
+                </div>
+              </div>
+
+              <div style="visibility: hidden;">
+                <input id="pressform_id" type="number" name="pressform_id" value="0">
+                <input id="work_id" type="number" name="work_id" value="0">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="my_table">
-  <table class="table table-bordered">
-    <thead class="table-light">
-      <tr>
-        <th scope="col" rowspan="2" class="col_property_pressform">Шильда</th>
-        <th scope="col" rowspan="2" class="col_property_pressform">№</th>
-        <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
-        <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
-        {% for current_type in typeWorks %}
-          {% for el in count_type %}
-            {% if current_type.id == el.type %}
-              {% if el.dcount == 1 %}
-                <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
-              {% else %}
-                <th scope="col" id="col_work_pressform_group" colspan="{{el.dcount}}">{{current_type.name}}</th>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-        {% endfor %}
-      </tr>
-      <tr>
+  <div class="my_table">
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th scope="col" rowspan="2" class="col_property_pressform">Шильда</th>
+          <th scope="col" rowspan="2" class="col_property_pressform">№</th>
+          <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
+          <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
           {% for current_type in typeWorks %}
             {% for el in count_type %}
-              {% if current_type.id == el.type and el.dcount != 1 %}
-                  {% for el in works %}
-                    {% if current_type.id == el.type.id %}
-                      <th scope="col" class="col_work_pressform">{{el.name}}</th>
-                    {% endif %}
-                  {% endfor %}
+              {% if current_type.id == el.type %}
+                {% if el.dcount == 1 %}
+                  <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
+                {% else %}
+                  <th scope="col" id="col_work_pressform_group" colspan="{{el.dcount}}">{{current_type.name}}</th>
+                {% endif %}
               {% endif %}
             {% endfor %}
           {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-        {% for progress in list_progress %}
-          <tr>
-            {% if progress.pf.shield %}
-              <td class="col_property_pressform">V</td>
-            {% else %}
-              <td></td>
-            {% endif %}
-            <td class="col_property_pressform">{{ forloop.counter }}</td>
-            {% if progress.pf.type == 1 %}
-              {% if progress.pf.status == 2 %}
-                <td id="type_pf_our_ready">{{progress.pf.name}}</td>
-              {% else %}
-                <td id="type_pf_our">{{progress.pf.name}}</td>
-              {% endif %}
-            {% elif progress.pf.type == 2 %}
-              <td id="type_pf_partner">{{progress.pf.name}}</td>
-            {% elif progress.pf.type == 3 %}
-              <td id="type_pf_import">{{progress.pf.name}}</td>
-            {% else %}
-              <td>{{progress.pf.name}}</td>
-            {% endif %}
-            <td class="col_property_pressform">{{progress.pf.assembly}}</td>
-            {% for el in progress.list_works %}
-              <td class="col_work_progress">
-                  <a href="" class="cell_progress" data-bs-toggle="modal" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
-                    {% if el.progress == 1 %}
-                      <div class="circle circle_color_green">
-                    {% elif el.progress == 2 %}
-                      <div class="circle circle_color_blue">
-                    {% elif el.progress == 3 %}
-                      <div class="circle circle_color_yellow">
-                    {% elif el.progress == 4 %}
-                        <div class="circle circle_color_red">
-                    {% else %}
-                      <div class="circle circle_color_grey">
-                    {% endif %}
-                      {% if el.week_name != '0' %}
-                        {{el.week_name|linebreaksbr}}
+        </tr>
+        <tr>
+            {% for current_type in typeWorks %}
+              {% for el in count_type %}
+                {% if current_type.id == el.type and el.dcount != 1 %}
+                    {% for el in works %}
+                      {% if current_type.id == el.type.id %}
+                        <th scope="col" class="col_work_pressform">{{el.name}}</th>
                       {% endif %}
-                    </div>
-                  </a>
-              </td>
+                    {% endfor %}
+                {% endif %}
+              {% endfor %}
             {% endfor %}
-          </tr>
-        {% endfor %}
-    </tbody>
-  </table>
+        </tr>
+      </thead>
+      <tbody>
+          {% for progress in list_progress %}
+            <tr>
+              {% if progress.pf.shield %}
+                <td class="col_property_pressform">V</td>
+              {% else %}
+                <td></td>
+              {% endif %}
+              <td class="col_property_pressform">{{ forloop.counter }}</td>
+              {% if progress.pf.type == 1 %}
+                {% if progress.pf.status == 2 %}
+                  <td id="type_pf_our_ready">{{progress.pf.name}}</td>
+                {% else %}
+                  <td id="type_pf_our">{{progress.pf.name}}</td>
+                {% endif %}
+              {% elif progress.pf.type == 2 %}
+                <td id="type_pf_partner">{{progress.pf.name}}</td>
+              {% elif progress.pf.type == 3 %}
+                <td id="type_pf_import">{{progress.pf.name}}</td>
+              {% else %}
+                <td>{{progress.pf.name}}</td>
+              {% endif %}
+              <td class="col_property_pressform">{{progress.pf.assembly}}</td>
+              {% for el in progress.list_works %}
+                <td class="col_work_progress">
+                    <a href="" class="cell_progress" data-bs-toggle="modal" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
+                      {% if el.progress == 1 %}
+                        <div class="circle circle_color_green">
+                      {% elif el.progress == 2 %}
+                        <div class="circle circle_color_blue">
+                      {% elif el.progress == 3 %}
+                        <div class="circle circle_color_yellow">
+                      {% elif el.progress == 4 %}
+                          <div class="circle circle_color_red">
+                      {% else %}
+                        <div class="circle circle_color_grey">
+                      {% endif %}
+                        {% if el.week_name != '0' %}
+                          {{el.week_name|linebreaksbr}}
+                        {% endif %}
+                      </div>
+                    </a>
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 <div class="footer">
   <table class="footer-table">
@@ -192,6 +191,8 @@
       <td>Не выполнено</td>
       <td><div class="circle circle_color_green footer-td"></div></td>
       <td>Выполнено</td>
+      <td style="width: 450px;"></td>
+      <td><input type="input" id="hiddenField" class="datepicker"/></td>
     </tr>
   </table>  
 </div>
@@ -251,14 +252,15 @@
     return Date.parse(JSON.parse(responseText)["date_modified"]);
   };
 
-  $(function() {
-     $('#date_finish').datepicker({
-      autoclose: true,
-      language: "ru",
-      daysOfWeekHighlighted: "0,6",
-     });
-   });
-
+   $( "#hiddenField" ).datepicker({
+      	showOn: "button",
+        buttonText: "Календарь",
+        showWeek: true,
+        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+				dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+        firstDay: 1,
+        weekHeader: '',
+    });
 
 </script>
 {% endblock %}
