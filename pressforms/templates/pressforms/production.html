@@ -68,7 +68,7 @@
                   <label for="datepicker">Дата завершения:</label>
                 </div>
                 <div class="col-2">
-                  <input type="text" id="date_finish" name="date_finish" class="form-control" style="width: 120px;">
+                  <input type="text" id="date_finish" name="date_finish" style="width: 120px;" autocomplete="off">
                 </div>
               </div>
 
@@ -212,6 +212,9 @@
     var date_finish = button.getAttribute('data-date_finish')
     var progress = button.getAttribute('data-progress')
     
+    let lastKnownScrollPosition = 0;
+    let ticking = false;
+    
     Modal.querySelector('.modal-title').textContent = '' + pressform_name
     document.getElementById('operation').textContent = work_name
     document.getElementById('pressform_id').value = pressform_id
@@ -238,7 +241,7 @@
     setInterval(function(){
       last_modified = getDateModified();
       if (date_modified < last_modified) {
-        window.location.reload(1);
+        window.location.reload(0);
         date_modified = last_modified;
       }
     }, 5000);
@@ -252,6 +255,18 @@
     return Date.parse(JSON.parse(responseText)["date_modified"]);
   };
 
+  $(function() {
+     $('#date_finish').datepicker({
+        showWeek: true,
+        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+				dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+        firstDay: 1,
+        todayHighlight: 'true',
+        weekHeader: '',
+        dateFormat: "dd.mm.yy",
+     });
+   });
+
    $( "#hiddenField" ).datepicker({
       	showOn: "button",
         buttonText: "Календарь",
@@ -259,6 +274,7 @@
         monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
 				dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
         firstDay: 1,
+        todayHighlight: 'true',
         weekHeader: '',
     });
 

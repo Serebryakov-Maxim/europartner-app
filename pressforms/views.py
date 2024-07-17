@@ -47,7 +47,7 @@ def media(request):
 
 def pressforms(request):
     """ Формирует список всех прессформ """
-    pressforms_list = Pressform.objects.order_by('-id')
+    pressforms_list = Pressform.objects.order_by('article')
     context = {'pressforms': pressforms_list}
     return render(request, 'pressforms/pressforms.html', context)
 
