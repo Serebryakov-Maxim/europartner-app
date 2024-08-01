@@ -13,9 +13,7 @@
 {% block content %}
 
 <div class="custom-cm">
-  <div>
-    <a class="custom-cm-close" href="" onclick="showContextMenu(false)">Закрыть X</a>
-  </div>
+  <div class="custom-cm-close" onclick="closeContextMenu()">Закрыть X</div>
   <div class="custom-cm__item" onclick="selectOperation(0)">
     <div class="marker background_grey"> </div>
     Пусто
@@ -208,7 +206,6 @@ function getDateModified(){
   function selectOperation(value){
       cm.setAttribute('data-progress', value);
       week = document.getElementById('week');
-      console.log(week);
 
       pressform_id = cm.getAttribute('data-pressform-id');
       work_id = cm.getAttribute('data-work-id');
@@ -234,6 +231,10 @@ function getDateModified(){
   function showContextMenu (show = true){
       cm.style.display = show ? 'block' : 'none';
   };
+
+  function closeContextMenu(){
+    showContextMenu(false);
+  }
 
   window.addEventListener('click', (e) => {
       el = e.target;

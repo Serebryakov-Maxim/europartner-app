@@ -184,6 +184,7 @@ footer {
 }
 
 .custom-cm-close{
+    cursor: pointer;
     text-align: right;
     text-decoration: none;
     float: right;
