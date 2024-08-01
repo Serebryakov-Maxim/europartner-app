@@ -7,86 +7,50 @@
 
 {% block link %}
   <link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
-{% endblock %}
+  <script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
+  {% endblock %}
 
 {% block content %}
 
-<div class="body">
-  <!-- Модальное окно -->
-  <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="left: 10px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title" id="ModalLabel">Название прессформы</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <form method="POST" action="{% url 'pressforms:operation' %}">
-              {% csrf_token %}
-              <h5 id="operation">Название операции</h5>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="oper" id="Radios1" value="0" checked style="background: #c3c3bf; ">
-                <label class="form-check-label" for="Radios1">
-                  Пусто
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="oper" id="Radios2" value="1" style="background: #a1f003;">
-                <label class="form-check-label" for="Radios2">
-                  Выполнено
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="oper" id="Radios3" value="2" style="background: #0073ff;">
-                <label class="form-check-label" for="Radios3">
-                  Не требует выполнения
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="oper" id="Radios4" value="3" style="background: #f3bc07;">
-                <label class="form-check-label" for="Radios4">
-                  В работе
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="oper" id="Radios5" value="4" style="background: #aa1614c9;">
-                <label class="form-check-label" for="Radios5">
-                  Не выполнено
-                </label>
-              </div>
-
-              <div>
-                <label for="week">
-                  Неделя:
-                </label>
-                <input type="number" step="1" min="0" max="55" value="0" id="week" name="week">
-              </div>
-              
-              <div class="row">
-                <div class="col-4">
-                  <label for="datepicker">Дата завершения:</label>
-                </div>
-                <div class="col-2">
-                  <input type="text" id="date_finish" name="date_finish" style="width: 120px;" autocomplete="off">
-                </div>
-              </div>
-
-              <div style="visibility: hidden;">
-                <input id="pressform_id" type="number" name="pressform_id" value="0">
-                <input id="work_id" type="number" name="work_id" value="0">
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="custom-cm">
+  <div>
+    <a class="custom-cm-close" href="" onclick="showContextMenu(false)">Закрыть X</a>
   </div>
+  <div class="custom-cm__item" onclick="selectOperation(0)">
+    <div class="marker background_grey"> </div>
+    Пусто
+  </div>
+  <div class="custom-cm__item" onclick="selectOperation(1)">
+    <div class="marker background_green"> </div>
+    Выполнено
+  </div>
+  <div class="custom-cm__item" onclick="selectOperation(2)">
+    <div class="marker background_blue"> </div>
+    Не требует выполнения
+  </div>
+  <div class="custom-cm__item" onclick="selectOperation(3)">
+    <div class="marker background_yellow"> </div>
+    В работе
+  </div>
+  <div class="custom-cm__item" onclick="selectOperation(4)">
+    <div class="marker background_red"> </div>
+    Не выполнено</div>
+  <div class="custom-cm__divider">
 
+  </div>
+  <div class="custom-cm__item">
+    <label for="week">
+      Неделя:
+    </label>
+    <input type="number" step="1" min="0" max="55" value="0" id="week" name="week" onchange="changeWeek()">
+  </div>
+  <div class="custom-cm__item">
+    <label for="datepicker">Дата завершения:</label>
+    <input type="text" id="date_finish" name="date_finish" style="width: 120px;" autocomplete="off" onchange="changeDateFinish()">
+  </div>
+</div>
+
+<div class="body">
   <div class="my_table">
     <table class="table table-bordered">
       <thead class="table-light">
@@ -145,18 +109,18 @@
               {% endif %}
               <td class="col_property_pressform">{{progress.pf.assembly}}</td>
               {% for el in progress.list_works %}
-                <td class="col_work_progress">
-                    <a href="" class="cell_progress" data-bs-toggle="modal" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}" data-bs-target="#Modal">
+                <td class="col_work_progress"  data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}">
+                    <a href="#" class="cell_progress">
                       {% if el.progress == 1 %}
-                        <div class="circle circle_color_green">
+                        <div class="circle background_green">
                       {% elif el.progress == 2 %}
-                        <div class="circle circle_color_blue">
+                        <div class="circle background_blue">
                       {% elif el.progress == 3 %}
-                        <div class="circle circle_color_yellow">
+                        <div class="circle background_yellow">
                       {% elif el.progress == 4 %}
-                          <div class="circle circle_color_red">
+                          <div class="circle background_red">
                       {% else %}
-                        <div class="circle circle_color_grey">
+                        <div class="circle background_grey">
                       {% endif %}
                         {% if el.week_name != '0' %}
                           {{el.week_name|linebreaksbr}}
@@ -183,76 +147,141 @@
       <td><div class="square footer-td" id="type_pf_import"></div></td>
       <td>Импорт</td>
       <td style="width: 50px;"></td>
-      <td><div class="circle circle_color_blue footer-td"></div></td>
+      <td><div class="circle background_blue footer-td"></div></td>
       <td>Не требует выполнения</td>
-      <td><div class="circle circle_color_yellow footer-td"></div></td>
+      <td><div class="circle background_yellow footer-td"></div></td>
       <td>В работе</td>
-      <td><div class="circle circle_color_red footer-td"></div></td>
+      <td><div class="circle background_red footer-td"></div></td>
       <td>Не выполнено</td>
-      <td><div class="circle circle_color_green footer-td"></div></td>
+      <td><div class="circle background_green footer-td"></div></td>
       <td>Выполнено</td>
       <td style="width: 450px;"></td>
       <td><input type="input" id="hiddenField" class="datepicker"/></td>
     </tr>
   </table>  
 </div>
+
 <script>
-  var date_modified = getDateModified();
-  var Modal = document.getElementById('Modal');
+var date_modified = getDateModified();
+const cm = document.querySelector('.custom-cm');
 
-  Modal.addEventListener('show.bs.modal', function (event) {
-    // Button that triggered the modal
-    var button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    var work_id = button.getAttribute('data-work-id')
-    var pressform_id = button.getAttribute('data-pressform-id')
-    var work_name = button.getAttribute('data-work-name')
-    var pressform_name = button.getAttribute('data-pressform-name')
-    var week = button.getAttribute('data-week')
-    var date_finish = button.getAttribute('data-date_finish')
-    var progress = button.getAttribute('data-progress')
-    
-    let lastKnownScrollPosition = 0;
-    let ticking = false;
-    
-    Modal.querySelector('.modal-title').textContent = '' + pressform_name
-    document.getElementById('operation').textContent = work_name
-    document.getElementById('pressform_id').value = pressform_id
-    document.getElementById('work_id').value = work_id
-    document.getElementById('week').value = week
-    document.getElementById('date_finish').value = date_finish
-    
+setInterval(function(){
+   last_modified = getDateModified();
+   if (date_modified < last_modified) {
+      window.location.reload(0);
+      date_modified = last_modified;
+    }
+  }, 5000);
 
-    if (progress == 0)
-      document.getElementById('Radios1').checked = true
-    else if (progress == 1)
-      document.getElementById('Radios2').checked = true
-    else if (progress == 2)
-      document.getElementById('Radios3').checked = true
-    else if (progress == 3)
-      document.getElementById('Radios4').checked = true
-    else if (progress == 4)
-      document.getElementById('Radios5').checked = true
-    else
-      document.getElementById('Radios1').checked = true
+function getDateModified(){
+  theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", theUrl, false );
+  xmlHttp.send( null );
+  responseText = xmlHttp.responseText;
+  return Date.parse(JSON.parse(responseText)["date_modified"]);
+};
 
-    })
+ $( "#hiddenField" ).datepicker({
+      showOn: "button",
+      buttonText: "Календарь",
+      showWeek: true,
+      monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+              dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+      firstDay: 1,
+      todayHighlight: 'true',
+      weekHeader: '',
+  });
 
-    setInterval(function(){
-      last_modified = getDateModified();
-      if (date_modified < last_modified) {
-        window.location.reload(0);
-        date_modified = last_modified;
+  // Док загружен
+  $(document).ready(function() {
+      // восстановим текущий скролл из куки
+      if ( $.cookie("scroll") !== null ) {
+          $(".my_table").scrollTop( $.cookie("scroll") );
       }
-    }, 5000);
+  });
 
-  function getDateModified(){
-    theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    responseText = xmlHttp.responseText;
-    return Date.parse(JSON.parse(responseText)["date_modified"]);
+  window.onbeforeunload = function(){
+      $.cookie("scroll", $(".my_table").scrollTop());
+  };
+
+  function selectOperation(value){
+      cm.setAttribute('data-progress', value);
+      week = document.getElementById('week');
+      console.log(week);
+
+      pressform_id = cm.getAttribute('data-pressform-id');
+      work_id = cm.getAttribute('data-work-id');
+      oper = cm.getAttribute('data-progress');
+      week = cm.getAttribute('data-week');
+      date_finish = cm.getAttribute('data-date_finish');
+ 
+      fetch("{% url 'pressforms:operation' %}", {
+              method: 'POST',
+              headers: {
+                      "Content-Type": "application/json"
+                  },
+              body: JSON.stringify({pressform_id: pressform_id,
+                  work_id:work_id,
+                  oper: oper,
+                  week: week,
+                  date_finish: date_finish
+              })
+          });
+      window.location.reload(0);
+  };
+
+  function showContextMenu (show = true){
+      cm.style.display = show ? 'block' : 'none';
+  };
+
+  window.addEventListener('click', (e) => {
+      el = e.target;
+      is_circle = el.className.includes('circle')
+      if (is_circle == true) {
+        $.cookie("scroll", $(".my_table").scrollTop());
+          // заполнение переменных
+          parent = el.offsetParent;
+          cm.setAttribute('data-work-id', parent.getAttribute('data-work-id'));
+          cm.setAttribute('data-pressform-id', parent.getAttribute('data-pressform-id'));
+          cm.setAttribute('data-work-name', parent.getAttribute('data-work-name'));
+          cm.setAttribute('data-pressform-name', parent.getAttribute('data-pressform-name'));
+          cm.setAttribute('data-week', parent.getAttribute('data-week'));
+          cm.setAttribute('data-date_finish', parent.getAttribute('data-date_finish'));
+          cm.setAttribute('data-progress', parent.getAttribute('data-progress'));
+
+          // заполним неделю
+          document.getElementById('week').value = parent.getAttribute('data-week');
+
+          // заполним дату выполнения
+          document.getElementById('date_finish').value = parent.getAttribute('data-date_finish');
+              
+          e.preventDefault();
+          showContextMenu();
+
+          let x = e.x, y = e.clientY, 
+          winWidth = window.innerWidth, 
+          winHeight = window.innerHeight,
+          cmWidth = cm.offsetWidth,
+          cmHeight = cm.offsetHeight;
+          current_scroll = 0;
+
+          x = x > winWidth - cmWidth ? winWidth - cmWidth : x;
+          y = y > winHeight - cmHeight - current_scroll ? winHeight - cmHeight: y;
+       
+          cm.style.left = x + 'px';
+          cm.style.top = y + 'px';
+      };
+  });
+
+  function changeWeek(){
+    week = document.getElementById('week').value;
+    cm.setAttribute('data-week', week);
+  };
+
+  function changeDateFinish(){
+    date_finish = document.getElementById('date_finish').value;
+    cm.setAttribute('data-date_finish', date_finish);
   };
 
   $(function() {
@@ -266,17 +295,6 @@
         dateFormat: "dd.mm.yy",
      });
    });
-
-   $( "#hiddenField" ).datepicker({
-      	showOn: "button",
-        buttonText: "Календарь",
-        showWeek: true,
-        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-				dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
-        firstDay: 1,
-        todayHighlight: 'true',
-        weekHeader: '',
-    });
 
 </script>
 {% endblock %}

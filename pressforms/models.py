@@ -100,6 +100,13 @@ class Progress(models.Model):
 
     def __str__(self):
         return str(self.pressform.name) + '. ' + str(self.work.name)
+    
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.progress != 3:
+            self.week = 0
+            self.date_finish = None
+
+        super(Progress, self).save()
 
 class MediaFile(models.Model):
     """Медиа файлы - видио и фото контент"""

@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import datetime
+import json
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 
 def history(request):
     """ Формирование произведенных прессформ """
@@ -106,15 +108,18 @@ def production(request):
 
     return render(request, 'pressforms/production.html', context)
 
+@csrf_exempt
 def operation(request):
     """ Сохраняет введенные данные """
     if request.method == 'POST':
-        #print(request.POST)
-        pressform_id = request.POST['pressform_id']
-        work_id = request.POST['work_id']
-        oper = request.POST['oper']
-        week = request.POST['week']
-        date_finish = request.POST['date_finish']
+        json_b = request.body
+        data_json = json.loads(json_b)
+    
+        pressform_id = data_json['pressform_id']
+        work_id = data_json['work_id']
+        oper = data_json['oper']
+        week = data_json['week']
+        date_finish = data_json['date_finish']
         
         if not date_finish == '':
             parsed_date = datetime.datetime.strptime(date_finish, "%d.%m.%Y").date()
