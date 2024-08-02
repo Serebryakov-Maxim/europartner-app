@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block link %}
-  <link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
-  <script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
-  {% endblock %}
+<link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
+<script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -32,19 +32,19 @@
   </div>
   <div class="custom-cm__item" onclick="selectOperation(4)">
     <div class="marker background_red"> </div>
-    Не выполнено</div>
+    Не выполнено
+  </div>
   <div class="custom-cm__divider">
 
   </div>
   <div class="custom-cm__item">
-    <label for="week">
-      Неделя:
-    </label>
+    <label for="week">Неделя:</label>
     <input type="number" step="1" min="0" max="55" value="0" id="week" name="week" onchange="changeWeek()">
   </div>
   <div class="custom-cm__item">
     <label for="datepicker">Дата завершения:</label>
-    <input type="text" id="date_finish" name="date_finish" style="width: 120px;" autocomplete="off" onchange="changeDateFinish()">
+    <input type="text" id="date_finish" name="date_finish" style="width: 120px;" autocomplete="off"
+      onchange="changeDateFinish()">
   </div>
 </div>
 
@@ -70,65 +70,67 @@
           {% endfor %}
         </tr>
         <tr>
-            {% for current_type in typeWorks %}
-              {% for el in count_type %}
-                {% if current_type.id == el.type and el.dcount != 1 %}
-                    {% for el in works %}
-                      {% if current_type.id == el.type.id %}
-                        <th scope="col" class="col_work_pressform">{{el.name}}</th>
-                      {% endif %}
-                    {% endfor %}
-                {% endif %}
-              {% endfor %}
+          {% for current_type in typeWorks %}
+            {% for el in count_type %}
+              {% if current_type.id == el.type and el.dcount != 1 %}
+                {% for el in works %}
+                  {% if current_type.id == el.type.id %}
+                    <th scope="col" class="col_work_pressform">{{el.name}}</th>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             {% endfor %}
+          {% endfor %}
         </tr>
       </thead>
       <tbody>
-          {% for progress in list_progress %}
-            <tr>
-              {% if progress.pf.shield %}
-                <td class="col_property_pressform">V</td>
+        {% for progress in list_progress %}
+        <tr>
+          {% if progress.pf.shield %}
+            <td class="col_property_pressform">V</td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          <td class="col_property_pressform">{{ forloop.counter }}</td>
+          {% if progress.pf.type == 1 %}
+            {% if progress.pf.status == 2 %}
+              <td id="type_pf_our_ready">{{progress.pf.name}}</td>
+            {% else %}
+              <td id="type_pf_our">{{progress.pf.name}}</td>
+            {% endif %}
+          {% elif progress.pf.type == 2 %}
+            <td id="type_pf_partner">{{progress.pf.name}}</td>
+          {% elif progress.pf.type == 3 %}
+            <td id="type_pf_import">{{progress.pf.name}}</td>
+          {% else %}
+            <td>{{progress.pf.name}}</td>
+          {% endif %}
+          <td class="col_property_pressform">{{progress.pf.assembly}}</td>
+          {% for el in progress.list_works %}
+          <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
+            data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}"
+            data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}">
+            <div class="cell_progress" onclick="selectProgress(this)">
+              {% if el.progress == 1 %}
+                <div class="circle background_green">
+              {% elif el.progress == 2 %}
+                <div class="circle background_blue">
+              {% elif el.progress == 3 %}
+                <div class="circle background_yellow">
+              {% elif el.progress == 4 %}
+                <div class="circle background_red">
               {% else %}
-                <td></td>
+                <div class="circle background_grey">
               {% endif %}
-              <td class="col_property_pressform">{{ forloop.counter }}</td>
-              {% if progress.pf.type == 1 %}
-                {% if progress.pf.status == 2 %}
-                  <td id="type_pf_our_ready">{{progress.pf.name}}</td>
-                {% else %}
-                  <td id="type_pf_our">{{progress.pf.name}}</td>
-                {% endif %}
-              {% elif progress.pf.type == 2 %}
-                <td id="type_pf_partner">{{progress.pf.name}}</td>
-              {% elif progress.pf.type == 3 %}
-                <td id="type_pf_import">{{progress.pf.name}}</td>
-              {% else %}
-                <td>{{progress.pf.name}}</td>
+              {% if el.week_name != '0' %}
+                {{el.week_name|linebreaksbr}}
               {% endif %}
-              <td class="col_property_pressform">{{progress.pf.assembly}}</td>
-              {% for el in progress.list_works %}
-                <td class="col_work_progress"  data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}" data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}" data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}">
-                    <a href="#" class="cell_progress">
-                      {% if el.progress == 1 %}
-                        <div class="circle background_green">
-                      {% elif el.progress == 2 %}
-                        <div class="circle background_blue">
-                      {% elif el.progress == 3 %}
-                        <div class="circle background_yellow">
-                      {% elif el.progress == 4 %}
-                          <div class="circle background_red">
-                      {% else %}
-                        <div class="circle background_grey">
-                      {% endif %}
-                        {% if el.week_name != '0' %}
-                          {{el.week_name|linebreaksbr}}
-                        {% endif %}
-                      </div>
-                    </a>
-                </td>
-              {% endfor %}
-            </tr>
+              </div>
+            </div>
+          </td>
           {% endfor %}
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
@@ -136,166 +138,201 @@
 <div class="footer">
   <table class="footer-table">
     <tr>
-      <td><div class="square footer-td" id="type_pf_our"></div></td>
+      <td>
+        <div class="square footer-td" id="type_pf_our"></div>
+      </td>
       <td>Европартнер (в работе)</td>
-      <td><div class="square footer-td" id="type_pf_our_ready"></div></td>
+      <td>
+        <div class="square footer-td" id="type_pf_our_ready"></div>
+      </td>
       <td>Европартнер (выполнено)</td>
-      <td><div class="square footer-td" id="type_pf_partner"></div></td>
+      <td>
+        <div class="square footer-td" id="type_pf_partner"></div>
+      </td>
       <td>Клиент</td>
-      <td><div class="square footer-td" id="type_pf_import"></div></td>
+      <td>
+        <div class="square footer-td" id="type_pf_import"></div>
+      </td>
       <td>Импорт</td>
       <td style="width: 50px;"></td>
-      <td><div class="circle background_blue footer-td"></div></td>
+      <td>
+        <div class="circle background_blue footer-td"></div>
+      </td>
       <td>Не требует выполнения</td>
-      <td><div class="circle background_yellow footer-td"></div></td>
+      <td>
+        <div class="circle background_yellow footer-td"></div>
+      </td>
       <td>В работе</td>
-      <td><div class="circle background_red footer-td"></div></td>
+      <td>
+        <div class="circle background_red footer-td"></div>
+      </td>
       <td>Не выполнено</td>
-      <td><div class="circle background_green footer-td"></div></td>
+      <td>
+        <div class="circle background_green footer-td"></div>
+      </td>
       <td>Выполнено</td>
       <td style="width: 450px;"></td>
-      <td><input type="input" id="hiddenField" class="datepicker"/></td>
+      <td><input type="input" id="hiddenField" class="datepicker" /></td>
     </tr>
-  </table>  
+  </table>
 </div>
 
 <script>
-var date_modified = getDateModified();
-const cm = document.querySelector('.custom-cm');
+  var date_modified = getDateModified();
+  const cm = document.querySelector('.custom-cm');
+  var parent = null;
 
-setInterval(function(){
-   last_modified = getDateModified();
-   if (date_modified < last_modified) {
+  // проверка на последние изменения, каждые 5 сек.
+  setInterval(function () {
+    last_modified = getDateModified();
+    if (date_modified < last_modified) {
       window.location.reload(0);
       date_modified = last_modified;
     }
   }, 5000);
 
-function getDateModified(){
-  theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open( "GET", theUrl, false );
-  xmlHttp.send( null );
-  responseText = xmlHttp.responseText;
-  return Date.parse(JSON.parse(responseText)["date_modified"]);
-};
+  // полчение даты последних изменений
+  function getDateModified() {
+    theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false);
+    xmlHttp.send(null);
+    responseText = xmlHttp.responseText;
+    return Date.parse(JSON.parse(responseText)["date_modified"]);
+  };
 
- $( "#hiddenField" ).datepicker({
-      showOn: "button",
-      buttonText: "Календарь",
-      showWeek: true,
-      monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-              dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
-      firstDay: 1,
-      todayHighlight: 'true',
-      weekHeader: '',
+  // отображение календаря
+  $("#hiddenField").datepicker({
+    showOn: "button",
+    buttonText: "Календарь",
+    showWeek: true,
+    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    firstDay: 1,
+    todayHighlight: 'true',
+    weekHeader: '',
   });
 
-  // Док загружен
-  $(document).ready(function() {
-      // восстановим текущий скролл из куки
-      if ( $.cookie("scroll") !== null ) {
-          $(".my_table").scrollTop( $.cookie("scroll") );
-      }
+  // Док загружен, восстановим текущий скролл из куки
+  $(document).ready(function () {
+    if ($.cookie("scroll") !== null) {
+      $(".my_table").scrollTop($.cookie("scroll"));
+    }
   });
 
-  window.onbeforeunload = function(){
-      $.cookie("scroll", $(".my_table").scrollTop());
+  // Сохраняем показания scroll в куки
+  window.onbeforeunload = function () {
+    $.cookie("scroll", $(".my_table").scrollTop());
   };
 
-  function selectOperation(value){
-      cm.setAttribute('data-progress', value);
-      week = document.getElementById('week');
-
-      pressform_id = cm.getAttribute('data-pressform-id');
-      work_id = cm.getAttribute('data-work-id');
-      oper = cm.getAttribute('data-progress');
-      week = cm.getAttribute('data-week');
-      date_finish = cm.getAttribute('data-date_finish');
- 
-      fetch("{% url 'pressforms:operation' %}", {
-              method: 'POST',
-              headers: {
-                      "Content-Type": "application/json"
-                  },
-              body: JSON.stringify({pressform_id: pressform_id,
-                  work_id:work_id,
-                  oper: oper,
-                  week: week,
-                  date_finish: date_finish
-              })
-          });
-      window.location.reload(0);
+  // Сохранение данных
+  function selectOperation(value) {
+    // установим значение операции
+    cm.setAttribute('data-progress', value);
+    // получим значения из атрибутов
+    pressform_id = cm.getAttribute('data-pressform-id');
+    work_id = cm.getAttribute('data-work-id');
+    oper = cm.getAttribute('data-progress');
+    week = cm.getAttribute('data-week');
+    date_finish = cm.getAttribute('data-date_finish');
+    // отправим запрос
+    fetch("{% url 'pressforms:operation' %}", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pressform_id: pressform_id,
+        work_id: work_id,
+        oper: oper,
+        week: week,
+        date_finish: date_finish
+      })
+    });
+    window.location.reload(0);
   };
 
-  function showContextMenu (show = true){
-      cm.style.display = show ? 'block' : 'none';
+  // Отобразить / спрятать меню
+  function showContextMenu(show = true) {
+    cm.style.display = show ? 'block' : 'none';
+    if (show){
+      if (parent != null) parent.style.background = '#ff0000';
+    }
+    else
+    {
+      if (parent != null) parent.style.background = '#747473';
+    }
   };
-
-  function closeContextMenu(){
+  
+  // Закрывает меню, по кнопке Закрыть
+  function closeContextMenu() {
     showContextMenu(false);
   }
 
-  window.addEventListener('click', (e) => {
-      el = e.target;
-      is_circle = el.className.includes('circle')
-      if (is_circle == true) {
-        $.cookie("scroll", $(".my_table").scrollTop());
-          // заполнение переменных
-          parent = el.offsetParent;
-          cm.setAttribute('data-work-id', parent.getAttribute('data-work-id'));
-          cm.setAttribute('data-pressform-id', parent.getAttribute('data-pressform-id'));
-          cm.setAttribute('data-work-name', parent.getAttribute('data-work-name'));
-          cm.setAttribute('data-pressform-name', parent.getAttribute('data-pressform-name'));
-          cm.setAttribute('data-week', parent.getAttribute('data-week'));
-          cm.setAttribute('data-date_finish', parent.getAttribute('data-date_finish'));
-          cm.setAttribute('data-progress', parent.getAttribute('data-progress'));
-
-          // заполним неделю
-          document.getElementById('week').value = parent.getAttribute('data-week');
-
-          // заполним дату выполнения
-          document.getElementById('date_finish').value = parent.getAttribute('data-date_finish');
-              
-          e.preventDefault();
-          showContextMenu();
-
-          let x = e.x, y = e.clientY, 
-          winWidth = window.innerWidth, 
-          winHeight = window.innerHeight,
-          cmWidth = cm.offsetWidth,
-          cmHeight = cm.offsetHeight;
-          current_scroll = 0;
-
-          x = x > winWidth - cmWidth ? winWidth - cmWidth : x;
-          y = y > winHeight - cmHeight - current_scroll ? winHeight - cmHeight: y;
-       
-          cm.style.left = x + 'px';
-          cm.style.top = y + 'px';
-      };
-  });
-
-  function changeWeek(){
+  // Событие установка недели
+  function changeWeek() {
     week = document.getElementById('week').value;
     cm.setAttribute('data-week', week);
   };
 
-  function changeDateFinish(){
+  // Событие установка дата окончания
+  function changeDateFinish() {
     date_finish = document.getElementById('date_finish').value;
     cm.setAttribute('data-date_finish', date_finish);
   };
 
-  $(function() {
-     $('#date_finish').datepicker({
-        showWeek: true,
-        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-				dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
-        firstDay: 1,
-        todayHighlight: 'true',
-        weekHeader: '',
-        dateFormat: "dd.mm.yy",
-     });
-   });
+  // Событие - показать меню операции
+  function selectProgress(event) {
+    
+    showContextMenu(false);
+
+    var e = window.event; // событие
+    var el = e.target; // элемент
+    parent = el.offsetParent; // родительский элемент
+    
+    // заполнение переменных
+    cm.setAttribute('data-work-id', parent.getAttribute('data-work-id'));
+    cm.setAttribute('data-pressform-id', parent.getAttribute('data-pressform-id'));
+    cm.setAttribute('data-work-name', parent.getAttribute('data-work-name'));
+    cm.setAttribute('data-pressform-name', parent.getAttribute('data-pressform-name'));
+    cm.setAttribute('data-week', parent.getAttribute('data-week'));
+    cm.setAttribute('data-date_finish', parent.getAttribute('data-date_finish'));
+    cm.setAttribute('data-progress', parent.getAttribute('data-progress'));
+
+    // заполним неделю
+    document.getElementById('week').value = parent.getAttribute('data-week');
+
+    // заполним дату выполнения
+    document.getElementById('date_finish').value = parent.getAttribute('data-date_finish');
+
+    e.preventDefault();
+    showContextMenu();
+
+    let x = e.x, y = e.clientY,
+      winWidth = window.innerWidth,
+      winHeight = window.innerHeight,
+      cmWidth = cm.offsetWidth,
+      cmHeight = cm.offsetHeight;
+
+    x = x > winWidth - cmWidth ? x - 250 : x;
+    y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+    cm.style.left = x + 'px';
+    cm.style.top = y + 'px';
+  }
+
+  // Календарь - выборк даты окончания
+  $(function () {
+    $('#date_finish').datepicker({
+      showWeek: true,
+      monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      firstDay: 1,
+      todayHighlight: 'true',
+      weekHeader: '',
+      dateFormat: "dd.mm.yy",
+    });
+  });
 
 </script>
 {% endblock %}
