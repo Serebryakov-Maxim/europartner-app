@@ -27,12 +27,12 @@
                     <div class="col-header2 year-card"> 
                         {{current_year.year}} год 
                         <br>
-                        <div style="font-size: small;">Изготовлено: {{current_year.dcount}} п/ф</div>
+                        <div >Изготовлено: {{current_year.dcount}} п/ф</div>
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="flex-row flex-nowrap">
+<!--        <div class="flex-row flex-nowrap">
             {% for current_year in table %}
                 {% for current_list_pf in current_year.list_pf %}
                     <div class="col-body">
@@ -51,7 +51,7 @@
                     </div>
                 {% endfor %}
             {% endfor %}
-        </div>
+        </div>-->
     {% else %}
         Данных нет
     {% endif %}
