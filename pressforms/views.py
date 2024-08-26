@@ -18,7 +18,7 @@ def history(request):
     years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('year')
 
     # заполним список с номерами по порядку
-    maxcountrow = 12
+    maxcountrow = 9
     table = []
     for year in years:
         list2=[]
