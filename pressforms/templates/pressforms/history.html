@@ -16,7 +16,7 @@
 
 <div class="body">
     {% if years %}
-        <div class="flex-row flex-nowrap">
+        <div class="row flex-row flex-nowrap">
             {% for current_year in table %}
                 {% if current_year.count_col == 1 %}
                     <div class="col-header year-card"> 
@@ -33,7 +33,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="flex-row flex-nowrap">
+        <div class="row flex-row flex-nowrap">
             {% for current_year in table %}
                 {% for current_list_pf in current_year.list_pf %}
                     <div class="col-body">
