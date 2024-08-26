@@ -15,10 +15,10 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 def history(request):
     """ Формирование произведенных прессформ """
     pressform_list = Pressform.objects.order_by('date_finish', 'assembly')
-    years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('year')
+    years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('-year')
 
     # заполним список с номерами по порядку
-    maxcountrow = 10
+    maxcountrow = 12
     table = []
     for year in years:
         list2=[]
@@ -31,7 +31,7 @@ def history(request):
 
         # нужно еще разбить но столбцы, если больше N прессформ в колонке
         new_list = [list2[i:i+maxcountrow] for i in range(0, len(list2), maxcountrow)]
-        table.append({'year': year['year'], 'dcount': year['dcount'], 'count_col': len(new_list), 'list_pf':new_list})
+        table.append({'year': year['year'], 'count_col': len(new_list), 'list_pf':new_list})
 
     context = {
         'years': years,
