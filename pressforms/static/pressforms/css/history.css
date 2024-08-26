@@ -16,7 +16,7 @@ body {
 
 .card-main{
     width: var(--сol-width);	
-    height: 50px;
+    height: 70px;
     border-radius: 10px;
     color: black;
     text-align: center;
