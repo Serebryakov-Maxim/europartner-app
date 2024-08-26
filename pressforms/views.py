@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 def history(request):
     """ Формирование произведенных прессформ """
     pressform_list = Pressform.objects.order_by('date_finish', 'assembly')
-    years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('-year')
+    years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('year')
 
     # заполним список с номерами по порядку
     maxcountrow = 12
