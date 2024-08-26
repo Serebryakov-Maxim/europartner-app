@@ -33,7 +33,6 @@ def history(request):
         new_list = [list2[i:i+maxcountrow] for i in range(0, len(list2), maxcountrow)]
         table.append({'year': year['year'], 'dcount': year['dcount'], 'count_col': len(new_list), 'list_pf':new_list})
 
-    print(years)
     context = {
         'years': years,
         'table': table,
