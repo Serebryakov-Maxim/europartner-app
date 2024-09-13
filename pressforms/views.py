@@ -14,28 +14,54 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 
 def history(request):
     """ Формирование произведенных прессформ """
-    pressform_list = Pressform.objects.order_by('date_finish', 'assembly')
+    pressform_list = Pressform.objects.filter(year__gt=0).order_by('date_finish', 'assembly')
     years = Pressform.objects.filter(year__gt=0).values('year').annotate(dcount=Count('year')).order_by('year')
 
-    # заполним список с номерами по порядку
-    maxcountrow = 12
-    table = []
+    # получим максимальное количество строк
+    max_count_str = 0
     for year in years:
-        list2=[]
+        max_count_str = max(max_count_str, year['dcount'])
+    max_count_str = int(max_count_str / 2 + 0.5)
+
+    main_table = []
+    num_str = 1
+    while num_str <= max_count_str:
+        for year in years:
+            main_table.append({'npp': num_str, 'year':year['year'], 'col': 1, 'name':'', 'type':''})
+            main_table.append({'npp': num_str, 'year':year['year'], 'col': 2, 'name':'', 'type':''})
+        num_str += 1
+    
+    # пронумеруем строки по годам
+    list_pf = []
+    for year in years:
         npp = 1
+        t_npp = 1
         for cur_pf in pressform_list:
             if cur_pf.year == year['year']:
-                d = {'npp':npp, 'name':cur_pf.name, 'type':cur_pf.type}
-                list2.append(d)
+                d = {'npp': int(npp / 2 + 0.5), 'year':year['year'], 'name':cur_pf.name, 'type':cur_pf.type, 'col': 2 if (npp % 2 == 0) else 1}
+                list_pf.append(d)
                 npp += 1
 
-        # нужно еще разбить но столбцы, если больше N прессформ в колонке
-        new_list = [list2[i:i+maxcountrow] for i in range(0, len(list2), maxcountrow)]
-        table.append({'year': year['year'], 'dcount': year['dcount'], 'count_col': len(new_list), 'list_pf':new_list})
+    for str_main_table in main_table:
+        for str_list_pf in list_pf:
+            if str_main_table['year'] == str_list_pf['year'] and str_main_table['npp'] == str_list_pf['npp'] and str_main_table['col'] == str_list_pf['col']:
+                str_main_table['name'] = str_list_pf['name']
+                str_main_table['type'] = str_list_pf['type']
+
+    table_new = []
+    num_str = 1
+    while num_str <= max_count_str:
+        list = []
+        for str_main_table in main_table:
+            if num_str == str_main_table['npp']:
+                list.append(str_main_table)
+        table_new.append({'num_str': num_str, 'list': list})
+
+        num_str += 1
 
     context = {
         'years': years,
-        'table': table,
+        'table_new': table_new
     }
 
     return render(request, 'pressforms/history.html', context)

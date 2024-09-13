@@ -10,55 +10,54 @@
 {% endblock %}
 
 {% block content %}
-<div class="page_name">
-   <h3> История </h3>
-</div>
 
 <div class="body">
     {% if years %}
-        <div class="row flex-row flex-nowrap">
-            {% for current_year in table %}
-                {% if current_year.count_col == 1 %}
-                    <div class="col-header year-card"> 
-                        {{current_year.year}} год
-                        <br> 
-                        <div style="font-size: small;">Изготовлено: {{current_year.dcount}} п/ф</div>
-                    </div>
-                {% elif current_year.count_col == 2 %}
-                    <div class="col-header2 year-card"> 
-                        {{current_year.year}} год 
-                        <br>
-                        <div style="font-size: small;">Изготовлено: {{current_year.dcount}} п/ф</div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="row flex-row flex-nowrap">
-            {% for current_year in table %}
-                {% for current_list_pf in current_year.list_pf %}
-                    <div class="col-body">
-                    
-                        {% for pressform in current_list_pf %}
-                            {% if pressform.type == 1 %}
-                                <div class="card-main" id="type_pf_our">{{pressform.name}}</div>
-                            {% elif pressform.type == 2 %}
-                                <div class="card-main" id="type_pf_partner">{{pressform.name}}</div>
-                            {% elif pressform.type == 3 %}
-                                <div class="card-main" id="type_pf_import">{{pressform.name}}</div>
-                            {% else %}
-                                <div class="card-main">{{pressform.name}}</div>
-                            {% endif %}
-                        {% endfor %}                    
-                    </div>
-                {% endfor %}
-            {% endfor %}
+        <div class="my_table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+
+                    {% for current_year in years %}
+                        <th colspan="2">
+                            {{current_year.year}} год
+                            <br> 
+                            <div style="font-size: small;">Изготовлено {{current_year.dcount}} п/ф</div>
+                        </th>
+                    {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for current_str in table_new %}
+                      <tr>
+                        {% for current_year in years %}
+                            {% for list_pf in current_str.list %}
+                                {% if current_year.year == list_pf.year %}
+                                    {% if list_pf.type == 1 %}
+                                        <td id="type_pf_our">
+                                    {% elif list_pf.type == 2 %}
+                                        <td id="type_pf_partner">
+                                    {% elif list_pf.type == 3 %}
+                                        <td id="type_pf_import">
+                                    {% else %}
+                                        <td>
+                                    {% endif %}
+                                    {{list_pf.name}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                      </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% else %}
         Данных нет
     {% endif %}
 </div>
+
 <div class="footer">
-    <table>
+    <table class="footer-table">
       <tr>
         <td><div class="square footer-td" id="type_pf_our"></div></td>
         <td>Европартнер</td>
