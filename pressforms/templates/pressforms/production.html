@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-
+<script>0</script>
 <div class="custom-cm">
   <div class="custom-cm-close" onclick="closeContextMenu()">Закрыть X</div>
   <div class="custom-cm__item" onclick="selectOperation(0)">
@@ -186,10 +186,15 @@
   setInterval(function () {
     last_modified = getDateModified();
     if (date_modified < last_modified) {
-      window.location.reload(0);
+      updateWindow();
       date_modified = last_modified;
     }
   }, 5000);
+
+  // обновление страницы
+  function updateWindow(){
+    window.location.reload(0);
+  }
 
   // полчение даты последних изменений
   function getDateModified() {
@@ -226,7 +231,7 @@
   };
 
   // Сохранение данных
-  function selectOperation(value) {
+  async function selectOperation(value) {
     // установим значение операции
     cm.setAttribute('data-progress', value);
     // получим значения из атрибутов
@@ -236,7 +241,7 @@
     week = cm.getAttribute('data-week');
     date_finish = cm.getAttribute('data-date_finish');
     // отправим запрос
-    fetch("{% url 'pressforms:operation' %}", {
+    let response = await fetch("{% url 'pressforms:operation' %}", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -249,7 +254,7 @@
         date_finish: date_finish
       })
     });
-    window.location.reload(0);
+    updateWindow();
   };
 
   // Отобразить / спрятать меню
