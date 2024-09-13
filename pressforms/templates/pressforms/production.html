@@ -193,7 +193,7 @@
 
   // обновление страницы
   function updateWindow(){
-    window.location.reload(0);
+    window.location.reload();
   }
 
   // полчение даты последних изменений
@@ -231,7 +231,7 @@
   };
 
   // Сохранение данных
-  async function selectOperation(value) {
+  function selectOperation(value) {
     // установим значение операции
     cm.setAttribute('data-progress', value);
     // получим значения из атрибутов
@@ -243,7 +243,7 @@
     
     showContextMenu(false);
     // отправим запрос
-    let response = await fetch("{% url 'pressforms:operation' %}", {
+    fetch("{% url 'pressforms:operation' %}", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

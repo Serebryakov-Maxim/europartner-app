@@ -165,7 +165,7 @@ def operation(request):
         prg.save()
 
         pressform.save()
- 
+    
     return redirect('/pressforms/production/')
 
 def create(request):
