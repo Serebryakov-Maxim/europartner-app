@@ -240,6 +240,8 @@
     oper = cm.getAttribute('data-progress');
     week = cm.getAttribute('data-week');
     date_finish = cm.getAttribute('data-date_finish');
+    
+    showContextMenu(false);
     // отправим запрос
     let response = await fetch("{% url 'pressforms:operation' %}", {
       method: 'POST',
@@ -254,7 +256,7 @@
         date_finish: date_finish
       })
     });
-    showContextMenu(false);
+    
     updateWindow();
   };
 
