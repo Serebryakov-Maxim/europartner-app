@@ -27,8 +27,8 @@ def history(request):
     num_str = 1
     while num_str <= max_count_str:
         for year in years:
-            main_table.append({'npp': num_str, 'year':year['year'], 'col': 1, 'name':'', 'type':''})
-            main_table.append({'npp': num_str, 'year':year['year'], 'col': 2, 'name':'', 'type':''})
+            main_table.append({'npp': num_str, 'year':year['year'], 'col': 1, 'name':'', 'type':'', 'id':0})
+            main_table.append({'npp': num_str, 'year':year['year'], 'col': 2, 'name':'', 'type':'', 'id':0})
         num_str += 1
     
     # пронумеруем строки по годам
@@ -38,7 +38,7 @@ def history(request):
         t_npp = 1
         for cur_pf in pressform_list:
             if cur_pf.year == year['year']:
-                d = {'npp': int(npp / 2 + 0.5), 'year':year['year'], 'name':cur_pf.name, 'type':cur_pf.type, 'col': 2 if (npp % 2 == 0) else 1}
+                d = {'npp': int(npp / 2 + 0.5), 'year':year['year'], 'name':cur_pf.name, 'type':cur_pf.type, 'col': 2 if (npp % 2 == 0) else 1, 'id': cur_pf.id}
                 list_pf.append(d)
                 npp += 1
 
@@ -47,6 +47,7 @@ def history(request):
             if str_main_table['year'] == str_list_pf['year'] and str_main_table['npp'] == str_list_pf['npp'] and str_main_table['col'] == str_list_pf['col']:
                 str_main_table['name'] = str_list_pf['name']
                 str_main_table['type'] = str_list_pf['type']
+                str_main_table['id'] = str_list_pf['id']
 
     table_new = []
     num_str = 1
@@ -207,6 +208,7 @@ def card(request, pressform_id):
     context = {
         'form': form
     }
+
     return render(request, 'pressforms/create.html', context)
 
 class PressformApiView(APIView):
