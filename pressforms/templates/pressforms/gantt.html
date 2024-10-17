@@ -1,0 +1,249 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
+    <script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'pressforms/js/highcharts-gantt.js' %}"></script>
+    <script src="{% static 'pressforms/js/exporting.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="container"></div>
+
+<script>
+    let today = new Date();
+
+    const day = 1000 * 60 * 60 * 24,
+    dateFormat = Highcharts.dateFormat;
+
+    // Set to 00:00:00:000 today
+    today.setUTCHours(0);
+    today.setUTCMinutes(0);
+    today.setUTCSeconds(0);
+    today.setUTCMilliseconds(0);
+    today = today.getTime();
+
+    textColor = '#FFFFFF';
+    
+    const projects = JSON.parse("{{projects|escapejs}}");
+
+    // Parse data into series.
+    const series = projects.map(function (project, i) {
+        const data = project.data.map(function (data) {
+            return {
+                id: 'data-' + i,
+                start: data.start,
+                end: data.end,
+                y: i,
+                name: data.name,
+                color: data.color,
+            };
+        });
+        return {
+            name: project.name,
+            article: project.article,
+            partner: project.partner,
+            date_start: project.date_start,
+            data: data
+        };
+    });
+
+    Highcharts.setOptions({
+					    		lang: {
+					        		months: [
+					            		'Январь', 'Февраль', 'Март', 'Апрель',
+					            		'Май', 'Июнь', 'Июль', 'Август',
+					            		'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+					        		],
+					        		shortMonths: [
+					            		'Янв', 'Фев', 'Мар', 'Апр',
+					            		'Май', 'Июн', 'Июл', 'Авг',
+					            		'Сен', 'Окт', 'Ноя', 'Дек'
+					        		],
+					        		weekdays: [
+					            		'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг',
+					            		'Пятница', 'Суббота'
+					        		],
+					        		shortWeekdays: [
+					            		'Вс', 'Пн', 'Вт', 'Ср', 'Чт',
+					            		'Пт', 'Сб'
+					        		],
+					        		downloadJPEG: false,
+					        		downloadPDF: false,
+					        		downloadSVG: false,
+					        		downloadPNG: false
+					    		},
+					    		global: {
+						          /**
+						           * Use moment-timezone.js to return the timezone offset for individual
+						           * timestamps, used in the X axis labels and the tooltip header.
+						           */
+						          getTimezoneOffset: function (timestamp) {
+						              d = new Date();
+						              timezoneOffset =  d.getTimezoneOffset()
+
+						              return timezoneOffset;
+						          }
+						         }
+							});
+
+    Highcharts.ganttChart('container', {
+        title: {
+            text: 'Ход выполнения проектов',
+            style:{
+                color: textColor,
+            }
+        },
+
+        chart: {
+            backgroundColor: '#747473',
+        },
+
+        xAxis: [{
+            tickInterval: 1000 * 60 * 60 * 24 * 7, // Week
+            currentDateIndicator: {
+	            width: 2,
+	            dashStyle: 'Dash',
+	            color: 'red',
+	            label: {
+	                format: '%d-%m-%Y'
+	            }
+	        },
+            labels: {
+                format: '{value:%W}',
+                style: {
+                    color: textColor,
+                    fontSize: '10px'
+                }
+            },
+            grid: {
+                borderWidth: 1
+            },
+            gridLineWidth: 1,
+            custom: {
+                today,
+                weekendPlotBands: true
+            }
+        },{
+            tickInterval: 1000 * 60 * 60 * 24 * 30, // Month
+            labels: {
+                format: '{value:%b}',
+                style: {
+                    color: textColor,
+                    fontSize: '12px'
+                }
+            },
+            grid: {
+                borderWidth: 1
+            },
+            gridLineWidth: 1,
+            custom: {
+                today,
+                weekendPlotBands: true
+            }
+        }, {
+            tickInterval: 1000 * 60 * 60 * 24 * 365, // Year
+            labels: {
+                format: '{value:%Y}',
+                style: {
+                    color: textColor,
+                    fontSize: '12px'
+                }
+            },
+            linkedTo: 0
+        }],
+
+        yAxis: {
+            type: 'category',
+            grid: {
+                columns: [{
+                    title: {
+                        text: 'Контрагент',
+                        rotation: 45,
+                        y: -15,
+                        x: -15,
+                        style: {
+                            color: textColor,
+                            width: '50px'
+                        }
+                    },
+                    categories: series.map(function (s) {
+                        return s.partner;
+                    }),
+                    labels:{
+                        style: {
+                            color: textColor,
+                            fontSize: '12px',
+                            width: '100px'
+                        }}
+                }, {
+                    title: {
+                        text: 'Артикул',
+                        rotation: 45,
+                        y: -15,
+                        x: -15,
+                        style: {
+                            color: textColor,
+                            width: '50px'
+                        }
+                    },
+                    categories: series.map(function (s) {
+                        return s.article;
+                    }),
+                    labels:{
+                        style: {
+                            color: textColor,
+                            fontSize: '12px',
+                            width: '25px'
+                        }}
+                }, {
+                    title: {
+                        text: 'Прессформа',
+                        rotation: 45,
+                        y: -15,
+                        x: -15,
+                        style: {
+                            color: textColor,
+                            width: '100px'
+                        }
+                    },
+                    categories: series.map(function (s) {
+                        return s.name;
+                    }),
+                    labels:{
+                        style: {
+                            color: textColor,
+                            fontSize: '12px',
+                            width: '200px'
+                        }}
+                }, {
+                    title: {
+                        text: 'Старт',
+                        rotation: 45,
+                        y: -15,
+                        x: -15,
+                        style: {
+                            color: textColor,
+                            width: '50px'
+                        }
+                    },
+                    categories: series.map(function (s) {
+                        return s.date_start;
+                    },),
+                    labels:{
+                        style: {
+                            color: textColor,
+                            fontSize: '12px',
+                            width: '25px'
+                        }}
+                },
+            ]
+            }
+        },
+        series: series,
+    });
+</script>
+
+{% endblock %}

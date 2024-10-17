@@ -13,6 +13,7 @@ urlpatterns = [
     path('production/', views.production, name='production'),
     path('operation/', views.operation, name='operation'),
     path('media/', views.media, name='media'),
+    path('gantt/', views.gantt, name='gantt'),
     path('<int:pressform_id>', views.card, name='card'),
     path('api/list/', views.PressformApiView.as_view(), name='api'),
     path('api/last_modified/', views.PressformLastModifiedApiView.as_view(), name='api'),
