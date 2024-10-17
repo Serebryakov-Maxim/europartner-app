@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import datetime
 import json
-#import requests
+import requests
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
 
 def history(request):
@@ -141,39 +141,30 @@ def gantt(request):
 
     url = 'http://192.168.1.48/ERP/hs/instrumental/projects'
     headers = {'Authorization': "Basic QW5kcm9pZDpYbzdrb25vZg=="}  
-    #r = requests.get(url, headers=headers)
+    r = requests.get(url, headers=headers)
 
-    #data_json = r.json()
-
-
-    #series_list = []
-    #for series in data_json:
-    #    data = []
-    #    for cur_job in series['data']:
-    #        job = {'color': cur_job['color'], 
-    #               'end': int(cur_job['end']),
-    #               'isFinish': cur_job['isFinish'], 
-    #               'name': cur_job['name'],
-    #               'start': int(cur_job['start']), 
-    #               'y': cur_job['color']}
-    #        data.append(job)
-    #    project = {'name' : series['name'],
-    #               'article': series['article'], 
-    #               'date_start': series['date_start'], 
-    #               'partner': series['partner'], 
-    #               'data': data}
-    #    series_list.append(project)#
-
-    #print(series_list)
-
-    #projects = json.dumps(series_list)
-    projects = []
-    #projects = projects.replace('\\', '')
-
-    #print(projects)
+    data_json = r.json()
 
 
-    #print(projects)
+    series_list = []
+    for series in data_json:
+        data = []
+        for cur_job in series['data']:
+            job = {'color': cur_job['color'], 
+                   'end': int(cur_job['end']),
+                   'isFinish': cur_job['isFinish'], 
+                   'name': cur_job['name'],
+                   'start': int(cur_job['start']), 
+                   'y': cur_job['color']}
+            data.append(job)
+        project = {'name' : series['name'],
+                   'article': series['article'], 
+                   'date_start': series['date_start'], 
+                   'partner': series['partner'], 
+                   'data': data}
+        series_list.append(project)#
+
+    projects = json.dumps(series_list)
 
     context = {'projects': projects}
     return render(request, 'pressforms/gantt.html', context)
