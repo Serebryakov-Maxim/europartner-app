@@ -162,7 +162,7 @@ def gantt(request):
                    'date_start': series['date_start'], 
                    'partner': series['partner'], 
                    'data': data}
-        series_list.append(project)#
+        series_list.append(project)
 
     projects = json.dumps(series_list)
 
