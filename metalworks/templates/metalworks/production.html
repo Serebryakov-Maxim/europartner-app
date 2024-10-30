@@ -69,7 +69,11 @@
       <tbody>
         {% for progress in list_progress %}
         <tr>
-          <td class="col_name_client">{{ progress.dt.partner }}</td>
+          {% if progress.dt.partner.code_1C == "00-00000011" %}
+            <td id="type_dt_our" class="col_name_client">{{ progress.dt.partner }}</td>
+          {% else %}
+            <td id="type_dt_partner" class="col_name_client">{{ progress.dt.partner }}</td>
+          {% endif %}
           {% if progress.dt.shield %}
             <td class="col_property_detail">V</td>
           {% else %}
@@ -77,11 +81,7 @@
           {% endif %}
           <td class="col_property_detail">{{ forloop.counter }}</td>
           <td class="col_property_pressform">{{progress.dt.assembly}}</td>
-          {% if progress.dt.partner.code_1C == "00-00000011" %}
-            <td id="type_dt_our" title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
-          {% else %}
-            <td id="type_dt_partner" title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
-          {% endif %}
+          <td title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
           <td class="col_property_detail">{{ progress.dt.quantity }}</td>
           {% for el in progress.list_works %}
           <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
