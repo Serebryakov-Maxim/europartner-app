@@ -1,8 +1,11 @@
 form{
     margin-top: 50px;
-    margin-left: 32%;
-    width: 500px;
+    margin-left: 10%;
 }
+
+.form-group {
+    margin-bottom: 1rem;
+  }
 
 div.main_head {
     width: 100%;

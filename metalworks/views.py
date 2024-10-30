@@ -158,7 +158,8 @@ def card(request, detail_id):
     form = DetailForm(instance=instance)
 
     context = {
-        'form': form
+        'form': form,
+        'error': error
     }
 
     return render(request, 'metalworks/create.html', context)
@@ -222,6 +223,8 @@ class DetailApiView(APIView):
     def post(self, request, *args, **kwargs):
         '''Создание / обновление детали'''
         data = {
+            'article': request.data.get('article'),
+            'assembly': request.data.get('assembly'),
             'name': request.data.get('name'),
             'quantity': request.data.get('quantity'),
             'uuid_1C': request.data.get('uuid_1C'),

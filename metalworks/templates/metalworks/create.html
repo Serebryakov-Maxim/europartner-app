@@ -16,51 +16,71 @@
 
     <form method="post">
         {% csrf_token %}
-        <div class="row">
-            <label for="inputArticle" class="col-form-label">Артикул</label>
-            {{form.article}}
-        </div>
-        <div class="row">
-            <label for="inputName" class="col-form-label">Наименование</label>
-            {{form.name}}
-        </div>
-        <div class="row">
-            <label for="inputFullName" class="col-form-label">Полное наименование</label>
-            {{form.full_name}}
-        </div>
-        <div class="row">
-            <label for="inputAssembly" class="col-form-label">Сборка</label>
-            {{form.assembly}}
-        </div>
-        <div class="row">
-            <div class="form-check">
-                <label for="inputShield" class="col-form-label">Шильда</label>
-                {{form.shield}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputArticle" class="col-sm-2 col-form-label">Артикул</label>
+                <div class="col-sm-2">{{form.article}}</div>
             </div>
         </div>
-        <div class="row">
-            <label for="inputQuantity" class="col-form-label">Количество, шт.</label>
-            {{form.quantity}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputAssembly" class="col-sm-2 col-form-label">Сборка</label>
+                <div class="col-sm-2">{{form.assembly}}</div>
+            </div>
         </div>
-        <div class="row">
-            <label for="inputType" class="col-form-label">Тип</label>
-            {{form.type}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputName" class="col-sm-2 col-form-label">Наименование</label>
+                <div class="col-sm-10">{{form.name}}</div>
+            </div>
         </div>
-        <div class="row">
-            <label for="inputPartner" class="col-form-label">Клиент</label>
-            {{form.partner}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputFullName" class="col-sm-2 col-form-label">Полное наименование</label>
+                <div class="col-sm-10">{{form.full_name}}</div>
+            </div>
         </div>
-        <div class="row">
-            <label for="inputDateStart" class="col-form-label">Дата начала производства</label>
-            {{form.date_start}}
+        <div class="form-group row">
+            <div class="row">
+                <div class="col-sm-2">Шильда</div>
+                <div class="col-sm-2 form-check">
+                    <div for="inputShield"  class="col-sm-2">{{form.shield}}</div>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <label for="inputDateFinish" class="col-form-label">Дата производства</label>
-            {{form.date_finish}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputQuantity" class="col-sm-2 col-form-label">Количество, шт.</label>
+                <div class="col-sm-2">{{form.quantity}}</div>
+            </div>
         </div>
-        <div class="row">
-            <label for="inputStatus" class="col-form-label">Статус</label>
-            {{form.status}}
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputPartner" class="col-sm-2 col-form-label">Клиент</label>
+                <div class="col-sm-2">{{form.partner}}</div>
+
+                <label for="inputType" class="col-sm-2 col-form-label">Тип</label>
+                <div class="col-sm-2">{{form.type}}</div>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputDateStart" class="col-sm-2 col-form-label">Дата начала производства</label>
+                <div class="col-sm-2">{{form.date_start}}</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputDateFinish" class="col-sm-2 col-form-label">Дата производства</label>
+                <div class="col-sm-2">{{form.date_finish}}</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="row">
+                <label for="inputStatus" class="col-form-label">Статус</label>
+                <div class="col-sm-2">{{form.status}}</div>
+            </div>
         </div>
         <span>{{ error }}</span>
         <br>
