@@ -77,7 +77,11 @@
           {% endif %}
           <td class="col_property_detail">{{ forloop.counter }}</td>
           <td class="col_property_pressform">{{progress.dt.assembly}}</td>
-          <td title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
+          {% if progress.dt.partner.code_1C == "00-00000011" %}
+            <td id="type_dt_our" title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
+          {% else %}
+            <td id="type_dt_partner" title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
+          {% endif %}
           <td class="col_property_detail">{{ progress.dt.quantity }}</td>
           {% for el in progress.list_works %}
           <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
@@ -112,6 +116,15 @@
   <table class="footer-table">
     <tr>
       <td>
+        <div class="square footer-td" id="type_dt_our"></div>
+      </td>
+      <td>Европартнер</td>
+      <td>
+        <div class="square footer-td" id="type_dt_partner"></div>
+      </td>
+      <td>Клиент</td>
+      <td style="width: 50px;"></td>
+      <td>
         <div class="circle background_blue footer-td"></div>
       </td>
       <td>Не требует выполнения</td>
@@ -127,7 +140,7 @@
         <div class="circle background_green footer-td"></div>
       </td>
       <td>Выполнено</td>
-      <td style="width: 1200px;"></td>
+      <td style="width: 850px;"></td>
       <td><input type="input" id="hiddenField" class="datepicker" /></td>
     </tr>
   </table>
