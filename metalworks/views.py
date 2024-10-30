@@ -226,6 +226,7 @@ class DetailApiView(APIView):
             'article': request.data.get('article'),
             'assembly': request.data.get('assembly'),
             'name': request.data.get('name'),
+            'full_name': request.data.get('full_name'),
             'quantity': request.data.get('quantity'),
             'uuid_1C': request.data.get('uuid_1C'),
             'date_start': request.data.get('date_start'), 
