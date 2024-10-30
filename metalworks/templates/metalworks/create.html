@@ -1,0 +1,69 @@
+{% extends 'pressforms/layout.html' %}
+{% load static %}
+
+{% block title %}
+Добавление
+{% endblock %}
+
+{% block link %}
+  <link rel="stylesheet" href="{% static 'metalworks/css/card.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main_head">
+        <h3> Карточка детали </h3>
+      </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <label for="inputArticle" class="col-form-label">Артикул</label>
+            {{form.article}}
+        </div>
+        <div class="row">
+            <label for="inputName" class="col-form-label">Наименование</label>
+            {{form.name}}
+        </div>
+        <div class="row">
+            <label for="inputFullName" class="col-form-label">Полное наименование</label>
+            {{form.full_name}}
+        </div>
+        <div class="row">
+            <label for="inputAssembly" class="col-form-label">Сборка</label>
+            {{form.assembly}}
+        </div>
+        <div class="row">
+            <div class="form-check">
+                <label for="inputShield" class="col-form-label">Шильда</label>
+                {{form.shield}}
+            </div>
+        </div>
+        <div class="row">
+            <label for="inputQuantity" class="col-form-label">Количество, шт.</label>
+            {{form.quantity}}
+        </div>
+        <div class="row">
+            <label for="inputType" class="col-form-label">Тип</label>
+            {{form.type}}
+        </div>
+        <div class="row">
+            <label for="inputPartner" class="col-form-label">Клиент</label>
+            {{form.partner}}
+        </div>
+        <div class="row">
+            <label for="inputDateStart" class="col-form-label">Дата начала производства</label>
+            {{form.date_start}}
+        </div>
+        <div class="row">
+            <label for="inputDateFinish" class="col-form-label">Дата производства</label>
+            {{form.date_finish}}
+        </div>
+        <div class="row">
+            <label for="inputStatus" class="col-form-label">Статус</label>
+            {{form.status}}
+        </div>
+        <span>{{ error }}</span>
+        <br>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+{% endblock %}

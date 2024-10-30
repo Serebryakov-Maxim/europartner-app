@@ -107,19 +107,19 @@ def production(request):
                 data_work['week_name'] = ''
                 data_work['date_finish'] = ''
                 
-                for prg in progress:
-                    if prg.pressform == pf and prg.work == work:
-                        data_work['progress'] = prg.progress
-                        data_work['week'] = prg.week
+                try:
+                    prg = progress.get(pressform=pf, work=work)
+                    data_work['progress'] = prg.progress
+                    data_work['week'] = prg.week
 
-                        if prg.date_finish != None and prg.date_finish > datetime.date(1970, 1, 1):
-                            data_work['week_name'] = prg.date_finish.strftime("%d/%m")
-                            data_work['date_finish'] = prg.date_finish.strftime("%d.%m.%Y")
-                        else:
-                            data_work['week_name'] = str(prg.week)
-                            data_work['date_finish'] = ''
-                     
-                        break
+                    if prg.date_finish != None and prg.date_finish > datetime.date(1970, 1, 1):
+                        data_work['week_name'] = prg.date_finish.strftime("%d/%m")
+                        data_work['date_finish'] = prg.date_finish.strftime("%d.%m.%Y")
+                    else:
+                        data_work['week_name'] = str(prg.week)
+                        data_work['date_finish'] = ''
+                except Progress.DoesNotExist:
+                    pass
 
                 list_works.append(data_work)
 

@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block title %}
-Прессформы в производстве
+Детали в производстве
 {% endblock %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
-<script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
+<link rel="stylesheet" href="{% static 'metalworks/css/production.css' %}">
+<script src="{% static 'metalworks/js/jquery.cookie.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -51,65 +51,38 @@
 <div class="body">
   <div class="my_table">
     <table class="table table-bordered">
+      {% autoescape off %}
       <thead class="table-light">
         <tr>
-          <th scope="col" rowspan="2" class="col_property_pressform">Шильда</th>
-          <th scope="col" rowspan="2" class="col_property_pressform">№</th>
-          <th scope="col" rowspan="2" class="col_name_pressform">Наименование</th>
-          <th scope="col" rowspan="2" class="col_property_pressform">Сборка</th>
-          {% for current_type in typeWorks %}
-            {% for el in count_type %}
-              {% if current_type.id == el.type %}
-                {% if el.dcount == 1 %}
-                  <th scope="col" rowspan="2" class="col_work_pressform">{{current_type.name}}</th>
-                {% else %}
-                  <th scope="col" id="col_work_pressform_group" colspan="{{el.dcount}}">{{current_type.name}}</th>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% endfor %}
-        </tr>
-        <tr>
-          {% for current_type in typeWorks %}
-            {% for el in count_type %}
-              {% if current_type.id == el.type and el.dcount != 1 %}
-                {% for el in works %}
-                  {% if current_type.id == el.type.id %}
-                    <th scope="col" class="col_work_pressform">{{el.name}}</th>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
+          <th scope="col" class="col_name_client">Клиент</th>
+          <th scope="col" class="col_property_detail">Шильда</th>
+          <th scope="col" class="col_property_detail">№</th>
+          <th scope="col" class="col_property_detail">Сборка</th>
+          <th scope="col" class="col_name_pressform">Наименование</th>
+          <th scope="col" class="col_property_detail">Кол-во<br>деталей<br>(шт.)</th>
+          {% for el in works %}
+            <th scope="col" class="col_work_detail">{{el.name}}</th>
           {% endfor %}
         </tr>
       </thead>
+      {% endautoescape %}
       <tbody>
         {% for progress in list_progress %}
         <tr>
-          {% if progress.pf.shield %}
-            <td class="col_property_pressform">V</td>
+          <td class="col_name_client">{{ progress.dt.partner }}</td>
+          {% if progress.dt.shield %}
+            <td class="col_property_detail">V</td>
           {% else %}
             <td></td>
           {% endif %}
-          <td class="col_property_pressform">{{ forloop.counter }}</td>
-          {% if progress.pf.type == 1 %}
-            {% if progress.pf.status == 2 %}
-              <td id="type_pf_our_ready">{{progress.pf.name}}</td>
-            {% else %}
-              <td id="type_pf_our">{{progress.pf.name}}</td>
-            {% endif %}
-          {% elif progress.pf.type == 2 %}
-            <td id="type_pf_partner">{{progress.pf.name}}</td>
-          {% elif progress.pf.type == 3 %}
-            <td id="type_pf_import">{{progress.pf.name}}</td>
-          {% else %}
-            <td>{{progress.pf.name}}</td>
-          {% endif %}
-          <td class="col_property_pressform">{{progress.pf.assembly}}</td>
+          <td class="col_property_detail">{{ forloop.counter }}</td>
+          <td class="col_property_pressform">{{progress.dt.assembly}}</td>
+          <td title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
+          <td class="col_property_detail">{{ progress.dt.quantity }}</td>
           {% for el in progress.list_works %}
           <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
-            data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}"
-            data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}">
+            data-pressform-name="{{progress.dt.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}"
+            data-progress="{{el.progress}}" data-pressform-id="{{progress.dt.id}}">
             <div class="cell_progress" onclick="selectProgress(this)">
               {% if el.progress == 1 %}
                 <div class="circle background_green">
@@ -139,23 +112,6 @@
   <table class="footer-table">
     <tr>
       <td>
-        <div class="square footer-td" id="type_pf_our"></div>
-      </td>
-      <td>Европартнер (в работе)</td>
-      <td>
-        <div class="square footer-td" id="type_pf_our_ready"></div>
-      </td>
-      <td>Европартнер (выполнено)</td>
-      <td>
-        <div class="square footer-td" id="type_pf_partner"></div>
-      </td>
-      <td>Клиент</td>
-      <td>
-        <div class="square footer-td" id="type_pf_import"></div>
-      </td>
-      <td>Импорт</td>
-      <td style="width: 50px;"></td>
-      <td>
         <div class="circle background_blue footer-td"></div>
       </td>
       <td>Не требует выполнения</td>
@@ -181,7 +137,7 @@
   var date_modified = getDateModified();
   const cm = document.querySelector('.custom-cm');
   var parent = null;
- 
+
   // проверка на последние изменения, каждые 5 сек.
   setInterval(function () {
     last_modified = getDateModified();
@@ -198,7 +154,7 @@
 
   // полчение даты последних изменений
   function getDateModified() {
-    theUrl = window.location.protocol + "//" + window.location.host + "/pressforms/api/last_modified/";
+    theUrl = window.location.protocol + "//" + window.location.host + "/metalworks/api/last_modified/";
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", theUrl, false);
     xmlHttp.send(null);
@@ -243,7 +199,7 @@
     
     showContextMenu(false);
     // отправим запрос
-    fetch("{% url 'pressforms:operation' %}", {
+    fetch("{% url 'metalworks:operation' %}", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -343,4 +299,5 @@
   });
 
 </script>
+
 {% endblock %}

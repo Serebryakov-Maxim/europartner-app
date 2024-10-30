@@ -1,0 +1,149 @@
+:root {
+    --сol-width: 200px;
+    --сol-width2: 410px;
+  }
+
+body {
+    background: #747473;
+}
+
+.col-header{
+    float: left;
+    margin: auto;
+    width: var(--сol-width);
+    text-align: center;
+}
+
+.card-main{
+    width: var(--сol-width);	
+    height: 70px;
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+
+.col-header2{
+    float: left;
+    margin: auto;
+    width: var(--сol-width2);
+    text-align: center;
+}
+
+.year-card{
+    text-decoration: none;
+    background-color: #DCDCDC;
+    border: solid;
+    border-width: 1px;
+    border-color: #17a2b8;
+    border-radius: 5px;
+    padding: 2px;
+    color: black;
+    font-size: 22px;
+    margin: 5px;
+    display: block;
+  }
+
+.col-body{
+    float: left;
+    margin: auto;
+    width: var(--сol-width);
+    margin: 5px;
+}
+
+
+.body{
+    float: left;
+    width: 100%;
+}
+
+#type_pf_our{
+    background: green;
+ }
+ 
+ #type_pf_partner{
+     background: pink;
+  }
+ 
+ #type_pf_import{
+     background: #0059ff;
+  }
+
+  /*.footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height:auto;
+    color: rgb(253, 253, 253);
+}
+
+.footer-td{
+    margin-left: 10px;
+}*/
+
+.square {
+    width: 35px;
+    height: 35px;
+    padding-top: 8px;
+    display: inline-block;
+}
+
+.table {
+    width: 100%;
+    border-collapse:separate; 
+    border-spacing: 5px;
+}
+
+.my_table { 
+    overflow: auto; 
+    height: calc(100vh - 100px);
+}
+
+.my_table thead {
+    position: sticky; 
+    top: 0; 
+    z-index: 1;
+}
+
+.my_table tbody {
+    z-index: 2;
+}
+
+footer {
+    height: 45px;
+}
+
+.footer-td{
+    margin-left: 10px;
+}
+
+.footer-table-td{
+    text-align: right;
+    width: 550px;
+}
+
+.table th{
+    text-decoration: none;
+    background-color: #DCDCDC;
+    border: solid;
+    border-width: 1px;
+    border-color: #17a2b8;
+    border-radius: 5px;
+    color: black;
+    font-size: 22px;
+    margin: 5px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.table td {
+    width: var(--сol-width);	
+    height: 50px;
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+    padding: 2px;
+    margin-bottom: 5px;
+}

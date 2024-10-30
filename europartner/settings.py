@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'pressforms',
     'tpa',
     'main',
+    'partners',
+    'metalworks',
 ]
 
 MIDDLEWARE = [
