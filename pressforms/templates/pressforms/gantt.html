@@ -2,14 +2,30 @@
 {% load static %}
 
 {% block link %}
-    <link rel="stylesheet" href="{% static 'pressforms/css/production.css' %}">
     <script src="{% static 'pressforms/js/jquery.cookie.js' %}"></script>
     <script src="{% static 'pressforms/js/highcharts-gantt.js' %}"></script>
     <script src="{% static 'pressforms/js/exporting.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'pressforms/css/gantt.css' %}">
 {% endblock %}
 
 {% block content %}
 
+<div class="custom-cm">
+    <table>
+        <tr>
+            <td class='cell_color' id="color_yellow"></td>
+            <td>Отдел продаж</td>
+            <td class='cell_color' id="color_green"></td>
+            <td>Инструментальный цех</td>
+        </tr>
+        <tr>
+            <td class='cell_color' id="color_blue"></td>
+            <td>Конструкторский отдел</td>
+            <td class='cell_color' id="color_red"></td>
+            <td>Литьевой участок</td>
+        </tr>
+    </table>
+</div>
 <div id="container"></div>
 
 <script>
@@ -160,6 +176,11 @@
 
         yAxis: {
             type: 'category',
+            scrollbar: {
+                enabled: true
+            },
+            min: 0,
+            max: 12,
             grid: {
                 columns: [{
                     title: {

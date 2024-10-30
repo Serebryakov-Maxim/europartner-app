@@ -1,4 +1,34 @@
-body {
-    margin: auto;
-    background: #747473;
+
+.custom-cm{
+    padding: 10px 0;
+    width: 500px;
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    z-index: 10000;
+}
+
+.cell_color{
+    width: 50px;
+}
+#color_yellow{
+    background: #FFD700;
+}
+
+#color_green{
+    background: #7FFF00;
+}
+
+#color_blue{
+    background: #0000CD;
+}
+
+#color_red{
+    background: #FF0000;
+}
+
+td{
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #FFFFFF;
 }
