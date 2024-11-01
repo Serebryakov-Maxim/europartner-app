@@ -445,7 +445,7 @@ class FirstCycleOnDateApiView(APIView):
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
-        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('date')[:1]
+        cycles = Cycle.objects.filter(date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('date')[:1]
 
         serializer = CycleSerializer(cycles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -457,7 +457,7 @@ class LastCycleOnDateApiView(APIView):
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
-        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('-date')[:1]
+        cycles = Cycle.objects.filter(date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('-date')[:1]
 
         serializer = CycleSerializer(cycles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -473,7 +473,7 @@ class AvgCycleOnDateApiView(APIView):
         job_ob = Job.objects.get(uuid_1C=job)
         plan_cycle = job_ob.time_plan_ms * 1000
 
-        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job, time_ms__lte = plan_cycle*2).aggregate(Avg('time_ms'))
+        cycles = Cycle.objects.filter(date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job, time_ms__lte = plan_cycle*2).aggregate(Avg('time_ms'))
 
         return JsonResponse(cycles, safe=False)
               
