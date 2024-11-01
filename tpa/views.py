@@ -475,6 +475,5 @@ class AvgCycleOnDateApiView(APIView):
 
         cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job, time_ms__lte = plan_cycle*2).aggregate(Avg('time_ms'))
 
-        serializer = CycleSerializer(cycles, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return JsonResponse(cycles, safe=False)
               
