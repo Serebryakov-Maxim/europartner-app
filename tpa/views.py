@@ -445,6 +445,10 @@ class FirstCycleOnDateApiView(APIView):
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
+        
+        if date_end_cycle == "":
+            date_end_cycle = datetime.now()
+
         cycles = Cycle.objects.filter(date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('date')[:1]
 
         serializer = CycleSerializer(cycles, many=True)
@@ -457,6 +461,10 @@ class LastCycleOnDateApiView(APIView):
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
+        
+        if date_end_cycle == "":
+            date_end_cycle = datetime.now()
+
         cycles = Cycle.objects.filter(date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('-date')[:1]
 
         serializer = CycleSerializer(cycles, many=True)
@@ -469,6 +477,9 @@ class AvgCycleOnDateApiView(APIView):
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
+
+        if date_end_cycle == "":
+            date_end_cycle = datetime.now()
 
         job_ob = Job.objects.get(uuid_1C=job)
         plan_cycle = job_ob.time_plan_ms * 1000
