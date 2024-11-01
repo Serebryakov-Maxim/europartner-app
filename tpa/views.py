@@ -444,10 +444,9 @@ class FirstCycleOnDateApiView(APIView):
         id = request.GET.get("id")
         date_cycle = request.GET.get("date")
         job = request.GET.get("job")
-        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).order_by("date")
-        if cycles.count() > 0:
-            cycles = cycles[0]
-            
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).order_by("date")[0]
+
+
         serializer = CycleSerializer(cycles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
