@@ -463,15 +463,15 @@ class LastCycleOnDateApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
         
 class AvgCycleOnDateApiView(APIView):
-    '''Возвращает последний цикл'''
+    '''Возвращает средниее время цикла'''
     def get(self, request, *args, **kwargs):
         id = request.GET.get("id")
         date_start_cycle = request.GET.get("date_start")
         date_end_cycle = request.GET.get("date_end")
         job = request.GET.get("job")
 
-        job = JobListApiView().get_object_by_uuid(job)
-        plan_cycle = job.time_plan_ms
+        job_ob = JobListApiView().get_object_by_uuid(job)
+        plan_cycle = job_ob.time_plan_ms
 
         cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).aggregate(Avg('time_ms'))
 
