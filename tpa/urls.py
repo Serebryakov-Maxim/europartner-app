@@ -20,4 +20,5 @@ urlpatterns = [
     path('api/time_cycle_by_job/', views.TimeProdApiView.as_view(), name='api'),
     path('api/first_cycle_by_job/', views.FirstCycleOnDateApiView.as_view(), name='api'),
     path('api/last_cycle_by_job/', views.LastCycleOnDateApiView.as_view(), name='api'),
+    path('api/avg_cycle_by_job/', views.AvgCycleOnDateApiView.as_view(), name='api'),
 ]
