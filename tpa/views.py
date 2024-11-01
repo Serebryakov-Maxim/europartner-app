@@ -449,4 +449,16 @@ class FirstCycleOnDateApiView(APIView):
 
         serializer = CycleSerializer(cycles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class LastCycleOnDateApiView(APIView):
+    '''Возвращает последний цикл'''
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get("id")
+        date_start_cycle = request.GET.get("date_start")
+        date_end_cycle = request.GET.get("date_end")
+        job = request.GET.get("job")
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).order_by('-date')[:1]
+
+        serializer = CycleSerializer(cycles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
         
