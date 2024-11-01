@@ -473,7 +473,7 @@ class AvgCycleOnDateApiView(APIView):
         job = JobListApiView().get_object_by_uuid(job)
         plan_cycle = job.time_plan_ms
 
-        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job, time_ms__lte = plan_cycle*2).aggregate(Avg('time_ms'))
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_start_cycle, date__lte = date_end_cycle, job__uuid_1C = job).aggregate(Avg('time_ms'))
 
         return JsonResponse(cycles, safe=False)
               
