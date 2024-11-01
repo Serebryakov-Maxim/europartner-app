@@ -80,7 +80,7 @@ body {
 
 .table th{
     --count-col-work: 40;
-    font-size: small;
+    font-size: large;
     text-align: center;
     word-break: break-all;
     padding: 0px;

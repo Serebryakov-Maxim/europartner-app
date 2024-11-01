@@ -437,3 +437,13 @@ class TimeProdApiView(APIView):
         cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).aggregate(Sum('time_ms'))
 
         return JsonResponse(cycles, safe=False)
+    
+class FirstCycleOnDateApiView(APIView):
+    '''Возвращает первый цикл'''
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get("id")
+        date_cycle = request.GET.get("date")
+        job = request.GET.get("job")
+        cycles = Cycle.objects.filter(machine__id = id, date__gte = date_cycle, job__uuid_1C = job).order_by("date_cycle")[0]
+
+        return JsonResponse(cycles, safe=False)
