@@ -66,48 +66,8 @@
         </tr>
       </thead>
       {% endautoescape %}
-      <tbody>
-        {% for progress in list_progress %}
-        <tr>
-          {% if progress.dt.partner.code_1C == "00-00000011" %}
-            <td id="type_dt_our" class="col_name_client">{{ progress.dt.partner }}</td>
-          {% else %}
-            <td id="type_dt_partner" class="col_name_client">{{ progress.dt.partner }}</td>
-          {% endif %}
-          {% if progress.dt.shield %}
-            <td class="col_property_detail">V</td>
-          {% else %}
-            <td></td>
-          {% endif %}
-          <td class="col_property_detail">{{ forloop.counter }}</td>
-          <td class="col_property_pressform">{{progress.dt.assembly}}</td>
-          <td title="{{progress.dt.full_name}}">{{progress.dt.name}}</td>
-          <td class="col_property_detail">{{ progress.dt.quantity }}</td>
-          {% for el in progress.list_works %}
-          <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
-            data-pressform-name="{{progress.dt.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}"
-            data-progress="{{el.progress}}" data-pressform-id="{{progress.dt.id}}">
-            <div class="cell_progress" onclick="selectProgress(this)">
-              {% if el.progress == 1 %}
-                <div class="circle background_green">
-              {% elif el.progress == 2 %}
-                <div class="circle background_blue">
-              {% elif el.progress == 3 %}
-                <div class="circle background_yellow">
-              {% elif el.progress == 4 %}
-                <div class="circle background_red">
-              {% else %}
-                <div class="circle background_grey">
-              {% endif %}
-              {% if el.week_name != '0' %}
-                {{el.week_name|linebreaksbr}}
-              {% endif %}
-              </div>
-            </div>
-          </td>
-          {% endfor %}
-        </tr>
-        {% endfor %}
+      <tbody id="replaceable-content">
+        {% include 'metalworks/production_list_partial.html' %}
       </tbody>
     </table>
   </div>
@@ -150,13 +110,17 @@
   var date_modified = getDateModified();
   const cm = document.querySelector('.custom-cm');
   var parent = null;
+  const production_div = $('#replaceable-content')
+  const endpoint = '/metalworks/production/'
+  const delay_by_in_ms = 300
+  let scheduled_function = false
 
   // проверка на последние изменения, каждые 5 сек.
   setInterval(function () {
     last_modified = getDateModified();
     if (date_modified < last_modified) {
-      updateWindow();
-      date_modified = last_modified;
+      updateWindow_ajax();
+      //date_modified = last_modified;
     }
   }, 5000);
 
@@ -173,6 +137,10 @@
     xmlHttp.send(null);
     responseText = xmlHttp.responseText;
     return Date.parse(JSON.parse(responseText)["date_modified"]);
+  };
+
+  function setDateModified() {
+    date_modified = getDateModified();
   };
 
   // отображение календаря
@@ -212,7 +180,7 @@
     
     showContextMenu(false);
     // отправим запрос
-    fetch("{% url 'metalworks:operation' %}", {
+    req = fetch("{% url 'metalworks:operation' %}", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -224,9 +192,29 @@
         week: week,
         date_finish: date_finish
       })
-    });
-    
-    updateWindow();
+    }).then(updateWindow_ajax());
+  };
+
+  let ajax_call = function (endpoint) {
+      $.getJSON(endpoint)
+          .done(response => {
+              // спрячем production_div, потом:
+              production_div.fadeTo('fast', 0).promise().then(() => {
+                  // замени HTML контекст
+                  production_div.html(response['html_from_view'])
+                  // отобразим html контекст с новыми данными
+                  production_div.fadeTo('fast', 1)
+              })
+          }).then(setDateModified())
+  };
+
+  function updateWindow_ajax() {
+    if (scheduled_function) {
+          clearTimeout(scheduled_function)
+      }
+
+    // setTimeout returns the ID of the function to be executed
+    scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint);
   };
 
   // Отобразить / спрятать меню

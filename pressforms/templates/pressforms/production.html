@@ -83,54 +83,8 @@
           {% endfor %}
         </tr>
       </thead>
-      <tbody>
-        {% for progress in list_progress %}
-        <tr>
-          {% if progress.pf.shield %}
-            <td class="col_property_pressform">V</td>
-          {% else %}
-            <td></td>
-          {% endif %}
-          <td class="col_property_pressform">{{ forloop.counter }}</td>
-          {% if progress.pf.type == 1 %}
-            {% if progress.pf.status == 2 %}
-              <td id="type_pf_our_ready">{{progress.pf.name}}</td>
-            {% else %}
-              <td id="type_pf_our">{{progress.pf.name}}</td>
-            {% endif %}
-          {% elif progress.pf.type == 2 %}
-            <td id="type_pf_partner">{{progress.pf.name}}</td>
-          {% elif progress.pf.type == 3 %}
-            <td id="type_pf_import">{{progress.pf.name}}</td>
-          {% else %}
-            <td>{{progress.pf.name}}</td>
-          {% endif %}
-          <td class="col_property_pressform">{{progress.pf.assembly}}</td>
-          {% for el in progress.list_works %}
-          <td class="col_work_progress" data-date_finish="{{el.date_finish}}" data-work-name="{{el.work.name}}"
-            data-pressform-name="{{progress.pf.name}}" data-work-id="{{el.work.id}}" data-week="{{el.week}}"
-            data-progress="{{el.progress}}" data-pressform-id="{{progress.pf.id}}">
-            <div class="cell_progress" onclick="selectProgress(this)">
-              {% if el.progress == 1 %}
-                <div class="circle background_green">
-              {% elif el.progress == 2 %}
-                <div class="circle background_blue">
-              {% elif el.progress == 3 %}
-                <div class="circle background_yellow">
-              {% elif el.progress == 4 %}
-                <div class="circle background_red">
-              {% else %}
-                <div class="circle background_grey">
-              {% endif %}
-              {% if el.week_name != '0' %}
-                {{el.week_name|linebreaksbr}}
-              {% endif %}
-              </div>
-            </div>
-          </td>
-          {% endfor %}
-        </tr>
-        {% endfor %}
+      <tbody id="replaceable-content">
+        {% include 'pressforms/production_list_partial.html' %}
       </tbody>
     </table>
   </div>
@@ -181,13 +135,29 @@
   var date_modified = getDateModified();
   const cm = document.querySelector('.custom-cm');
   var parent = null;
+  const production_div = $('#replaceable-content')
+  const endpoint = '/pressforms/production/'
+  const delay_by_in_ms = 300
+  let scheduled_function = false
+
+  let ajax_call = function (endpoint) {
+      $.getJSON(endpoint)
+          .done(response => {
+              // спрячем production_div, потом:
+              production_div.fadeTo('fast', 0).promise().then(() => {
+                  // замени HTML контекст
+                  production_div.html(response['html_from_view'])
+                  // отобразим html контекст с новыми данными
+                  production_div.fadeTo('fast', 1)
+              })
+          }).then(setDateModified())
+  };
  
   // проверка на последние изменения, каждые 5 сек.
   setInterval(function () {
     last_modified = getDateModified();
     if (date_modified < last_modified) {
-      updateWindow();
-      date_modified = last_modified;
+      updateWindow_ajax();
     }
   }, 5000);
 
@@ -204,6 +174,10 @@
     xmlHttp.send(null);
     responseText = xmlHttp.responseText;
     return Date.parse(JSON.parse(responseText)["date_modified"]);
+  };
+
+  function setDateModified() {
+    date_modified = getDateModified();
   };
 
   // отображение календаря
@@ -257,7 +231,16 @@
       })
     });
     
-    updateWindow();
+    updateWindow_ajax();
+  };
+
+  function updateWindow_ajax() {
+    if (scheduled_function) {
+          clearTimeout(scheduled_function)
+      }
+
+    // setTimeout returns the ID of the function to be executed
+    scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint);
   };
 
   // Отобразить / спрятать меню

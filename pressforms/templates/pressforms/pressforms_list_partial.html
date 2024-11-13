@@ -1,0 +1,19 @@
+
+{% if pressforms %}  
+    {% for el in pressforms %}
+          <tr>
+            <td>{{ el.article }}</td>
+            <td class="tr_col_name">{{ el.name }}</td>
+            <td>{{ el.getYear }}</td>
+            <td>{{ el.get_type_display }}</td>
+            <td>{{ el.get_status_display }}</td>
+            <td> <a href="{% url 'pressforms:card' el.id %}" class="btn btn-warning">Открыть</a></td>
+          </tr>
+        {% endfor %}
+{% else %}
+          {
+            <tr>
+              <td colspan="6">ДАННЫХ НЕТ</td>
+            </tr>
+          }
+{% endif %}  

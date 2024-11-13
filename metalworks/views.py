@@ -11,10 +11,31 @@ from rest_framework import status
 from .serializers import DetailSerializer, DetailLastModifiedSerializer
 import json
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.db.models import Q
 
 def details(request):
     """ Формирует список всех прессформ """
-    details_list = mw_Detail.objects.order_by('article')
+    url_parameter = request.GET.get("q")
+    if url_parameter:
+        details_list = mw_Detail.objects.filter(Q(name__icontains=url_parameter) | Q(assembly__icontains=url_parameter) | Q(article__icontains=url_parameter)).order_by('article')
+    else:
+        details_list = mw_Detail.objects.order_by('article')
+
+    does_req_accept_json = request.accepts("application/json")
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
+    
+    if is_ajax_request:
+        html = render_to_string(
+            template_name="metalworks/details_list_partial.html", 
+            context={"details": details_list}
+        )
+
+        data_dict = {"html_from_view": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+    
     context = {'details': details_list}
     return render(request, 'metalworks/details.html', context)
 
@@ -112,13 +133,27 @@ def production(request):
 
         data['list_works'] = list_works
         list_progress.append(data)
+ 
+    # Обновление по ajax
+    does_req_accept_json = request.accepts("application/json")
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
+    
+    if is_ajax_request:
+        html = render_to_string(
+            template_name="metalworks/production_list_partial.html", 
+            context={"list_progress": list_progress}
+        )
+
+        data_dict = {"html_from_view": html}
+
+        return JsonResponse(data=data_dict, safe=False)
 
     context = {
         'details': details,
         'works': works,
         'list_progress': list_progress,
         }
-
+    
     return render(request, 'metalworks/production.html', context)
 
 def create(request):

@@ -12,6 +12,9 @@ import datetime
 import json
 import requests
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.db.models import Q
 
 def history(request):
     """ Формирование произведенных прессформ """
@@ -77,8 +80,26 @@ def media(request):
 
 def pressforms(request):
     """ Формирует список всех прессформ """
-    pressforms_list = Pressform.objects.order_by('article')
+    url_parameter = request.GET.get("q")
+    if url_parameter:
+        pressforms_list = Pressform.objects.filter(Q(name__icontains=url_parameter) | Q(assembly__icontains=url_parameter) | Q(article__icontains=url_parameter)).order_by('article')
+    else:
+        pressforms_list = Pressform.objects.order_by('article')
     context = {'pressforms': pressforms_list}
+
+    does_req_accept_json = request.accepts("application/json")
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
+    
+    if is_ajax_request:
+        html = render_to_string(
+            template_name="pressforms/pressforms_list_partial.html", 
+            context={"pressforms": pressforms_list}
+        )
+
+        data_dict = {"html_from_view": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+    
     return render(request, 'pressforms/pressforms.html', context)
 
 def production(request):
@@ -126,6 +147,18 @@ def production(request):
         data['list_works'] = list_works
         list_progress.append(data)
 
+    does_req_accept_json = request.accepts("application/json")
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
+    
+    # Обновление по ajax
+    if is_ajax_request:
+        html = render_to_string(
+            template_name="pressforms/production_list_partial.html", 
+            context={"list_progress": list_progress}
+        )
+        data_dict = {"html_from_view": html}
+        return JsonResponse(data=data_dict, safe=False)
+    
     context = {
         'typeWorks': typeWorks,
         'pressforms': pressforms,

@@ -1,5 +1,7 @@
 from django.db import models
 from partners.models import Partner
+from django.db.models import Q
+import datetime
 
 class mw_Detail(models.Model):
     """Деталь - информация о детали"""
@@ -37,10 +39,21 @@ class mw_Detail(models.Model):
     uuid_1C = models.CharField('Идентификатор детали в 1С', max_length=36, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # проверим, если статус последний, тогда деталь выполнена
+        work_ready = mw_Work.objects.get(name='Сдача')
+        try:
+            progress_ready = mw_Progress.objects.get(Q(detail=self) & Q(work=work_ready))
+        except mw_Progress.DoesNotExist:    
+            progress_ready = None
+
+        if work_ready and progress_ready and progress_ready.progress == 1:
+            self.status = 2
+            self.date_finish = datetime.datetime.now()
+
         if self.date_finish is not None:
             self.year = self.date_finish.year
         else:
-            self.year = 0        
+            self.year = 0  
 
         super(mw_Detail, self).save()
 
@@ -79,6 +92,7 @@ class mw_Progress(models.Model):
     week = models.IntegerField('Неделя', default=0)
     date_finish = models.DateField('Дата выполнения', blank=True, null=True)
 
+    #Прогресс: 0-пусто, 1-Выполнено, 2-Не требует выполнения, 3-В работе, 4-Не выполнено
     class Meta:
             db_table = 'mw_execute'
             verbose_name = 'Выполнение'

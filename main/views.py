@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from pyModbusTCP.client import ModbusClient
 from django.views.decorators.csrf import csrf_exempt
+from django.http import Http404
+from rest_framework import status
+from rest_framework.response import Response
+import json
+import os
 
 def index(request):
     return render(request, 'main/index.html')
@@ -88,3 +93,15 @@ def ventilation(request):
         return JsonResponse(data)
     else:
         return JsonResponse({'error': 'Неизвестный метод'})
+
+@csrf_exempt
+def yandex_forms(request):
+
+    if request.method == 'POST':
+        json_b = request.body
+        try:
+            data_json = json.loads(json_b)
+            return JsonResponse(data_json, safe=False, status=status.HTTP_200_OK)
+        except NameError:
+            json_r = {'error': NameError}
+            return JsonResponse(json_r, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
