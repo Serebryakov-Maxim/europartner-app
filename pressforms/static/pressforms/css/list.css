@@ -72,3 +72,7 @@ tr {
     animation-timing-function:ease-in-out;
     animation-direction: alternate;
   }
+
+.fas {
+    margin-left: 10px;
+}

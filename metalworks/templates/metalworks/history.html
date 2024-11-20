@@ -21,7 +21,7 @@
                         <th colspan="2">
                             {{current_year.year}} год
                             <br> 
-                            <div style="font-size: small;">Изготовлено {{current_year.dcount}} п/ф</div>
+                            <div style="font-size: small;">Изготовлено {{current_year.dcount}} деталей</div>
                         </th>
                     {% endfor %}
                     </tr>
@@ -32,15 +32,12 @@
                         {% for current_year in years %}
                             {% for list_dt in current_str.list %}
                                 {% if current_year.year == list_dt.year %}
-                                    {% if list_dt.type == 1 %}
+                                    {% if list_dt.partner.code_1C == "00-00000011" %}
                                         <td id="type_pf_our">
-                                    {% elif list_dt.type == 2 %}
-                                        <td id="type_pf_partner">
-                                    {% elif list_dt.type == 3 %}
-                                        <td id="type_pf_import">
                                     {% else %}
-                                        <td>
+                                        <td id="type_pf_partner">
                                     {% endif %}
+                                    <b>{{list_dt.partner}}</b><br>
                                     {{list_dt.name}}</td>
                                 {% endif %}
                             {% endfor %}
