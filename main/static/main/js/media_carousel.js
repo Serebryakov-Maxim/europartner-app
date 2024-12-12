@@ -1,4 +1,4 @@
-var mytime = mytime_const = 60;
+var mytime = mytime_const = 3600;
 document.onmousemove = document.onkeydown = document.onscroll = function(){mytime = mytime_const};
 
 setInterval(function(){
