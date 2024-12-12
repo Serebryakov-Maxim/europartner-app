@@ -25,6 +25,13 @@
 </div>
 
 <script>
+    
+    var callback = location.search.substring(1);
+    document.onclick = document.onkeydown = function(){
+        //console.log("Движение!" + callback);
+        if (callback !== "") location.href = callback;
+    };
+
     $(function() {
         // Owl Carousel
         var owl = $(".owl-carousel");
@@ -34,7 +41,7 @@
             margin:10,
             autoplay:true,
             autoplayTimeout:5000,
-            autoplayHoverPause:true,
+            autoplayHoverPause:false,
             slideSpeed : 300,
             paginationSpeed : 400,
             autoHeight:true,
