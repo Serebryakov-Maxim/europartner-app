@@ -1,0 +1,7 @@
+#owl-demo .item img{
+    display: block;
+    width: 100%;
+    height: calc(100vh - 100px);
+}
+
+

@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block link %}
+<link rel="stylesheet" href="{% static 'pressforms/css/media.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -13,26 +14,35 @@
 {% endblock %}
 
 {% block content %}
-
-        <div class="owl-carousel owl-theme">
-            {% for cur_file in foto_files %}
-                <div>
-                    <img src="{{cur_file.file.url}}" class="img-fluid">
-                </div>
-            {%endfor%}
-        </div>
+<div class="fotos">
+            <div id="owl-demo" class="owl-carousel owl-theme">
+                {% for cur_file in foto_files %}
+                    <div class="item">
+                        <img src="{{cur_file.file.url}}">
+                    </div>
+                {%endfor%}
+            </div>
+</div>
 
 <script>
     $(function() {
         // Owl Carousel
         var owl = $(".owl-carousel");
         owl.owlCarousel({
-            items: 1,
-            margin: 10,
-            loop: true,
-            nav: true,
-            autoWidth: false,
-            autoplay: true,
+            navigation : true, // Show next and prev buttons
+            loop:true,
+            margin:10,
+            autoplay:true,
+            autoplayTimeout:5000,
+            autoplayHoverPause:true,
+            slideSpeed : 300,
+            paginationSpeed : 400,
+            autoHeight:true,
+            items : 1, 
+            itemsDesktop : false,
+            itemsDesktopSmall : false,
+            itemsTablet: false,
+            itemsMobile : false
         });
         });
 </script>
