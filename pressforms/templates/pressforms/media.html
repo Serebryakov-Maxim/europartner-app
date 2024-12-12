@@ -28,14 +28,19 @@
     
     var callback = location.search.substring(1);
     document.onclick = document.onkeydown = function(){
-        //console.log("Движение!" + callback);
         if (callback !== "") location.href = callback;
     };
+
+    setInterval(function(){
+        window.location.reload();
+    }, 3600000);
+
 
     $(function() {
         // Owl Carousel
         var owl = $(".owl-carousel");
         owl.owlCarousel({
+            lazyLoad: true,
             navigation : true, // Show next and prev buttons
             loop:true,
             margin:10,
@@ -49,7 +54,7 @@
             itemsDesktop : false,
             itemsDesktopSmall : false,
             itemsTablet: false,
-            itemsMobile : false
+            itemsMobile : false,
         });
         });
 </script>
