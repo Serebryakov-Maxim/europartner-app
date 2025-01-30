@@ -45,6 +45,7 @@ def ventilation(request):
                     data[key] = 'read error'
         data['connection'] = connection.is_open
 
+        connection.close()
         return data
     
     def setDataVentilation(addr, value)->dict:
@@ -54,8 +55,9 @@ def ventilation(request):
         if connection.is_open:
             if connection.write_multiple_registers(addr, [value]):
                 result = True
-
-        return {'result':result, 'connection':connection.is_open}
+        is_open = connection.is_open
+        connection.close()
+        return {'result':result, 'connection':is_open}
     
     def make_response(addr_str, value_str)->dict:
         '''Проверки перед установкой значений'''
