@@ -17,7 +17,7 @@ def ventilation(request):
 
     def get_connection():
         '''Получает соединение с modbus'''
-        connection = ModbusClient(host="10.30.0.30", port=502, unit_id=16, auto_open=True, timeout=5.0)
+        connection = ModbusClient(host="192.168.1.167", port=502, unit_id=16, auto_open=True, timeout=5.0)
         connection.open()
         return connection
 
