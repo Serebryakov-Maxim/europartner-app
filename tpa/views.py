@@ -142,7 +142,20 @@ class JobListApiView(APIView):
     # 1. List all
     def get(self, request, *args, **kwargs):
         '''Получить список заданий'''
-        jobs = Job.objects.all()
+        active = request.GET.get("active")
+        machine_id = request.GET.get("machine_id")
+
+        filter = {}
+        if active != None:
+            filter['status'] = 'Выполняется'
+        if machine_id != None:
+            filter['machine__id'] = machine_id
+
+        if len(filter):
+            jobs = Job.objects.filter(**filter)
+        else:
+            jobs = Job.objects.all()
+
         serializer = JobSerializer(jobs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
