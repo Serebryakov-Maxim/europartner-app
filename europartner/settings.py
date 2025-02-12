@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'main',
     'partners',
     'metalworks',
+    'sensors',
 ]
 
 MIDDLEWARE = [
