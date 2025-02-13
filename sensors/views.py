@@ -173,10 +173,12 @@ class LastParametersApiView(APIView):
         # Получаем данные
         if len(filter):
             value = 0
+            date = ''
             data = ValueParameter.objects.filter(**filter).order_by('date')[:1]
             if len(data) > 0:
                 value = data[0].value
+                date = data[0].date
 
-            return JsonResponse({'value': value}, safe=False)
+            return JsonResponse({'date':date,'value': value}, safe=False)
         else:
             return Response("Empty filter", safe=False)
