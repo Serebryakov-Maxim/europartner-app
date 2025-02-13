@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime
+from django.utils import timezone
 
 class ValuesSensorApiView(APIView):
     # Get values  
@@ -153,6 +154,8 @@ class LastParametersApiView(APIView):
         sensor = request.GET.get("sensor")
         parameter = request.GET.get("parameter")
 
+        tz = timezone.get_current_timezone()
+
                 # Соберем фильтр    
         filter = {}
 
@@ -177,7 +180,7 @@ class LastParametersApiView(APIView):
             data = ValueParameter.objects.filter(**filter).order_by('-date')[:1]
             if len(data) > 0:
                 value = data[0].value
-                date = data[0].date
+                date = data[0].date.astimezone(tz)
 
             return JsonResponse({'date':date,'value': value}, safe=False)
         else:
