@@ -148,4 +148,35 @@ class ListParameters_v2_ApiView(APIView):
         else:
             return Response("Empty filter", safe=False)
 
-        
+class LastParametersApiView(APIView):
+    def get(self, request, *args, **kwargs):
+        sensor = request.GET.get("sensor")
+        parameter = request.GET.get("parameter")
+
+                # Соберем фильтр    
+        filter = {}
+
+        if sensor != None:
+            try:
+                sensor_instance = Sensor.objects.get(name=sensor)
+                filter['sensor'] = sensor_instance.id
+            except:
+                None
+            
+        if parameter != None:
+            try:
+                parameter_instance = Parameter.objects.get(name=parameter)
+                filter['parameter'] = parameter_instance.id
+            except:
+                None
+
+        # Получаем данные
+        if len(filter):
+            value = 0
+            data = ValueParameter.objects.filter(**filter).order_by('date')[:1]
+            if len(data) > 0:
+                value = data[0].value
+
+            return JsonResponse({'value': value}, safe=False)
+        else:
+            return Response("Empty filter", safe=False)
