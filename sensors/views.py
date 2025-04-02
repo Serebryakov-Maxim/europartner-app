@@ -9,6 +9,7 @@ from django.http import JsonResponse, HttpResponse
 from datetime import datetime
 from django.utils import timezone
 
+
 class ValuesSensorApiView(APIView):
     # Get values  
     def get(self, request, *args, **kwargs):
@@ -150,6 +151,7 @@ class ListParameters_v2_ApiView(APIView):
             return Response("Empty filter", safe=False)
 
 class LastParametersApiView(APIView):
+
     def get(self, request, *args, **kwargs):
         sensor = request.GET.get("sensor")
         parameter = request.GET.get("parameter")
@@ -185,3 +187,4 @@ class LastParametersApiView(APIView):
             return JsonResponse({'date':date,'value': value}, safe=False)
         else:
             return Response("Empty filter", safe=False)
+       

@@ -5,8 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 import json
-import os
+from europartner.mqtt import client as mqtt_client
 
 def index(request):
     return render(request, 'main/index.html')
@@ -107,3 +108,14 @@ def yandex_forms(request):
         except NameError:
             json_r = {'error': NameError}
             return JsonResponse(json_r, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@csrf_exempt
+def mqtt_publish(request):
+
+     if request.method == 'POST':
+
+        request_data = json.loads(request.body)
+        rc, mid = mqtt_client.publish(request_data['topic'], request_data['msg'])
+
+        return JsonResponse(rc, safe=False, status=status.HTTP_200_OK)
+

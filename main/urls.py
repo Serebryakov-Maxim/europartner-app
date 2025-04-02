@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('ventilation/', views.ventilation, name='ventilation'),
     path('yandex_forms/', views.yandex_forms, name='yandex_forms'),
+    path('mqtt_publish/', views.mqtt_publish, name='mqtt_publish'),
 ]
