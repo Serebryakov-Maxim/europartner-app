@@ -79,7 +79,7 @@ TEMPLATES = [
 ]
 
 CRONJOBS = [
-    ('* * * * *', 'main.cron.send_reminders'),
+    ('* * * * *', 'europartner.cron.send_reminders'),
 ]
 
 WSGI_APPLICATION = 'europartner.wsgi.application'
@@ -144,15 +144,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'erp-1c@europartner.su'
-EMAIL_HOST_PASSWORD = '2wmgU5H&'
-EMAIL_USER_SENDER = 'Django Admin <erp-1c@europartner.su>'
-EMAIL_USER_ALERT = ['serebryakov@partnerpak.ru']
-
 
 from .settings_local import *
