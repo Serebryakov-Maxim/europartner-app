@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime
 from tpa.models import Cycle
+from django.utils import timezone
 
 def checking_controllers():
 
@@ -9,7 +10,10 @@ def checking_controllers():
     if obj == None:
         return
     
-    difference = datetime.now() - obj.date.replace(tzinfo=None)
+    tz = timezone.get_current_timezone()
+    date_now = datetime.now().astimezone(tz)
+    
+    difference = date_now - obj.date
 
     total_seconds = difference.total_seconds()
 
