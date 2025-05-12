@@ -17,6 +17,9 @@ def checking_controllers():
 
     total_seconds = difference.total_seconds()
 
+    if total_seconds < 100:
+        return
+
     subject = 'Нет данных с контроллеров ТПА!'
     message = 'Последние показания были ' + str(int(total_seconds)) + ' сек. назад'
     send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)
