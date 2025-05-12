@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'rest_framework',
     'pressforms',
     'tpa',
@@ -75,6 +76,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+CRONJOBS = [
+    ('* * * * *', 'europartner.cron.send_reminders'),
 ]
 
 WSGI_APPLICATION = 'europartner.wsgi.application'
@@ -139,5 +144,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'erp-1c@europartner.su'
+EMAIL_HOST_PASSWORD = '2wmgU5H&'
 
 from .settings_local import *
