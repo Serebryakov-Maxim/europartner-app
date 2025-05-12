@@ -32,6 +32,7 @@ class StandartResultSetPagination(PageNumberPagination):
 def list(request):
     machines_list = Machine.objects.order_by('id')
     context = {'machines': machines_list}
+
     return render(request, 'tpa/list.html', context)
 
 def machine_card(request, machine_id):

@@ -79,7 +79,7 @@ TEMPLATES = [
 ]
 
 CRONJOBS = [
-    ('* * * * *', 'europartner.cron.send_reminders'),
+    ('* * * * *', 'europartner.cron.checking_controllers'),
 ]
 
 WSGI_APPLICATION = 'europartner.wsgi.application'
