@@ -4,4 +4,4 @@ from django.conf import settings
 def send_reminders():
     subject = 'Django ALARM!'
     message = 'test'
-    send_mail(subject, message, settings.EMAIL_HOST_USER, ['serebryakov@partnerpak.ru'])
+    send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)

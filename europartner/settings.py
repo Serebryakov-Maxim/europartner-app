@@ -151,5 +151,8 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'erp-1c@europartner.su'
 EMAIL_HOST_PASSWORD = '2wmgU5H&'
+EMAIL_USER_SENDER = 'Django Admin <erp-1c@europartner.su>'
+EMAIL_USER_ALERT = ['serebryakov@partnerpak.ru']
+
 
 from .settings_local import *
