@@ -144,12 +144,15 @@ class JobListApiView(APIView):
         '''Получить список заданий'''
         active = request.GET.get("active")
         machine_id = request.GET.get("machine_id")
+        id = request.GET.get("id")
 
         filter = {}
         if active != None:
             filter['status'] = 'Выполняется'
         if machine_id != None:
             filter['machine__id'] = machine_id
+        if id != None:
+            filter['id'] = id
 
         if len(filter):
             jobs = Job.objects.filter(**filter)
