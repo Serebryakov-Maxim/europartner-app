@@ -3,6 +3,7 @@ from django.conf import settings
 from datetime import datetime
 from tpa.models import Cycle
 from django.utils import timezone
+import subprocess
 
 def checking_controllers():
 
@@ -19,7 +20,9 @@ def checking_controllers():
 
     if total_seconds < 100:
         return
-
+                         
     subject = 'Нет данных с контроллеров ТПА!'
     message = 'Последние показания были ' + str(int(total_seconds)) + ' сек. назад'
     send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)
+
+    subprocess.run(['source /home/user/code/restart_raspberry_service/restart_service.sh'])
