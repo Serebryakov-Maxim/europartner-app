@@ -220,14 +220,13 @@ class CycleApiView(APIView):
             filter['time_ms__gte'] = time_ms
 
         # Получаем данные
-        if len(filter):
+        if len(filter) > 0:
             cycles = Cycle.objects.filter(**filter).order_by('id')
         else:
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
         if page != None:
             paginator = StandartResultSetPagination()
-            paginator.page_size = 100
             result_page = paginator.paginate_queryset(cycles, request)
             serializer = CycleSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
