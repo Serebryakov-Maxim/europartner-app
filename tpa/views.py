@@ -16,14 +16,15 @@ from django.utils import timezone
 from statistics import mean
 
 class StandartResultSetPagination(PageNumberPagination):
-    page_size = 100
+    page_size = 1000
     #page_size_query_param = 'page_size'
 
     def get_paginated_response(self, data):
         return Response({
             'count': self.page.paginator.count,
-            'num_pages': self.page.number,
-            'per_page': self.page.paginator.per_page,
+            'current_page': self.page.number,
+            'num_pages': self.page.paginator.num_pages,
+            #'per_page': self.page.paginator.per_page,
             'result': data,
 
         })
@@ -220,9 +221,11 @@ class CycleApiView(APIView):
             filter['time_ms__gte'] = time_ms
 
         # Получаем данные
-        if len(filter) > 0:
+        if len(filter):
+            print(1)
             cycles = Cycle.objects.filter(**filter).order_by('id')
         else:
+            print(2)
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
         if page != None:
