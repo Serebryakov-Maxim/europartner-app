@@ -27,4 +27,4 @@ def checking_controllers():
     send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)
     
     # запуск скрипта на перезапуск службы
-    subprocess.run(['source /home/user/code/restart_raspberry_service/restart_service.sh'])
+    subprocess.run(['. /home/user/code/restart_raspberry_service/restart_service.sh'], shell=True)
