@@ -7,7 +7,6 @@ import subprocess
 
 def checking_controllers():
 
-    return
     # последние данные
     obj = Cycle.objects.last()
     if obj == None:
