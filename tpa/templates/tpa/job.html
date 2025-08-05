@@ -50,6 +50,20 @@
 				<td class="td_right">{% if el.proc == 0 %}  {% else %} {{el.proc}} {% endif %}</td>
 			</tr>
 			{% endfor %}
+			{% if data_json.water %}
+				<td class="td_left"></td>
+				<td class="td_left"></td>
+				<td class="td_left">Увлажнение</td>
+				<td class="td_right"></td>
+				<td class="td_right"></td>
+			{% endif %}
+			{% if data_json.recycle > 0 %}
+				<td class="td_left">Дробленка</td>
+				<td class="td_left"></td>
+				<td class="td_left"></td>
+				<td class="td_right"></td>
+				<td class="td_right">data_json.recycle</td>
+			{% endif %}
 		</tbody>
 		<tfoot>
 			<tr>
