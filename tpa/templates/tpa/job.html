@@ -51,6 +51,7 @@
 			</tr>
 			{% endfor %}
 			{% if data_json.water %}
+			<tr>
 				<td class="td_left"></td>
 				<td class="td_left"><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAA
 AARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxMAAAsTAQCanBgAAALcSURBVEhL5VQ9
@@ -74,10 +75,12 @@ iH4BAy/4T/rnvW8AAAAASUVORK5CYII=">
 				<td class="td_left">Увлажнение</td>
 				<td class="td_right"></td>
 				<td class="td_right"></td>
+			</tr>
 			{% endif %}
 			{% if data_json.recycle > 0 %}
+			<tr>
 				<td class="td_left">Дробленка</td>
-				<td class="td_left"><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhk
+				<td class="td_right"><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhk
 iAAAAAlwSFlzAAAAtwAAALcBRi4NFgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3Nj
 YXBlLm9yZ5vuPBoAAAOjSURBVEiJnZVvSJ11FMc/53eveRU3nY0L+2PmiBB6UYTO
 SWMYvVl6Hav2B4qKls5FLQaZXt9olxhLI0Y5HY4VI4jG1ouaDpe9aLLIPxSL1UJy
@@ -103,6 +106,7 @@ TkSuQmCC"></td>
 				<td class="td_left"></td>
 				<td class="td_right"></td>
 				<td class="td_right">{{data_json.recycle}}</td>
+			</tr>
 			{% endif %}
 		</tbody>
 		<tfoot>
