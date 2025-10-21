@@ -43,7 +43,6 @@ def machine_card(request, machine_id):
         raise Http404("Станок не найден!")
     
     if request.method == 'POST':
-        form = TpaMachineForm(request.POST)
         instance.operation_time = request.POST['operation_time']
         instance.save()
         return redirect('tpa:list')
