@@ -15,7 +15,8 @@
                 <a href="{% url 'tpa:machine_card' el.id %}">
                     <div class="card text-bg-warning mb-3" style="width: 18rem;">
                     <h5 class="card-title text-center"> №{{ el.id }} {{ el.name }}</h5>
-                        <div class="card-body">
+                        <div class="card-body text-center">
+                            Наработка: {{ el.operation_time }} мин.
                         </div>
                     </div>
                 </a>

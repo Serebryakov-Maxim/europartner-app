@@ -1,6 +1,7 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.db.models import Avg, Sum
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,12 +40,25 @@ def machine_card(request, machine_id):
     try:
         instance = Machine.objects.get(id=machine_id)
     except Exception as e:
-        raise Http404("Станок не найдена!")
+        raise Http404("Станок не найден!")
+    
+    if request.method == 'POST':
+        form = TpaMachineForm(request.POST)
+        instance.operation_time = request.POST['operation_time']
+        instance.save()
+        return redirect('tpa:list')
+    else:
+        
+        context = {'machine':instance}
+        return render(request, 'tpa/machine.html', context)
 
-    cycles = Cycle.objects.filter(machine_id=machine_id).order_by('-date')[:10]
-
-    context = {'machine':instance}
-    return render(request, 'tpa/machine.html', context)
+def delete_set_operation_time(request, machine_id):
+    try:
+        pass
+    except:
+        Http404('Ошибка')
+    
+    return render(request, "tpa/list.html")
 
 def machine_last_data(request, machine_id):
     """ Просмотр последних данных с контроллера """
@@ -225,10 +239,8 @@ class CycleApiView(APIView):
 
         # Получаем данные
         if len(filter):
-            print(1)
             cycles = Cycle.objects.filter(**filter).order_by('id')
         else:
-            print(2)
             cycles = Cycle.objects.all().order_by('-date')[:10]
         
         if page != None:
@@ -505,3 +517,39 @@ class AvgCycleOnDateApiView(APIView):
 
         return JsonResponse(cycles, safe=False)
               
+class MachineOperationTimeApiView(APIView):
+    
+    def get(self, request, machine_id):
+        try:
+            instance = Machine.objects.get(id=machine_id)
+        except Machine.DoesNotExist:
+            return Http404('Ошибка')
+        
+        data = {'operation_time': instance.operation_time}
+
+        return JsonResponse(data, safe=False)
+    
+
+    def post(self, request, machine_id):
+        try:
+            instance = Machine.objects.get(id=machine_id)
+        except Machine.DoesNotExist:
+            return Http404('Ошибка')
+        
+        instance.operation_time = request.data.get('operation_time')
+        instance.save()
+
+        return Response("Значение наработки установлено", status=status.HTTP_201_CREATED)
+    
+    def put(self, request, machine_id):
+        try:
+            instance = Machine.objects.get(id=machine_id)
+        except Machine.DoesNotExist:
+            return Http404('Ошибка')
+        
+        instance.operation_time = instance.operation_time + request.data.get('operation_time')
+        instance.save()
+
+        return Response("Значение наработки обновлено", status=status.HTTP_202_ACCEPTED)
+
+        

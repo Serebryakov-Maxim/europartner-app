@@ -4,7 +4,7 @@ from .models import Machine, Job, Cycle, Event
 class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine
-        fields = ['id','name', 'full_job_description']
+        fields = ['id','name', 'full_job_description', 'operation_time']
 
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
