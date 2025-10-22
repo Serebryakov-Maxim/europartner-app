@@ -69,8 +69,8 @@ def machine_last_data(request, machine_id):
     except Exception as e:
         raise Http404("Станок не найдена!")
 
-    cycles = Cycle.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-date')[:10]
-    events = Event.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-date')[:10]
+    cycles = Cycle.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-id')[:10]
+    events = Event.objects.filter(machine_id=machine_id, date__gte=date_start).order_by('-id')[:10]
 
     context = {'machine':instance, 'cycles': cycles, 'events': events}
     return render(request, 'tpa/last_data.html', context)
