@@ -528,7 +528,6 @@ class MachineOperationTimeApiView(APIView):
 
         return JsonResponse(data, safe=False)
     
-
     def post(self, request, machine_id):
         try:
             instance = Machine.objects.get(id=machine_id)
@@ -549,6 +548,6 @@ class MachineOperationTimeApiView(APIView):
         instance.operation_time = instance.operation_time + request.data.get('operation_time')
         instance.save()
 
-        return Response("Значение наработки обновлено", status=status.HTTP_202_ACCEPTED)
+        return Response("Значение наработки обновлено", status=status.HTTP_201_CREATED)
 
         
