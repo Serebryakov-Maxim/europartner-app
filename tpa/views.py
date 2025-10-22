@@ -32,6 +32,10 @@ class StandartResultSetPagination(PageNumberPagination):
     
 def list(request):
     machines_list = Machine.objects.order_by('id')
+
+    for el in machines_list:
+        el.operation_time = int(el.operation_time / 60)
+
     context = {'machines': machines_list}
     return render(request, 'tpa/list.html', context)
 
@@ -41,14 +45,15 @@ def machine_card(request, machine_id):
         instance = Machine.objects.get(id=machine_id)
     except Exception as e:
         raise Http404("Станок не найден!")
-    
+
     if request.method == 'POST':
-        instance.operation_time = request.POST['operation_time']
+        operation_time = request.POST['operation_time']
+        instance.operation_time = int(operation_time) * 60 # в минутрах, переводим в секунды
         instance.save()
         return redirect('tpa:list')
     else:
         
-        context = {'machine':instance}
+        context = {'machine':instance, 'optime_min': int(instance.operation_time / 60)}
         return render(request, 'tpa/machine.html', context)
 
 def delete_set_operation_time(request, machine_id):
