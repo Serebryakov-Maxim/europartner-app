@@ -19,7 +19,7 @@
       {% csrf_token %}
       <div class="mb-3" style="width: 200px;">
         <label for="operation_time" class="form-label">Наработка, мин.</label>
-        <input type="number" class="form-control" id="operation_time" name="operation_time" value={{machine.operation_time}}>
+        <input type="number" class="form-control" id="operation_time" name="operation_time" min="0" value={{machine.operation_time}}>
         <div class="form-text">Введите наработку станка в минутах</div>
       </div>
       <button type="submit" class="btn btn-primary">Сохранить</button>
