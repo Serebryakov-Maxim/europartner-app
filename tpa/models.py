@@ -7,7 +7,7 @@ class Machine(models.Model):
     name = models.CharField('Наименование', max_length=255)
     id = models.IntegerField('Номер', primary_key=True)
     full_job_description = models.BooleanField('Полное описание задания', default=True)
-    operation_time = models.IntegerField('Наработка', default=0, blank=True, validators=[MinValueValidator(0)])
+    operation_time = models.BigIntegerField('Наработка', default=0, blank=True, validators=[MinValueValidator(0)])
 
     class Meta:
             db_table = 'tpa_machines'
