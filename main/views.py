@@ -12,6 +12,10 @@ from europartner.mqtt import client as mqtt_client
 def index(request):
     return render(request, 'main/index.html')
 
+def ping(request):
+    json_r = {'result': "OK"}
+    return JsonResponse(json_r, safe=False, status=status.HTTP_200_OK)
+
 @csrf_exempt
 def ventilation(request):
     '''Данная вьюха управляет вентиляцией через протокол modbus'''
