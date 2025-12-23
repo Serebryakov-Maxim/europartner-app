@@ -10,18 +10,21 @@
 <div class="container">
     <div class="row align-items-start">
         
-             {% for el in machines %}
-             <div class="col">
-                <a href="{% url 'tpa:machine_card' el.id %}">
-                    <div class="card text-bg-warning mb-3" style="width: 18rem;">
-                    <h5 class="card-title text-center"> №{{ el.id }} {{ el.name }}</h5>
-                        <div class="card-body text-center">
-                            Наработка: {{ el.operation_time }} мин. 
+        {% for el in machines %}
+
+            {% if el.id != 0 %}
+                <div class="col">
+                    <a href="{% url 'tpa:machine_card' el.id %}">
+                        <div class="card text-bg-warning mb-3" style="width: 18rem;">
+                        <h5 class="card-title text-center"> №{{ el.id }} {{ el.name }}</h5>
+                            <div class="card-body text-center">
+                                Наработка: {{ el.operation_time }} мин. 
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
         
     </div>
 </div>
