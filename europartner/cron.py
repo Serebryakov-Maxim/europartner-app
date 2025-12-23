@@ -3,15 +3,19 @@ from django.conf import settings
 from datetime import datetime
 from tpa.models import Cycle
 from django.utils import timezone
+from django.conf import settings
 import subprocess
 
 def checking_controllers():
 
+    if settings.CRON_IS_ENABLE != None and settings.CRON_IS_ENABLE == False:
+        return
+    
     # последние данные
     obj = Cycle.objects.last()
     if obj == None:
         return
-    
+        
     # расчет количества сек. с последних данных
     tz = timezone.get_current_timezone()
     date_now = datetime.now().astimezone(tz)
