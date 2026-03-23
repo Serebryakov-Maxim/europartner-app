@@ -13,7 +13,6 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 @xframe_options_exempt
 def index(request):
     response = render(request, 'main/index.html')
-    response['Content-Security-Policy'] = "frame-ancestors 'self' http://192.168.1.76:8000"
     return response
 
 def ping(request):
