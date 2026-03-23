@@ -8,9 +8,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
 from europartner.mqtt import client as mqtt_client
+from django.views.decorators.clickjacking import xframe_options_exempt
 
+@xframe_options_exempt
 def index(request):
-    return render(request, 'main/index.html')
+    response = render(request, 'main/index.html')
+    response['Content-Security-Policy'] = "frame-ancestors 'self' http://192.168.1.76:8000"
+    return response
 
 def ping(request):
     json_r = {'result': "OK"}
