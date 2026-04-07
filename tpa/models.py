@@ -91,7 +91,7 @@ class MashineStatus(models.Model):
 
     class Meta:
         ordering = ('parent__id', 'sort_order', 'name')
-        db_table = 'tpa_machine_statuses'
+        db_table = 'tpa_mashinestatus'
         verbose_name = 'Статусы станков'
         verbose_name_plural = 'Статусы станков'
 
