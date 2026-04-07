@@ -1,0 +1,33 @@
+<li class="node {% if node.is_group %}node-group{% endif %}" data-id="{{ node.id }}" data-group="{{ node.group|yesno:'1,0' }}">
+  <div class="node-row" role="treeitem" aria-expanded="false">
+    {% if node.children.exists %}
+      <button type="button" class="toggle" aria-label="Развернуть">
+        <span class="icon">▸</span>
+      </button>
+    {% else %}
+      <span style="display:inline-block;width:22px"></span>
+    {% endif %}
+
+    {% if not node.is_group %}
+      <input class="radio" type="radio" name="tree_selected" aria-label="Выбрать элемент" />
+    {% else %}
+      <span style="display:inline-block;width:20px;margin-right:6px"></span>
+    {% endif %}
+
+    {% if node.is_group %}
+      <div class="label" aria-disabled="true">{{ node.name }} <span class="meta">— Группа</span></div>
+    {% else %}
+      <div class="label">{{ node.name }}</div>
+    {% endif %}
+
+    <div class="actions"><!-- actions area reserved --></div>
+  </div>
+
+  {% if node.children.exists %}
+    <ul class="children" role="group">
+      {% for child in node.children.all|dictsort:"sort_order" %}
+        {% include "tpa/status_node.html" with node=child %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from .models import Machine, Cycle, Job, Event
+from .models import Machine, Cycle, Job, Event, MashineStatus
 from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer
 import json
 from datetime import datetime, timedelta
@@ -555,4 +555,6 @@ class MachineOperationTimeApiView(APIView):
 
         return Response("Значение наработки обновлено", status=status.HTTP_201_CREATED)
 
-        
+def machine_status(request):
+    roots = MashineStatus.objects.filter(parent__isnull=True).order_by('sort_order')
+    return render(request, 'tpa/status.html', {'roots': roots})        

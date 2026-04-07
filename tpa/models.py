@@ -58,6 +58,7 @@ class Event(models.Model):
         return str(self.machine) + ', ' + str(self.date) + ', ' + str(self.data)
     
 class Cycle(models.Model):
+       
     """Цикл - выполненные циклы"""
     date = models.DateTimeField('Дата', db_index=True)
     time_ms = models.IntegerField('Время цикла')
@@ -73,3 +74,34 @@ class Cycle(models.Model):
 
     def __str__(self):
         return str(self.machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
+    
+
+class MashineStatus(models.Model):
+    name = models.CharField(max_length=200)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='children',
+        on_delete=models.CASCADE
+    )
+    uuid_1C = models.CharField('Идентификатор в 1С', max_length=36, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    group = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        ordering = ('parent__id', 'sort_order', 'name')
+
+    def __str__(self):
+        return self.name
+
+    def is_root(self):
+        return self.parent is None
+
+    def get_ancestors(self):
+        ancestors = []
+        node = self.parent
+        while node:
+            ancestors.append(node)
+            node = node.parent
+        return list(reversed(ancestors))

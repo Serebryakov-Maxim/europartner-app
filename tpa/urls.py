@@ -10,6 +10,7 @@ urlpatterns = [
     path('<int:machine_id>', views.machine_card, name='machine_card'),
     path('<int:machine_id>/last_data/', views.machine_last_data, name='machine_last_data'),
     path('<int:machine_id>/job/', views.machine_job, name='machine_job'),
+    path('status', views.machine_status, name='status'),
     
     path('api/machine/', views.MachineListApiView.as_view(), name='api'),
     path('api/machine/<int:machine_id>/operation_time/', views.MachineOperationTimeApiView.as_view(), name='api'),

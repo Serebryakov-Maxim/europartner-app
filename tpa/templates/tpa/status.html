@@ -1,0 +1,238 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Выбор значения</title>
+  <style>
+    :root{ --bg:#fff; --fg:#111; --muted:#666; --accent:#0a84ff; }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; margin:0; color:var(--fg);}
+    .panel{ max-width:720px; margin:12px auto; border:1px solid #e6e6e6; border-radius:8px; background:var(--bg); overflow:hidden; display:flex; flex-direction:column; }
+    .header{padding:10px 14px; border-bottom:1px solid #f0f0f0; display:flex; gap:8px; align-items:center;}
+    .search{ flex:1; padding:8px 10px; border:1px solid #e0e0e0; border-radius:6px; font-size:14px; }
+
+    .list-wrap{ max-height:60vh; overflow:auto; padding:12px; }
+
+    ul.tree{ list-style:none; margin:0; padding:0 0 0 12px; }
+    li.node{ position:relative; margin:0; display:block; }
+
+    li.node::before{
+      content:""; position:absolute; left:0; top:0; bottom:0; width:12px;
+      background:
+        linear-gradient(to bottom, transparent 0%, transparent calc(50% - 1px), #e6e6e6 calc(50% - 1px), #e6e6e6 calc(50% + 1px), transparent calc(50% + 1px));
+      pointer-events:none;
+    }
+    li.node:last-child::before{ background: linear-gradient(to bottom, transparent 0%, transparent 16px, transparent 100%); }
+
+    .node-row{ display:flex; align-items:center; gap:8px; margin-left:12px; border-radius:6px; padding:4px 2px; }
+    .node .label{ flex:1; font-size:14px; word-break:break-word; padding:6px 8px; border-radius:6px; cursor:pointer; }
+    .node.selected .label{ background:linear-gradient(90deg, rgba(10,132,255,0.06), rgba(10,132,255,0.03)); outline:2px solid rgba(10,132,255,0.06); }
+
+    button.toggle{ background:none; border:0; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:var(--accent); font-weight:700; padding:0; }
+    .toggle .icon{ transition:transform .15s ease; display:inline-block; }
+    .node.expanded > .node-row > .toggle .icon{ transform:rotate(90deg); }
+
+    .node-group .label{ font-weight:700; color:var(--muted); cursor:default; }
+    .node-group .actions{ visibility:hidden; }
+    .node-group .label[aria-disabled="true"]{ opacity:0.95; }
+
+    .children{ margin-left:12px; padding-left:0; }
+
+    .radio{
+      appearance:none; -webkit-appearance:none; width:10px; height:16px; border-radius:50%; visibility: hidden;
+      border:2px solid #bbb; display:inline-block; margin-right:6px; position:relative; cursor:pointer;
+      flex:0 0 20px; background:#fff;
+    }
+    .radio:checked{ border-color:var(--accent); background:var(--accent); }
+    .radio:focus{ outline:2px solid rgba(10,132,255,0.12); }
+
+    .footer{ border-top:1px solid #f0f0f0; padding:10px 12px; display:flex; justify-content:flex-end; gap:8px; background:#fafafa; }
+    .btn{ padding:8px 14px; border-radius:6px; border:0; cursor:pointer; font-size:14px; }
+    .btn-primary{ background:var(--accent); color:#fff; }
+    .btn-ghost{ background:transparent; color:var(--accent); border:1px solid transparent; }
+
+    @media (max-width:420px){
+      .panel{ margin:6px; border-radius:6px; max-width:98vw; }
+      .header{padding:8px;}
+      .search{padding:7px; font-size:13px;}
+      .node .label{ padding:5px 6px; font-size:13px; }
+      .footer{ padding:8px; }
+    }
+
+    .children { display: none; } .node.expanded > .children { display: block; }
+    .node-row .label { font-weight:700; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="panel" role="dialog" aria-label="Выбор значения">
+    <div class="header">
+      <input id="treeSearch" class="search" type="search" placeholder="Поиск..." aria-label="Поиск по списку">
+      <form id="selectForm" method="post" style="display:none;">{% csrf_token %}
+        <input type="hidden" name="selected_id" id="selected_id">
+      </form>
+    </div>
+
+    <div class="list-wrap" id="treeContainer" role="tree" tabindex="0">
+      <ul class="tree" id="treeRoot">
+        {% for node in roots %}
+          {% include "tpa/status_node.html" with node=node %}
+        {% empty %}
+          <li class="node"><div class="node-row"><div class="label">Нет значений</div></div></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="footer">
+      <button id="clearBtn" class="btn btn-ghost" type="button">Сбросить</button>
+      <button id="confirmBtn" class="btn btn-primary" type="button">Выбрать</button>
+    </div>
+  </div>
+
+  <script>
+    function qs(s, el=document){ return el.querySelector(s); }
+    function qsa(s, el=document){ return Array.from(el.querySelectorAll(s)); }
+
+    function clearSelectionUI(){
+      qsa('.node.selected').forEach(n=>n.classList.remove('selected'));
+      qsa('input[type="radio"].radio').forEach(r=> r.checked = false);
+      const inp = qs('#selected_id'); if(inp) inp.value = '';
+    }
+
+    function setSelection(id, li){
+      clearSelectionUI();
+      if(!li) return;
+      li.classList.add('selected');
+      const radio = li.querySelector('input[type="radio"].radio');
+      if(radio) radio.checked = true;
+      const inp = qs('#selected_id'); if(inp) inp.value = id;
+      document.dispatchEvent(new CustomEvent('tree:select', {detail:{id:id, node:li}}));
+    }
+
+    // tabindex init
+    function initTabIndex(){
+      qsa('li.node').forEach(li=>{
+        if(li.dataset.group === '1') li.tabIndex = -1; else li.tabIndex = 0;
+        const row = li.querySelector('.node-row');
+        if(row) row.setAttribute('role','treeitem');
+      });
+    }
+    initTabIndex();
+
+    // Click handling: toggle, radio select, label behavior
+    document.addEventListener('click', (e)=>{
+      const t = e.target;
+      const toggleBtn = t.closest('.toggle');
+      if(toggleBtn){
+        const li = toggleBtn.closest('li.node');
+        if (!li.querySelector('.children .node')) return;
+        if(!li) return;
+        const row = li.querySelector('.node-row');
+        const expanded = li.classList.toggle('expanded');
+        if(row) row.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        return;
+      }
+
+      // radio click (direct on radio or its label)
+      const radio = t.closest('input[type="radio"].radio');
+      if(radio){
+        const li = radio.closest('li.node');
+        if(!li) return;
+        setSelection(li.dataset.id, li);
+        return;
+      }
+
+      // label click
+      if(t.classList.contains('label') || t.closest('.label')){
+        const label = t.classList.contains('label') ? t : t.closest('.label');
+        const li = label.closest('li.node');
+        if(!li) return;
+        if(li.dataset.group === '1'){
+          // groups: toggle only
+          if(li.querySelector(':scope > .children > .node')){
+            const row = li.querySelector('.node-row');
+            const expanded = li.classList.toggle('expanded');
+            if(row) row.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          }
+          return;
+        }
+        // for items: set selection (radio) on click of label
+        setSelection(li.dataset.id, li);
+        return;
+      }
+    });
+
+    // Confirm button: submit selected id via form or dispatch event
+    qs('#confirmBtn').addEventListener('click', ()=>{
+      const sel = qs('#selected_id').value;
+      if(!sel){
+        // optional: show alert
+        alert('Пожалуйста, выберите элемент.');
+        return;
+      }
+      // submit form (uncomment to submit)
+      // document.getElementById('selectForm').submit();
+      // or dispatch event
+      document.dispatchEvent(new CustomEvent('tree:confirm', {detail:{id:sel}}));
+      // optional visual feedback
+      console.log('Selected id:', sel);
+    });
+
+    // Clear button
+    qs('#clearBtn').addEventListener('click', ()=>{
+      clearSelectionUI();
+      document.dispatchEvent(new CustomEvent('tree:cleared'));
+    });
+
+    // Search (same as before, ensure radios/tabindex updated)
+    const searchInput = qs('#treeSearch');
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      if(q === ''){
+        qsa('li.node').forEach(li=>{
+          li.style.display = '';
+          li.classList.remove('matched','expanded');
+          if(li.dataset.group === '1') li.tabIndex = -1; else li.tabIndex = 0;
+        });
+        return;
+      }
+      qsa('li.node').forEach(li=>{
+        const label = (li.querySelector('.label')?.textContent || '').toLowerCase();
+        if(label.includes(q)){
+          li.style.display = '';
+          li.classList.add('matched');
+          let p = li.parentElement;
+          while(p && p.closest){
+            const parentLi = p.closest('li.node');
+            if(!parentLi) break;
+            parentLi.style.display = '';
+            parentLi.classList.add('expanded');
+            p = parentLi.parentElement;
+          }
+        } else {
+          li.style.display = 'none';
+          li.classList.remove('matched');
+        }
+        if(li.dataset.group === '1') li.tabIndex = -1; else li.tabIndex = 0;
+      });
+    });
+
+    // Keyboard nav simplified: arrows and Enter select
+    const container = qs('#treeContainer');
+    let focused = null;
+    container.addEventListener('keydown', (e)=>{
+      const visible = qsa('li.node').filter(n=> n.offsetParent !== null && n.tabIndex !== -1);
+      if(visible.length === 0) return;
+      if(!focused || !visible.includes(focused)) { focused = visible[0]; focused.focus(); }
+      const idx = visible.indexOf(focused);
+      if(e.key === 'ArrowDown'){ e.preventDefault(); const next = visible[Math.min(visible.length-1, idx+1)]; if(next){ focused = next; focused.focus(); } }
+      else if(e.key === 'ArrowUp'){ e.preventDefault(); const prev = visible[Math.max(0, idx-1)]; if(prev){ focused = prev; focused.focus(); } }
+      else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if(focused.dataset.group === '1'){ if(focused.querySelector(':scope > .children > .node')){ const isExp = focused.classList.toggle('expanded'); const row = focused.querySelector('.node-row'); if(row) row.setAttribute('aria-expanded', isExp ? 'true' : 'false'); } } else setSelection(focused.dataset.id, focused); }
+    });
+
+    // make radios focusable via JS (radios inside non-group nodes)
+    // initial render: ensure radio inputs present
+    // (see partial below)
+  </script>
+</body>
+</html>
