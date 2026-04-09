@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Machine, Job, Cycle, Event
+from .models import Machine, Job, Cycle, Event, MachineStatus
 
 class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine
-        fields = ['id','name', 'full_job_description', 'operation_time']
+        fields = ['id','name', 'full_job_description', 'operation_time', 'status']
 
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,3 +20,8 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['date','machine','type','data']
+
+class MaсhineStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MachineStatus
+        fields = ['id','name','parent','uuid_1C', 'group']

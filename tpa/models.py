@@ -2,12 +2,47 @@ from django.core.validators import MinValueValidator
 from django.db import models
 import uuid
 
+class MachineStatus(models.Model):
+    id = models.IntegerField('Код', primary_key=True)
+    name = models.CharField(max_length=200)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='children',
+        on_delete=models.CASCADE
+    )
+    uuid_1C = models.CharField('Идентификатор в 1С', max_length=36, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    group = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        ordering = ('parent__id', 'sort_order', 'name')
+        db_table = 'tpa_machinestatus'
+        verbose_name = 'Статусы станков'
+        verbose_name_plural = 'Статусы станков'
+
+    def __str__(self):
+        return self.name
+
+    def is_root(self):
+        return self.parent is None
+
+    def get_ancestors(self):
+        ancestors = []
+        node = self.parent
+        while node:
+            ancestors.append(node)
+            node = node.parent
+        return list(reversed(ancestors))
+
 class Machine(models.Model):
     """Станки - справочник станков"""
     name = models.CharField('Наименование', max_length=255)
     id = models.IntegerField('Номер', primary_key=True)
     full_job_description = models.BooleanField('Полное описание задания', default=True)
     operation_time = models.BigIntegerField('Наработка', default=0, blank=True, validators=[MinValueValidator(0)])
+    status = models.ForeignKey(MachineStatus, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
             db_table = 'tpa_machines'
@@ -74,37 +109,4 @@ class Cycle(models.Model):
 
     def __str__(self):
         return str(self.machine) + ', ' + str(self.date) + ', ' + str(self.time_ms) + ' мс'
-    
-
-class MashineStatus(models.Model):
-    name = models.CharField(max_length=200)
-    parent = models.ForeignKey(
-        'self',
-        null=True,
-        blank=True,
-        related_name='children',
-        on_delete=models.CASCADE
-    )
-    uuid_1C = models.CharField('Идентификатор в 1С', max_length=36, blank=True)
-    sort_order = models.PositiveIntegerField(default=0)
-    group = models.BooleanField(default=False, db_index=True)
-
-    class Meta:
-        ordering = ('parent__id', 'sort_order', 'name')
-        db_table = 'tpa_mashinestatus'
-        verbose_name = 'Статусы станков'
-        verbose_name_plural = 'Статусы станков'
-
-    def __str__(self):
-        return self.name
-
-    def is_root(self):
-        return self.parent is None
-
-    def get_ancestors(self):
-        ancestors = []
-        node = self.parent
-        while node:
-            ancestors.append(node)
-            node = node.parent
-        return list(reversed(ancestors))
+ 

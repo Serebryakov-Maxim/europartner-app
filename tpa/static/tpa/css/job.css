@@ -1,3 +1,28 @@
+
+:root {
+    --bg: #fff;
+    --fg: #111;
+    --muted: #666;
+    --accent: #0a84ff;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* либо height:100% */
+  margin-top: 5px;
+}
+
+main {
+  flex: 1 0 auto; /* заполняет доступное пространство между header и footer */
+  margin: 5px;
+}
+
 .stanok_head{
     width:90%;
     height: 60px;
@@ -8,7 +33,7 @@
     text-decoration: underline;
 }
 .stanok_main{
-    width: calc(100% / 2);
+    width: calc(100% / 3);
     float: left;
 }
 .stanok_main.stanok_left{
@@ -62,6 +87,61 @@ tfoot{
     font-weight: bold;
 }
 
+.status{
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: center;
+}
+
 .qr{
     float: right;
+}
+
+footer {
+    border-top: 1px solid #f0f0f0;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: #fafafa;
+    position: fixed; bottom: 0; width:100%;
+    justify-content: center;
+}
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+    font-size: x-large;
+}
+
+button {
+    appearance: auto;
+    text-rendering: auto;
+    color: buttontext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    cursor: default;
+    box-sizing: border-box;
+    background-color: buttonface;
+    margin: 0em 0em 0em 0em;
+    padding-block: 1px;
+    padding-inline: 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonborder;
+    border-image: initial;
 }

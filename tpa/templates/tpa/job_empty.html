@@ -8,14 +8,28 @@
         <link rel="stylesheet" href="{% static 'tpa/css/job.css' %}">
     </head>
     <body>
-        <div class="stanok_head">
-            <div class="stanok_main stanok_left">
-                {{name}}
-            </div>
-            <div class="stanok_main stanok_right">
-                №{{number}}
-            </div>
-        </div>
+        <header>
+			<div class="stanok_head">
+				<div class="stanok_main stanok_left">
+					{{machine.name}}
+				</div>
+				<div class="stanok_main status">
+					Статус:
+					<button id="changeStatus" class="btn btn-primary" type="button" value="{{ machine.id }}">
+						{% if machine.status == null %}
+							Не указан
+						{% elif machine.status.name == '_' %}
+							РАБОТАЕТ
+						{% else %}
+							{{ machine.status.name }}
+						{% endif %}
+					</button>
+				</div>
+				<div class="stanok_main stanok_right">
+					№{{machine.id}}
+				</div>
+			</div>
+		</header>
         <div>
             <div class="product_main">
                 <div  style="font-size:130px;">
@@ -30,4 +44,15 @@
             </div>
         </div>
     </body>
+
+    <script>
+        function qs(s, el=document){ return el.querySelector(s); }
+
+        qs('#changeStatus').addEventListener('click', ()=>{
+            const sel = qs('#changeStatus').value;
+            const param = encodeURIComponent(sel); // любой параметр
+            location.href = window.location.protocol + "//" + window.location.host + "/tpa/status?machine_id=" + param
+        });
+    </script>
+
 </html>

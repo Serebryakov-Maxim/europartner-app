@@ -4,6 +4,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from string import Template
 from django.conf import settings
+import europartner.erp_exchange as erp
 
 def on_connect(mqtt_client, userdata, flags, rc):
     if rc == 0:
@@ -19,8 +20,10 @@ def on_message(mqtt_client, userdata, msg):
 
         data_json = json.dumps(data)
         srv_tmpl = Template('http://$srv/$datebase/hs/django/TPA_projectors/')
-        srv = srv_tmpl.substitute(srv=settings.ERP_SERVER, datebase=settings.ERP_DATEBASE)
-        r = requests.post(srv, auth=HTTPBasicAuth(settings.ERP_USER, settings.ERP_PASSWORD), data=data_json, headers={'Content-Type': 'application/json'})
+
+        erp.send_request(srv_tmpl, data_json)
+        #srv = srv_tmpl.substitute(srv=settings.ERP_SERVER, datebase=settings.ERP_DATEBASE)
+        #r = requests.post(srv, auth=HTTPBasicAuth(settings.ERP_USER, settings.ERP_PASSWORD), data=data_json, headers={'Content-Type': 'application/json'})
 
         #print(f'Client: {mqtt_client} Received message on topic: {msg.topic} with payload: {msg.payload}')
 

@@ -7,14 +7,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from .models import Machine, Cycle, Job, Event, MashineStatus
-from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer
+from .models import Machine, Cycle, Job, Event, MachineStatus
+from .serializers import MachineSerializer, JobSerializer, CycleSerializer, EventSerializer, MaсhineStatusSerializer
 import json
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 import pytz
 from django.utils import timezone
 from statistics import mean
+from string import Template
+import europartner.erp_exchange as erp
 
 class StandartResultSetPagination(PageNumberPagination):
     page_size = 1000
@@ -86,7 +88,7 @@ def machine_job(request, machine_id):
         instance = Job.objects.get(machine_id=machine_id, status='Выполняется')
     except Exception as e:
         machine = Machine.objects.get(id=machine_id)
-        context = {'name': machine.name, 'number': machine.id}
+        context = {'machine': machine}
         return render(request, 'tpa/job_empty.html', context)
     
     data_str = instance.data_json
@@ -95,6 +97,32 @@ def machine_job(request, machine_id):
     context = {'machine': instance.machine, 'job':instance, 'data_json':data_json}
     
     return render(request, 'tpa/job.html', context)
+
+def setStatusMachine(request):
+    """ Сохраняет введенные данные """
+    if request.method == 'POST':
+        json_b = request.body
+        data_json = json.loads(json_b)
+    
+        machine_id = data_json['machine_id']
+        status_id = data_json['status_id']
+
+
+        mashine = Machine.objects.get(id=int(machine_id))
+        status = MachineStatus.objects.get(id=int(status_id))
+
+        mashine.status = status
+
+        mashine.save()
+
+        # Отправим запрос в ERP
+        data = {'machine_id':machine_id, 'status_id':status_id, 'uuid_1C': status.uuid_1C}
+        data_json = json.dumps(data)
+        srv_tmpl = Template('http://$srv/$datebase/hs/django/TPA_machines/')
+        res = erp.send_request(srv_tmpl, data_json)
+        print(res)
+    
+    return redirect('/tpa/' + machine_id + '/job/')
 
 class MachineListApiView(APIView):
 
@@ -119,7 +147,8 @@ class MachineListApiView(APIView):
         data = {
             'id': request.data.get('id'), 
             'name': request.data.get('name'),
-            'full_job_description': request.data.get('full_job_description')
+            'full_job_description': request.data.get('full_job_description'),
+            'status': request.data.get('status')
         }
         
         machine_instance = self.get_object(data['id'])
@@ -556,5 +585,44 @@ class MachineOperationTimeApiView(APIView):
         return Response("Значение наработки обновлено", status=status.HTTP_201_CREATED)
 
 def machine_status(request):
-    roots = MashineStatus.objects.filter(parent__isnull=True).order_by('sort_order')
+    roots = MachineStatus.objects.filter(parent__isnull=True).order_by('name')
     return render(request, 'tpa/status.html', {'roots': roots})        
+
+class MachineStatusListApiView(APIView):
+
+    def get_object(self, id):
+        '''Метод возвращает станок по id'''
+        try:
+            return MachineStatus.objects.get(id=id)
+        except MachineStatus.DoesNotExist:
+            return None
+
+    # 1. List all
+    def get(self, request, *args, **kwargs):
+        '''Получить список станков'''
+        machines = MachineStatus.objects.all()
+        serializer = MaсhineStatusSerializer(machines, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+     # 2. Create / update
+    def post(self, request, *args, **kwargs):
+        '''Создание/обновление статусов станков'''
+        data = {
+            'id': request.data.get('id'), 
+            'name': request.data.get('name'),
+            'parent': request.data.get('parent'),
+            'uuid_1C': request.data.get('uuid_1C'),
+            'group': request.data.get('group'),
+        }
+        
+        status_instance = self.get_object(data['id'])
+        if not status_instance:
+            serializer = MaсhineStatusSerializer(data=data)
+        else:
+            serializer = MaсhineStatusSerializer(instance = status_instance, data=data, partial = True)
+      
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
