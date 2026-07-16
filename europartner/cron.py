@@ -9,6 +9,7 @@ import subprocess
 def checking_controllers():
 
     if settings.CRON_IS_ENABLE != None and settings.CRON_IS_ENABLE == False:
+        print("Проверку пропускаем")
         return
     
     # последние данные
@@ -22,14 +23,18 @@ def checking_controllers():
     difference = date_now - obj.date
     total_seconds = difference.total_seconds()
 
+    print("Количество секунд = " + str(total_seconds))
+
     # менее 100, ожидаем
     if total_seconds < 100:
         return
     
-    # рассылка                         
+    # рассылка
+    print("Рассылка на почту")
     subject = 'Нет данных с контроллеров ТПА!'
     message = 'Последние показания были ' + str(int(total_seconds)) + ' сек. назад'
     send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)
     
     # запуск скрипта на перезапуск службы
+    print("Перезапуск скрипта")
     subprocess.run(['. /home/user/code/restart_raspberry_service/restart_service.sh'], shell=True)
