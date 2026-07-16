@@ -38,6 +38,7 @@ def checking_controllers():
 
     bot = bot_ERP()
     bot.send_message(settings.MAX_USER_ID_SEREBRYAKOV, text)
+    bot.send_message(settings.MAX_USER_ID_LOGACHEV, text)
 
     #print("Рассылка на почту")
     #send_mail(subject, message, settings.EMAIL_USER_SENDER, settings.EMAIL_USER_ALERT)
